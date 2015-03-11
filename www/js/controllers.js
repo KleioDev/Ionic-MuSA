@@ -17,4 +17,35 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
-});
+})
+
+
+//=================== Museum Tab Controllers ====================//
+.controller('MuseumGeneral', function($scope, General)
+{
+    //Get the new data, HTTP Request
+
+
+
+})
+
+.controller('MuseumEventsCtrl', function($scope, Events)
+    {
+
+    })
+
+.controller('MuseumNewsCtrl', function($scope,News)
+    {
+
+    })
+
+.controller('MuseumSingleEventsCrtl', function($scope, $stateParams, Events)
+    {
+
+    })
+
+.controller('MuseumSingleNEwsCtrl', function($scope, $stateParams, News)
+    {
+
+
+    });
