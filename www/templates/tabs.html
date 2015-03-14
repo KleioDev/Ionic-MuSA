@@ -5,20 +5,36 @@ navigation history that also transitions its views in and out.
 -->
 <ion-tabs class="tabs-icon-top tabs-positive">
 
-  <!-- Dashboard Tab -->
-  <ion-tab title="Status" icon-off="ion-ios-pulse" icon-on="ion-ios-pulse-strong" href="#/tab/dash">
-    <ion-nav-view name="tab-dash"></ion-nav-view>
+  <!-- Museum Tab -->
+  <ion-tab title="Museum" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/tab/museum-general">
+    <ion-nav-view name="tab-museum-general"></ion-nav-view>
   </ion-tab>
 
-  <!-- Chats Tab -->
-  <ion-tab title="Chats" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats">
+  <!-- Exhibitions Tab -->
+  <ion-tab title="Exhibitions" icon-off="ion-ios-list-outline" icon-on="ion-ios-list" href="#/tab/chats">
     <ion-nav-view name="tab-chats"></ion-nav-view>
   </ion-tab>
 
-  <!-- Account Tab -->
-  <ion-tab title="Account" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
+  <!-- QR Code Tab -->
+  <ion-tab title="Scan" icon-off="ion-ios-camera-outline" icon-on="ion-ios-camera href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
+
+    <!-- Map  Tab -->
+    <ion-tab title="Map" icon-off="ion-social-buffer-outline" icon-on="ion-social-buffer" href="#/tab/account">
+        <ion-nav-view name="tab-account"></ion-nav-view>
+    </ion-tab>
+
+
+
+    <!-- User Tab -->
+    <ion-tab title="User" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/account">
+        <ion-nav-view name="tab-account"></ion-nav-view>
+    </ion-tab>
+
+
+
+
 
 
 </ion-tabs>

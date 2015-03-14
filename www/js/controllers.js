@@ -21,9 +21,11 @@ angular.module('starter.controllers', [])
 
 
 //=================== Museum Tab Controllers ====================//
-.controller('MuseumGeneral', function($scope, General)
+.controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles)
 {
     //Get the new data, HTTP Request
+
+    $scope.navigationTitles = AppNavigationTitles;
 
 
 
@@ -39,12 +41,12 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('MuseumSingleEventsCrtl', function($scope, $stateParams, Events)
+.controller('MuseumSingleEventsCtrl', function($scope, $stateParams, Events)
     {
 
     })
 
-.controller('MuseumSingleNEwsCtrl', function($scope, $stateParams, News)
+.controller('MuseumSingleNewsCtrl', function($scope, $stateParams, News)
     {
 
 

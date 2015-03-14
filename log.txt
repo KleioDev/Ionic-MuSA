@@ -1,0 +1,16 @@
+
+
+March 11, 2015
+    - Started adding the controller layout for the Museum Tab
+    - Defined Museum routes
+
+    Next to do:
+    - Talk with Cesar to define the routes better (improve the API)
+    - Write the templates
+    - Finish service route handling
+
+
+March 9, 2015
+- Ionic blank project tabs generated
+- Added to Github
+

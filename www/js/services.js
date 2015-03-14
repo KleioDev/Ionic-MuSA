@@ -47,4 +47,98 @@ angular.module('starter.services', [])
       return null;
     }
   };
-});
+})
+
+.factory('AppNavigationTitles', function()
+    {
+
+        var lang = "ENGLISH";
+        var navigationTitles =
+        {
+            "museum":
+            {
+                /* Museum page Segmented Control */
+                "buttonBar":
+                {
+                    "generalButton":"General",
+                    "eventsButton": "Events",
+                    "newsButton": "News"
+                },
+                /* General nav buttons */
+                "general": {
+
+                    "hoursOfOperation": (lang == "SPANISH") ? "Hours of Operation" : "Horario",
+                    "directions": "Directions",
+                    "links": "Links"
+
+                },
+
+
+                "events": {
+
+                    "navHappeningToday": "Happening Today",
+                    "navUpcomingToday": "Upcoming Events"
+                },
+
+                "eventsSingle": {
+                    "titleLabel": "Event",
+                    "eventDateLabel": "Date",
+                    "eventTimeLabel": "Time",
+                    "eventLocationLabel": "Location",
+                    "descriptionLabel": "Description"
+                },
+
+                "news":
+                {
+                    "recentNewsLabel": "Recent News",
+                    "lastNewsLabel": "Last Week"
+
+                },
+
+                "newsSingle": {
+
+                    "titleLabel": "News"
+                }
+            },
+            "exhibitions":
+            {
+
+
+            },
+
+            "scanner":
+            {
+
+            },
+            "map":
+            {
+
+            },
+            "user":
+            {
+
+            }
+        };
+
+        return navigationTitles;
+    });
+
+//=================== Museum Services ====================//
+
+//.factory('GeneralInfo', function($http){
+//        {
+//            var GeneralInfo = {};
+//
+//            GeneralInfo.get = function (applicationId, callback) {
+//
+//                //$http.get(/* Museum Route goes Here */).success(function(data)
+//                //{
+//                //
+//                //    callback(data);
+//                //})
+//
+//            };
+//
+//            return GeneralInfo;
+//        }
+//});
