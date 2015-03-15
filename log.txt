@@ -1,4 +1,7 @@
 
+March 14, 2015
+    -Defined the navigation language labels
+    -Started on templates
 
 March 11, 2015
     - Started adding the controller layout for the Museum Tab

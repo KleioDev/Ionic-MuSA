@@ -21,19 +21,35 @@ angular.module('starter.controllers', [])
 
 
 //=================== Museum Tab Controllers ====================//
+    .controller('MuseumSegmentedControl', function($scope)
+    {
+        this.museumState = [];
+
+
+    })
 .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles)
 {
     //Get the new data, HTTP Request
 
-    $scope.navigationTitles = AppNavigationTitles;
+    $scope.navigationTitles = AppNavigationTitles.museum;
 
 
 
 })
 
-.controller('MuseumEventsCtrl', function($scope, Events)
+.controller('MuseumEventsCtrl', function($scope,  AppNavigationTitles, Events)
     {
 
+
+
+
+        $scope.navigationTitles = AppNavigationTitles.museum;
+        $scope.eventsToday = Events.getEventsToday();
+        $scope.upcomingEvents = Events.getUpcomingEvents();
+
+        $scope.go = function ( path ) {
+            $location.path( path );
+        };
     })
 
 .controller('MuseumNewsCtrl', function($scope,News)
@@ -41,8 +57,11 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('MuseumSingleEventsCtrl', function($scope, $stateParams, Events)
+.controller('MuseumSingleEventCtrl', function($scope, $stateParams, AppNavigationTitles, Events)
     {
+        $scope.event = Events.get($stateParams.eventId);
+
+
 
     })
 

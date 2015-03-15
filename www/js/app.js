@@ -37,16 +37,55 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   })
 
   // Each tab has its own nav history stack:
-
+  //    .state('tab.museum-segmented-control',{
+  //
+  //        url: '/museum-segmented-control',
+  //        views:
+  //        {
+  //            'tab-museum':{
+  //
+  //                templateUrl: 'templates/segmented-control-museum.html',
+  //                controller: ''
+  //            }
+  //        }
+  //    })
   .state('tab.museum-general', {
     url: '/museum-general',
     views: {
-      'tab-museum-general': {
+      'tab-museum': {
         templateUrl: 'templates/tab-museum-general.html',
         controller: 'MuseumGeneralCtrl'
       }
     }
   })
+
+  .state('tab.museum-events',
+  {
+
+      url:'/museum-events',
+      views:
+      {
+          'tab-museum':
+          {
+              templateUrl: 'templates/tab-museum-events.html',
+              controller: 'MuseumEventsCtrl'
+          }
+      }
+  })
+
+      .state('tab.museum-events-single',
+      {
+            url:'/museum-events/:eventId',
+          views:{
+
+              'tab-museum':
+              {
+                  templateUrl: 'templates/museum-single-event.html',
+                  controller: 'MuseumSingleEventCtrl'
+              }
+          }
+
+      })
 
 
   .state('tab.chats', {
@@ -80,6 +119,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/museum-general');
+  $urlRouterProvider.otherwise('/tab/museum-events');
 
 });

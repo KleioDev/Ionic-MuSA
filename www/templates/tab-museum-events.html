@@ -1,0 +1,81 @@
+<ion-view view-title="MuSA" id = "events-view">
+    <ion-content>
+        <div class="item item-divider">
+            {{navigationTitles.events.navHappeningToday}}
+        </div>
+
+        <div class="list card event-card" ng-repeat="event in eventsToday" type="item-text-wrap" >
+            <div class="item item-header item-icon-right">
+                <h2> {{event.title}}</h2>
+                <i class="icon ion-ios-arrow-right"></i>
+
+            </div>
+
+
+            <div class="item tabs tabs-secondary">
+                <a class="tab-item"  href="#/tab/museum-events/{{event.id}}">
+                    {{event.date}}                 </a>
+                <a class="tab-item" href="#">
+                    {{event.time}}
+                </a>
+
+            </div>
+
+        </div>
+
+
+    <div class="item item-divider">
+       {{ navigationTitles.events.navUpcomingToday}}
+    </div>
+
+
+        <div class="list card"  ng-repeat="event in upcomingEvents" type="item-text-wrap" href="#/tab/chats/{{event.id}}">
+
+            <div class="item item-header item-icon-right">
+                <h2> {{event.title}}</h2>
+                <i class="icon ion-ios-arrow-right"></i>
+
+            </div>
+
+
+            <div class="item tabs tabs-secondary">
+                <a class="tab-item">
+                    {{event.date}}                 </a>
+                <a class="tab-item" href="#">
+                    {{event.time}}
+                </a>
+
+            </div>
+
+        </div>
+
+    </ion-content>
+
+</ion-view>
+
+
+<script>
+    function hello()
+    {
+        console.log("Hello");
+    }
+    ionic.DomUtil.ready(hello);
+
+
+//    var eventCards = document.getElementsByClassName('event-card');
+//
+//    eventCards.forEach(function(eventCard)
+//            {
+//
+//                eventCard.style.cursor = 'pointer';
+//                eventCard.onclick = function() {
+//                    window.location = "/museum-events/"+eventCard.getAttribute('event-id');
+//                };
+//
+//            }
+//
+//
+//    );
+//    console.log("Run!");
+
+</script>

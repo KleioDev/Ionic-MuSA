@@ -49,12 +49,20 @@ angular.module('starter.services', [])
   };
 })
 
+.factory('MuseumStateService', function()
+    {
+        this.museumState = [];
+
+
+
+    })
 .factory('AppNavigationTitles', function()
     {
 
         var lang = "ENGLISH";
         var navigationTitles =
         {
+            /* Museum Tab navigation Lang */
             "museum":
             {
                 /* Museum page Segmented Control */
@@ -67,7 +75,7 @@ angular.module('starter.services', [])
                 /* General nav buttons */
                 "general": {
 
-                    "hoursOfOperation": (lang == "SPANISH") ? "Hours of Operation" : "Horario",
+                    "hoursOfOperation": (lang == "ENGLISH") ? "Hours of Operation" : "Horario",
                     "directions": "Directions",
                     "links": "Links"
 
@@ -121,7 +129,7 @@ angular.module('starter.services', [])
         };
 
         return navigationTitles;
-    });
+    })
 
 //=================== Museum Services ====================//
 
@@ -142,3 +150,91 @@ angular.module('starter.services', [])
 //            return GeneralInfo;
 //        }
 //});
+
+.factory('Events', function()
+{
+
+
+    var events = [
+
+        {
+            id: 273,
+            title: "Museum Inauguration",
+            date: "June 2, 2015",
+            description: "Museum will finally open after 13 years!",
+            time: "10:30 AM"
+        },
+        {
+            id: 300,
+            title: "Speech - Zorali de Feria",
+            date: "June 2, 2015",
+            time: "1:00 PM"
+        },
+
+        {
+
+            id: 301,
+            title: "Social Activity",
+            date: "June 9, 2015",
+            time: "11:00 AM"
+        },
+        {
+            id: 303,
+            title: "Short Movie",
+            date: "June 9, 2015",
+            time: "3:00PM"
+        },
+        {
+            id: 305,
+            title:"Cafe Opening",
+            date: "June 11, 2015",
+            time: "8:3AM"
+        }
+
+    ];
+
+    return {
+
+        all: function() {
+            return events;
+        },
+        get: function(id)
+        {
+            for (var i = 0; i < events.length; i++) {
+                if (events[i].id === parseInt(id)) {
+                    return events[i];
+                }
+            }
+        },
+
+        getEventsToday: function()
+        {
+            /* Get today's date */
+            var today = "June 2, 2015";
+            var eventsToday = [];
+            for (var i = 0; i < events.length; i++) {
+                if (events[i].date == today) {
+                   eventsToday.push(events[i]);
+                }
+
+
+            }
+            return eventsToday;
+        },
+
+        getUpcomingEvents: function()
+        {
+            /* Get upcoming events */
+            var today = "June 2, 2015";
+            var upcomingEvents = [];
+            for (var i = 0; i < events.length; i++) {
+                if (events[i].date != today) {
+                    upcomingEvents.push(events[i]);
+                }
+            }
+            return upcomingEvents;
+        }
+
+
+    }
+});
