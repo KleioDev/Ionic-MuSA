@@ -21,23 +21,58 @@ angular.module('starter.controllers', [])
 
 
 //=================== Museum Tab Controllers ====================//
-    .controller('MuseumSegmentedControl', function($scope)
+
+
+    .controller('MuseumSegmentedControl', function($ionicViewService, $scope, $state, AppNavigationTitles, MuseumSegmentedControlService)
     {
-        this.museumState = [];
+        var museumTabState = MuseumSegmentedControlService;
+        $scope.navigationTitles = AppNavigationTitles.museum;
+        $scope.museumTabState = museumTabState.get();
+
+
+        $scope.museumGeneralView = function()
+        {
+            museumTabState.set("general");
+            $scope.museumTabState = museumTabState.get();
+
+        };
+
+        $scope.museumEventsView = function()
+        {
+            museumTabState.set("events");
+            $scope.museumTabState = museumTabState.get();
+
+        };
+
+        $scope.museumNewsView = function()
+        {
+            museumTabState.set("news");
+            $scope.museumTabState = museumTabState.get();
+        }
+
 
 
     })
 .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles)
 {
+    console.log("Activated");
     //Get the new data, HTTP Request
-
+    //$scope.$parent.museumCtrlDelegate = function()
+    //{
+    //
+    //    $scope.apply();
+    //};
+    $scope.generalState = $scope.$parent.generalState;
     $scope.navigationTitles = AppNavigationTitles.museum;
+
+
+
 
 
 
 })
 
-.controller('MuseumEventsCtrl', function($scope,  AppNavigationTitles, Events)
+.controller('MuseumEventsCtrl', function( $scope,  AppNavigationTitles, Events)
     {
 
 
@@ -47,13 +82,11 @@ angular.module('starter.controllers', [])
         $scope.eventsToday = Events.getEventsToday();
         $scope.upcomingEvents = Events.getUpcomingEvents();
 
-        $scope.go = function ( path ) {
-            $location.path( path );
-        };
     })
 
-.controller('MuseumNewsCtrl', function($scope,News)
+.controller('MuseumNewsCtrl', function($scope, AppNavigationTitles)
     {
+        $scope.navigationTitles = AppNavigationTitles.museum;
 
     })
 
@@ -70,3 +103,4 @@ angular.module('starter.controllers', [])
 
 
     });
+

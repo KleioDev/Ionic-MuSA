@@ -49,13 +49,6 @@ angular.module('starter.services', [])
   };
 })
 
-.factory('MuseumStateService', function()
-    {
-        this.museumState = [];
-
-
-
-    })
 .factory('AppNavigationTitles', function()
     {
 
@@ -150,6 +143,48 @@ angular.module('starter.services', [])
 //            return GeneralInfo;
 //        }
 //});
+    .factory('MuseumSegmentedControlService', function()
+    {
+
+        var segmentedControlState = {
+            "generalState": true,
+            "eventsState":false,
+            "newsState":false
+        };
+
+        return {
+            get :function(){ return segmentedControlState;},
+
+            set: function(state){
+
+                /* SHOULD BE A BETTER WAY OF DOING THIS */
+                if(state == "general")
+                {
+                    segmentedControlState.generalState = true;
+                    segmentedControlState.eventsState = false;
+                    segmentedControlState.newsState = false;
+
+                }
+                if(state == "events")
+                {
+                    segmentedControlState.generalState = false;
+                    segmentedControlState.eventsState = true;
+                    segmentedControlState.newsState = false;
+
+                }
+                if(state == "news")
+                {
+                    segmentedControlState.generalState = false;
+                    segmentedControlState.eventsState = false;
+                    segmentedControlState.newsState = true;
+
+                }
+
+            }
+
+        };
+
+    })
 
 .factory('Events', function()
 {
@@ -237,4 +272,20 @@ angular.module('starter.services', [])
 
 
     }
-});
+})
+
+.factory('News', function()
+    {
+        var news = [
+            {
+
+
+
+            }
+
+
+
+
+        ]
+
+    })

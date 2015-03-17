@@ -1,4 +1,10 @@
 
+March 16, 2015
+    -Found a way for segmented controllers using nested controllers
+    -Need to finish News View Template
+    -There's a bug that the whole template keeps loading and it shows like a bad view (have to fix this soon!)
+    -Need to write out events services (going to check out the DB first)
+
 March 14, 2015
     -Defined the navigation language labels
     -Started on templates
