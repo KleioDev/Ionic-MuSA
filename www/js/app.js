@@ -44,7 +44,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           {
               'tab-museum':{
 
-                  templateUrl: 'templates/segmented-control-museum.html',
+                  templateUrl: 'templates/tab-museum/segmented-control-museum.html',
                   controller: 'MuseumSegmentedControl'
               }
           }
@@ -53,7 +53,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     url: '/museum-general',
     views: {
       'tab-museum': {
-        templateUrl: 'templates/tab-museum-general.html',
+        templateUrl: 'templates/tab-museum/tab-museum-general.html',
         controller: 'MuseumGeneralCtrl'
       }
     }
@@ -67,7 +67,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       {
           'tab-museum':
           {
-              templateUrl: 'templates/tab-museum-events.html',
+              templateUrl: 'templates/tab-museum/tab-museum-events.html',
               controller: 'MuseumEventsCtrl'
           }
       }
@@ -80,7 +80,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
               'tab-museum':
               {
-                  templateUrl: 'templates/museum-single-event.html',
+                  templateUrl: 'templates/tab-museum/museum-single-event.html',
                   controller: 'MuseumSingleEventCtrl'
               }
           }
@@ -94,7 +94,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           views: {
               'tab-museum':
               {
-                  templateUrl: 'templates/single_news_article.html',
+                  templateUrl: 'templates/tab-museum/museum-single-news-article.html',
                   controller: 'MuseumSingleNewsCtrl'
               }
           }
