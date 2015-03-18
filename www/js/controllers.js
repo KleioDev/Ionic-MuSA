@@ -84,9 +84,12 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('MuseumNewsCtrl', function($scope, AppNavigationTitles)
+.controller('MuseumNewsCtrl', function($scope, AppNavigationTitles, News)
     {
         $scope.navigationTitles = AppNavigationTitles.museum;
+
+        $scope.currentNews = News.currentNews();
+        $scope.pastWeekNews = News.pastWeekNews();
 
     })
 
@@ -98,9 +101,9 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('MuseumSingleNewsCtrl', function($scope, $stateParams, News)
+.controller('MuseumSingleNewsCtrl', function($scope, $stateParams, AppNavigationTitles,News)
     {
-
+        $scope.news = News.get($stateParams.newsId);
 
     });
 

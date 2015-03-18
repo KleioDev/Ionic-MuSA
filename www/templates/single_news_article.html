@@ -1,0 +1,56 @@
+<ion-view view-title="Article">
+
+
+    <ion-content>
+
+        <h2 class="text-wrap padding" >{{news.title}} </h2>
+        <!--<div class="list card" type="item-text-wrap" >-->
+
+        <div class="padding-horizontal">
+        <p><strong>{{news.author}}</strong> | {{news.datetime.format('ll')}}</p>
+        </div>
+        <hr>
+
+        <br>
+        <!--<div class="row">-->
+            <!--<div class="col col-10"></div>-->
+            <!--<div class="col col-80">      -->  <img  class="padding" style="display: block;
+    margin-left: auto;
+    margin-right: auto" src="img/placeholder.png" width="60%" />
+<br>
+        <hr>
+    <div class="padding" ng-bind-html="news.content"></div>
+            <!--</div>-->
+            <!--<div class="col col-10"></div>-->
+            <!--&lt;!&ndash;ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">&ndash;&gt;-->
+
+            <!--<div class="item item-header item-icon-right">-->
+                <!--<h2> {{event.title}} </h2>-->
+                <!--&lt;!&ndash;<i class="icon ion-ios-arrow-right"></i>&ndash;&gt;-->
+                <!--<p>{{event.date}} {{event.time}}</p>-->
+            <!--</div>-->
+
+            <!--<div class="item item-body">-->
+                <!--<p>-->
+                    <!--{{event.description}}-->
+                <!--</p>-->
+            <!--</div>-->
+
+            <!--<div class="item tabs tabs-secondary  tabs-icon-left">-->
+                <!--<a class="tab-item">-->
+                    <!--<i class="icon ion-ios-plus-outline"></i>-->
+                    <!--Add to Calendar-->
+                <!--</a>-->
+
+            <!--</div>-->
+
+        <!--</div>-->
+
+
+
+
+
+    </ion-content>
+
+
+</ion-view>

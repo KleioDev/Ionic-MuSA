@@ -87,6 +87,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
       })
 
+      .state('tab.single_news_article',
+      {
+          url: '/museum-news/:newsId',
+
+          views: {
+              'tab-museum':
+              {
+                  templateUrl: 'templates/single_news_article.html',
+                  controller: 'MuseumSingleNewsCtrl'
+              }
+          }
+      })
+
 
   .state('tab.chats', {
       url: '/chats',
