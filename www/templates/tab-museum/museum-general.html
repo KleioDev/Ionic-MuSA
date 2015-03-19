@@ -1,0 +1,73 @@
+<div ng-show="museumTabState.generalState" >
+    <div id="museumGeneralTemplate" ng-controller="MuseumGeneralCtrl">
+
+        <img class="padding" src="img/musa_home.png" width="100%"/>
+
+        <ion-list>
+
+            <a class="item item-icon-left item-icon-right ion-accordion" ng-click="toggle('hoursOfOperation')" >
+                <i class="icon ion-ios-clock-outline"></i>
+                {{navigationTitles.general.hoursOfOperation}}
+                <i class="icon ion-ios-arrow-{{museumAccordionState.hoursOfOperation.arrow}}"></i>
+            </a>
+
+            <div ng-show="museumAccordionState.hoursOfOperation.show" class="text-wrapping padding">
+
+                <p> The museum is usually open on weekdays. </p>
+
+                <table cellpadding="1" cellspacing="1" style="width:100%">
+                    <tbody>
+                    <tr>
+                        <td><strong>Monday</strong></td>
+                        <td>8:30 AM - 5:30 PM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tuesday</strong></td>
+                        <td>8:30 AM - 5:30 PM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Wednesday</strong></td>
+                        <td>8:30 AM - 7:30 PM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thursday</strong></td>
+                        <td>8:30 AM - 5:30 PM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Friday</strong></td>
+                        <td>8:30 AM - 6:30 PM</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <p>&nbsp;</p>
+
+                </div>
+
+
+            <a class="item item-icon-left item-icon-right ion-accordion" ng-click="toggle('location')" ng-show="museumAccordionState.location" >
+                <i class="icon ion-ios-location-outline"></i>
+                {{navigationTitles.general.directions}}
+                <i class="icon ion-ios-arrow-{{museumAccordionState.location.arrow}}"></i>
+            </a>
+            <div ng-show="museumAccordionState.location.show" class="padding">
+
+                <p> Show  Location </p>
+            </div>
+
+
+            <a class="item item-icon-left item-icon-right ion-accordion" ng-click="toggle('links')" ng-show="museumAccordionState.links" >
+                <i class="icon ion-ios-browsers-outline"></i>
+                {{navigationTitles.general.links}}
+                <i class="icon ion-ios-arrow-{{museumAccordionState.links.arrow}}"></i>
+            </a>
+            <div ng-show="museumAccordionState.links.show" class="padding">
+
+                <p> Show Links </p>
+            </div>
+
+
+        </ion-list>
+
+    </div>
+</div>

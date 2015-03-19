@@ -29,6 +29,8 @@ angular.module('starter.controllers', [])
         $scope.navigationTitles = AppNavigationTitles.museum;
         $scope.museumTabState = museumTabState.get();
 
+
+
         /* Change segmented control state to general */
         $scope.museumGeneralView = function()
         {
@@ -53,18 +55,39 @@ angular.module('starter.controllers', [])
 
     })
 
-    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles)
+    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, MuseumGeneralAccordionState)
     {
+
+        var accordionState = MuseumGeneralAccordionState;
         $scope.generalState = $scope.$parent.generalState;
         $scope.navigationTitles = AppNavigationTitles.museum;
+        $scope.accordionStateArrows = "down";
+
+        $scope.accordionState = accordionState;
+        $scope.museumAccordionState = MuseumGeneralAccordionState.get();
+
+        $scope.toggle = function(tag)
+        {
+
+                $scope.accordionState.toggle(tag);
+
+        }
+
+
 
     })
 
-    .controller('MuseumEventsCtrl', function( $scope,  AppNavigationTitles, Events)
+    .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events)
     {
         $scope.navigationTitles = AppNavigationTitles.museum;
         $scope.eventsToday = Events.getEventsToday();
         $scope.upcomingEvents = Events.getUpcomingEvents();
+
+
+        $scope.openEvent = function(eventId)
+        {
+            $state.go('tab.museum-events-single', {eventId: eventId});
+        }
 
     })
 
@@ -76,10 +99,38 @@ angular.module('starter.controllers', [])
 
     })
 
-    .controller('MuseumSingleEventCtrl', function($scope, $stateParams, AppNavigationTitles, Events)
+    .controller('MuseumSingleEventCtrl', function($scope, $stateParams, AppNavigationTitles, Events, $ionicPopup)
     {
         $scope.navigationTitles = AppNavigationTitles.museum.eventsSingle;
         $scope.event = Events.get($stateParams.eventId);
+
+        /* Handle pop up */
+        $scope.addToCalendar = function(event) {
+
+            console.log(event);
+            var confirmPopup = $ionicPopup.confirm({
+
+                title: 'Add Event To Calendar?',
+                template: '<strong>'+event.title+'</strong>'
+                        + '<p>'+event.datetime.format('lll')+'</p>'
+
+            });
+
+            confirmPopup.then(function(res)
+            {
+                if(res)
+                {   //Add event to calendar!
+                    console.log('Yes');
+                }
+                else{
+
+                    //NO
+                    console.log('No');
+                }
+
+            });
+
+        }
 
     })
 

@@ -1,140 +1,29 @@
-<ion-view>
-<ion-content >
+<ion-view view-title="General">
+<ion-content  ng-cloak >
 
     <div class="button-bar padding" >
 
-    <a class="button segmented-control" ng-click="museumGeneralView()" ng-class="{'active' : museumTabState.generalState}">{{navigationTitles.buttonBar.generalButton}}</a>
-    <a class="button segmented-control" ng-click="museumEventsView()" ng-class="{'active' : museumTabState.eventsState}">{{navigationTitles.buttonBar.eventsButton}}</a>
-    <a class="button segmented-control" ng-click="museumNewsView()" ng-class="{'active' : museumTabState.newsState}">{{navigationTitles.buttonBar.newsButton}}</a>
+        <a class="button segmented-control" ng-click="museumGeneralView()" ng-class="{'active' : museumTabState.generalState}">{{navigationTitles.buttonBar.generalButton}}</a>
+        <a class="button segmented-control" ng-click="museumEventsView()" ng-class="{'active' : museumTabState.eventsState}">{{navigationTitles.buttonBar.eventsButton}}</a>
+        <a class="button segmented-control" ng-click="museumNewsView()" ng-class="{'active' : museumTabState.newsState}">{{navigationTitles.buttonBar.newsButton}}</a>
 
-</div>
-
+    </div>
 
     <!--  Museum General Template -->
-    <div ng-show="museumTabState.generalState" >
-    <div id="museumGeneralTemplate" ng-controller="MuseumGeneralCtrl">
-
-        <img class="padding" src="img/musa_home.png" height="100%"/>
-
-        <ion-list>
-
-            <a class="item item-icon-left item-icon-right ion-accordion" href="#">
-                <i class="icon ion-ios-clock-outline"></i>
-                {{navigationTitles.general.hoursOfOperation}}
-                <i class="icon ion-ios-arrow-down"></i>
-            </a>
-
-
-            <a class="item item-icon-left item-icon-right ion-accordion" href="#">
-                <i class="icon ion-ios-location-outline"></i>
-                {{navigationTitles.general.directions}}
-                <i class="icon ion-ios-arrow-down"></i>
-            </a>
-
-            <a class="item item-icon-left item-icon-right ion-accordion" href="#">
-                <i class="icon ion-ios-browsers-outline"></i>
-                {{navigationTitles.general.links}}
-                <i class="icon ion-ios-arrow-down"></i>
-            </a>
-
-        </ion-list>
+    <div ng-show="museumTabState.generalState"  museum-general-dir >
 
     </div>
-    </div>
-
-
 
     <!-- Museum Events Template -->
-    <div ng-show="museumTabState.eventsState" {{museumTabState.eventsState ? show : hidden}}>
-
-    <div id="museumEventsTemplate" ng-controller="MuseumEventsCtrl" class="padding">
-    <div class="item item-divider">
-        {{navigationTitles.events.navHappeningToday}}
-    </div>
-
-    <div class="list card event-card" ng-repeat="event in eventsToday" type="item-text-wrap" >
-        <div class="item item-header item-icon-right">
-            <h2> {{event.title}}</h2>
-            <i class="icon ion-ios-arrow-right"></i>
-
-        </div>
-
-
-        <div class="item tabs tabs-secondary">
-            <a class="tab-item"  href="#/tab/museum-events/{{event.id}}">
-                {{event.datetime.format('ll')}}                 </a>
-            <a class="tab-item" href="#">
-                {{event.datetime.format('h:mm A')}}
-            </a>
-
-        </div>
+    <div ng-show="museumTabState.eventsState" museum-events-dir>
 
     </div>
 
+    <!--  Museum News Template -->
+    <div ng-show="museumTabState.newsState"  museum-news-dir>
 
-    <div class="item item-divider">
-        {{ navigationTitles.events.navUpcomingToday}}
     </div>
 
+</ion-content>
 
-    <div class="list card"  ng-repeat="event in upcomingEvents" type="item-text-wrap">
-
-        <div class="item item-header item-icon-right">
-            <h2> {{event.title}}</h2>
-            <i class="icon ion-ios-arrow-right"></i>
-
-        </div>
-
-
-        <div class="item tabs tabs-secondary">
-            <a class="tab-item" href="#/tab/museum-events/{{event.id}}">
-                {{event.datetime.format('ll')}}                 </a>
-            <a class="tab-item" href="#">
-                {{event.datetime.format('h:mm A')}}
-            </a>
-
-        </div>
-
-
-</div>
-
-
-
-</div>
-        </div>
-
-    <div ng-show="museumTabState.newsState"  {{museumTabState.newsState ? show : hidden}}>
-        <div id="" ng-controller="MuseumNewsCtrl" >
-
-        <div class="item item-divider">
-            {{navigationTitles.news.recentNewsLabel}}
-        </div>
-
-        <div class="list" >
-
-            <a class="item item-thumbnail-left  item-icon-right" ng-repeat="news in currentNews" type="item-text-wrap"  href="#/tab/museum-news/{{news.id}}">
-                <img src="img/placeholder.png">
-                <h2>{{news.title}}</h2>
-                <p>{{news.author}}</p>
-                <p>{{news.datetime.format('lll')}}</p>
-                <i class="icon ion-ios-arrow-right"></i>
-            </a>
-
-                  </div>
-
-        <div class="item item-divider">
-            {{navigationTitles.news.lastNewsLabel}}
-        </div>
-
-            <a class="item item-thumbnail-left  item-icon-right" ng-repeat="news in pastWeekNews" type="item-text-wrap" href="#/tab/museum-news/{{news.id}}">
-                <img src="img/placeholder.png">
-                <h2>{{news.title}}</h2>
-                <p>{{news.author}}</p>
-                <p>{{news.datetime.format('lll')}}</p>
-                <i class="icon ion-ios-arrow-right"></i>
-            </a>
-
-        </div>
-    </div>
-
-</ion-content></ion-view>
+</ion-view>

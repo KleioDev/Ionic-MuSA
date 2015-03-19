@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('museum-services', [])
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
@@ -69,7 +69,7 @@ angular.module('starter.services', [])
                 "general": {
 
                     "hoursOfOperation": (lang == "ENGLISH") ? "Hours of Operation" : "Horario",
-                    "directions": "Directions",
+                    "directions": "Location",
                     "links": "Links"
 
                 },
@@ -86,7 +86,8 @@ angular.module('starter.services', [])
                     "eventDateLabel": "Date",
                     "eventTimeLabel": "Time",
                     "eventLocationLabel": "Location",
-                    "descriptionLabel": "Description"
+                    "descriptionLabel": "Description",
+                    "addToCalendarLabel": "Add To Calendar"
                 },
 
                 "news":
@@ -126,26 +127,8 @@ angular.module('starter.services', [])
 
 //=================== Museum Services ====================//
 
-//.factory('GeneralInfo', function($http){
-//        {
-//            var GeneralInfo = {};
-//
-//            GeneralInfo.get = function (applicationId, callback) {
-//
-//                //$http.get(/* Museum Route goes Here */).success(function(data)
-//                //{
-//                //
-//                //    callback(data);
-//                //})
-//
-//            };
-//
-//            return GeneralInfo;
-//        }
-//});
     .factory('MuseumSegmentedControlService', function()
     {
-
         var segmentedControlState = {
             "generalState": true,
             "eventsState":false,
@@ -153,7 +136,10 @@ angular.module('starter.services', [])
         };
 
         return {
-            get :function(){ return segmentedControlState;},
+            get :function(){
+
+                return segmentedControlState;
+            },
 
             set: function(state){
 
@@ -186,6 +172,68 @@ angular.module('starter.services', [])
 
     })
 
+    //TODO: Museum- Setup ajax HTTP Request functionality
+
+    .factory('MuseumGeneralAccordionState', function()
+    {
+
+        var museumAccordionState = {
+
+            "hoursOfOperation": {
+                "show": false,
+                "arrow": "down"
+            },
+            "location":{
+                "show": false,
+                "arrow": "down"
+            },
+            "links":{
+                "show": false,
+                "arrow": "down"
+            }
+        };
+
+        var arrowDirection = function(bool)
+        {
+            if(bool)
+                return "up";
+            else
+                return "down";
+
+        };
+
+        return {
+
+            get: function()
+            {
+                return museumAccordionState;
+            },
+            toggle: function(state)
+            {
+                if(state == "hoursOfOperation")
+                {
+                    museumAccordionState.hoursOfOperation.show = !museumAccordionState.hoursOfOperation.show;
+                    museumAccordionState.hoursOfOperation.arrow =  arrowDirection(museumAccordionState.hoursOfOperation.show);
+
+
+                }
+                if(state == "location")
+                {
+                    museumAccordionState.location.show = !museumAccordionState.location.show;
+                    museumAccordionState.location.arrow = arrowDirection(museumAccordionState.location.show);
+                }
+                if(state == "links")
+                {
+                    museumAccordionState.links.show = !museumAccordionState.links.show ;
+                    museumAccordionState.links.arrow =  arrowDirection(museumAccordionState.links.show);
+
+                }
+
+            }
+
+        }
+    })
+    //TODO: Events- Setup ajax HTTP Request functionality
 .factory('Events', function()
 {
 
@@ -250,7 +298,7 @@ angular.module('starter.services', [])
             var eventsToday = [];
             for (var i = 0; i < events.length; i++)
             {
-                console.log(events[i].datetime.diff(currentDate));
+                //console.log(events[i].datetime.diff(currentDate));
                 if (events[i].datetime.diff(currentDate,'days') == 0)
                 {
                    eventsToday.push(events[i]);
@@ -277,6 +325,7 @@ angular.module('starter.services', [])
 })
 
 
+    //TODO: News - Setup ajax HTTP Request functionality
 
 .factory('News', function()
     {

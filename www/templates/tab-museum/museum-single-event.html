@@ -1,4 +1,4 @@
-<ion-view view-title="Event">
+<ion-view view-title="{{navigationTitles.titleLabel}}">
 
 
     <ion-content class="padding">
@@ -11,7 +11,8 @@
             <div class="item item-header item-icon-right">
                 <h2> {{event.title}} </h2>
                 <!--<i class="icon ion-ios-arrow-right"></i>-->
-                <p>{{event.date}} {{event.time}}</p>
+                <p><strong>{{navigationTitles.eventDateLabel}}: </strong>{{event.datetime.format('ll')}}</p>
+                <p><strong>{{navigationTitles.eventTimeLabel}}: </strong>{{event.datetime.format('h:mm A')}}</p>
             </div>
 
             <div class="item item-body">
@@ -20,10 +21,10 @@
                 </p>
             </div>
 
-            <div class="item tabs tabs-secondary  tabs-icon-left">
+            <div class="item tabs tabs-secondary  tabs-icon-left" ng-click="addToCalendar(event)">
                 <a class="tab-item">
                     <i class="icon ion-ios-plus-outline"></i>
-                        Add to Calendar
+                   {{navigationTitles.addToCalendarLabel}}
                 </a>
 
             </div>
