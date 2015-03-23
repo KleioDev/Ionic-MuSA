@@ -5,12 +5,10 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in museum-services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'museum-services','starter.directives'])
+angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'exhibition-services', 'app-services','starter.directives'])
 
 .run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
-
-
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -66,9 +64,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services','st
 
       .state('tab.museum-events-single',
       {
-            url:'/museum-events/:eventId',
-          views:{
-
+          url:'/museum-events/:eventId',
+          views:
+          {
               'tab-museum':
               {
                   templateUrl: 'templates/tab-museum/museum-single-event.html',
@@ -92,15 +90,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services','st
       })
 
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.collection', {
+          cache: true,
+      url: '/tab-collection/collection',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+
+        'tab-collection': {
+          templateUrl: 'templates/tab-collection/collection.html',
+          controller: 'ExhibitionSegmentedCtrl'
         }
       }
     })
+
+      .state('tab.collection-single-object',{
+          url: '/collection/objects/:objectId',
+          views:
+          {
+              'tab-collection':{
+                  templateUrl: 'templates/tab-collection/collection-single-object.html',
+                  controller: 'ObjectViewCtrl'
+              }
+          }
+      })
     .state('tab.chat-detail', {
       url: '/chats/:chatId',
       views: {
@@ -120,7 +131,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services','st
       }
     }
   });
-
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/museum-segmented-control');

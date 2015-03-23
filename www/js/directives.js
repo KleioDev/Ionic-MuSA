@@ -23,4 +23,28 @@ angular.module('starter.directives', [])
         return{
             templateUrl: 'templates/tab-museum/museum-news.html'
         }
+    })
+
+
+.directive('collectionNearMeDir', function()
+    {
+        return {
+            templateUrl: 'templates/tab-collection/collection-nearme.html'
+        }
+    })
+
+.directive('collectionObjectsDir', function()
+    {
+        return{
+            templateUrl: 'templates/tab-collection/collection-objects.html'
+
+        }
+    })
+
+.directive('collectionExhibitionsDir', function()
+    {
+        return{
+            templateUrl: 'templates/tab-collection/collection-exhibitions.html'
+
+        }
     });

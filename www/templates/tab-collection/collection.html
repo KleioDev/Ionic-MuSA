@@ -1,0 +1,29 @@
+<ion-view view-title="Collection">
+    <ion-content >
+
+        <div class="button-bar padding" >
+
+            <a class="button segmented-control" ng-click="nearMeView()" ng-class="{'active' : segmentedControl.nearMeState}">{{navigationTitles.buttonBar.nearMeButton}}</a>
+            <a class="button segmented-control" ng-click="objectsView()" ng-class="{'active' : segmentedControl.objectsState}">{{navigationTitles.buttonBar.objectsButton}}</a>
+            <a class="button segmented-control" ng-click="exhibitionsView()" ng-class="{'active' : segmentedControl.exhibitionsState}">{{navigationTitles.buttonBar.exhibitionsButton}}</a>
+
+        </div>
+
+        <!--  Near Me List Template -->
+        <div ng-show="segmentedControl.nearMeState"  id="nearMeTemplate" collection-near-me-dir >
+
+        </div>
+
+        <!-- Objects List Template -->
+        <div ng-show="segmentedControl.objectsState" id="objectsListTemplate" collection-objects-dir>
+
+        </div>
+
+        <!--  Exhibitions List Template -->
+        <div ng-show="segmentedControl.exhibitionsState"  id="exhibitionsListTemplate" collection-exhibitions-dir>
+
+        </div>
+
+    </ion-content>
+
+</ion-view>

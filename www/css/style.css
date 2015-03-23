@@ -4,3 +4,46 @@
 {
     color:white;
 }
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.landscape-box{
+    width: 40%;
+
+}
+
+.scroll-content {
+
+    background: url("https://raw.githubusercontent.com/joframart/LlamaBucket/master/images/bg/brushed_alu.png");
+}
+
+.fullscreen-image {
+    max-width: 100%;
+    max-height: 100%;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    opacity: 1;
+
+
+}
+
+.transparent {
+    background: black !important;
+    opacity: 0.8;
+
+
+}
+.image-modal {
+    width: 100% !important;
+    height: 100%;
+    top: 0 !important;
+    left: 0 !important;
+    opacity:1;
+}

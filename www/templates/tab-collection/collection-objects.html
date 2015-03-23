@@ -1,0 +1,21 @@
+<div ng-controller="CollectionObjectListCtrl">
+<div class="list list-inset">
+    <label class="item item-input">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input ng-model="searchTerm" type="text" placeholder="Search by Author or Object Title">
+    </label>
+</div>
+
+<div class="list">
+
+    <a class="item item-thumbnail-left item-icon-right" ng-repeat="object in museumObjects | filter:searchTerm" type="item-text-wrap" href="#/tab/collection/objects/{{object.id}}">
+        <img src="img/placeholder.png"/>
+        <h2>{{object.title}}</h2>
+        <p>{{object.author}}</p>
+        <i class="icon ion-ios-arrow-right"></i>
+
+    </a>
+
+
+</div>
+</div>

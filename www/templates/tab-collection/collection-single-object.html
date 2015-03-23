@@ -1,0 +1,83 @@
+<!-- This page will represent an object -->
+<ion-view view-title="MuSA">
+    <ion-content>
+        <div class="padding">
+        <h2>{{museumObject.title}}</h2>
+            <p>{{museumObject.author}}</p>
+            <p>{{museumObject.date_published}}</p>
+            <!--<div class="row">-->
+
+                <!--<div class="col">        <p>{{museumObject.author}}</p>-->
+                <!--</div>-->
+                <!--<div class="col"></div>-->
+                <!--<div class="col">June 3, 1950</div>-->
+            <!--</div>-->
+
+        </div>
+    <hr>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col col-90 portrait-box">
+                <img  ng-click="showImage()" src="{{museumObject.img_href}}">
+            </div>
+            <div class="col"></div>
+        </div>
+
+
+
+        <!--<div class="landscape-box">-->
+            <!--<img  class="padding"  src="https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xfa1/v/t1.0-9/10155300_385132964962924_6251655960579980408_n.jpg?oh=8d05c0ea341a3930dda08721b6568a6b&oe=557F12D5&__gda__=1434123747_c9bb1dc774ccc4addb5e2d9f05d4e4f6" width="100%" />-->
+
+        <!--</div>-->
+        <!-- If audio content available show the option -->
+        <div ng-switch="museumObject.mainAudioAvailable">
+        <div ng-switch-when="true" class="list padding">
+            <a class="item item-icon-left " href="#">
+                <i class="icon ion-headphone"></i>
+                Listen!
+            </a>
+            </div>
+
+            <div ng-switch-default></div>
+
+        </div>
+
+
+        <!-- Description -->
+        <div class="padding text-wrapping">
+        <h2>Description</h2>
+
+        <p>{{museumObject.description | limitTo:200}} ...</p>
+
+
+            <div class="row">
+
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col" style="color: blue;"><button class="button button-clear button-positive">
+                    Read More!
+                </button></div>
+
+            </div>
+        </div>
+
+        <!-- Choice -->
+
+
+
+
+
+        <!-- Extra content -->
+
+
+        <script id="image-modal.html" type="text/ng-template">
+            <div class="modal image-modal transparent" ng-click="closeModal()">
+                <ion-pane class="transparent">
+                    <img ng-src="{{museumObject.img_href}}" class="fullscreen-image"/>
+                </ion-pane>
+            </div>
+        </script>
+
+
+    </ion-content>
+</ion-view>

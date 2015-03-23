@@ -23,12 +23,11 @@ angular.module('starter.controllers', [])
 //=================== Museum Tab Controllers ====================//
 
 
-    .controller('MuseumSegmentedControl', function($ionicViewService, $scope, $state, AppNavigationTitles, MuseumSegmentedControlService)
+    .controller('MuseumSegmentedControl', function( $scope, AppNavigationTitles, MuseumSegmentedControlService)
     {
         var museumTabState = MuseumSegmentedControlService;
         $scope.navigationTitles = AppNavigationTitles.museum;
         $scope.museumTabState = museumTabState.get();
-
 
 
         /* Change segmented control state to general */
@@ -61,7 +60,6 @@ angular.module('starter.controllers', [])
         var accordionState = MuseumGeneralAccordionState;
         $scope.generalState = $scope.$parent.generalState;
         $scope.navigationTitles = AppNavigationTitles.museum;
-        $scope.accordionStateArrows = "down";
 
         $scope.accordionState = accordionState;
         $scope.museumAccordionState = MuseumGeneralAccordionState.get();
@@ -71,7 +69,11 @@ angular.module('starter.controllers', [])
 
                 $scope.accordionState.toggle(tag);
 
-        }
+        };
+        $scope.openBottomSheet = function() {
+            $mdBottomSheet.show({
+                template: '<md-bottom-sheet>Hello!</md-bottom-sheet>'
+            })}
 
 
 
@@ -137,7 +139,90 @@ angular.module('starter.controllers', [])
     .controller('MuseumSingleNewsCtrl', function($scope, $stateParams, AppNavigationTitles,News)
     {
         $scope.navigationTitles = AppNavigationTitles.museum.newsSingle;
+        console.log($stateParams.newsId);
         $scope.news = News.get($stateParams.newsId);
 
+    })
+
+//=================== Exhibition Tab Controllers ====================//
+
+.controller('ExhibitionSegmentedCtrl', function($scope, AppNavigationTitles, ExhibitionSegmentedControlState)
+{
+    var segmentedControlState = ExhibitionSegmentedControlState;
+
+    $scope.navigationTitles = AppNavigationTitles.collection;
+
+    $scope.segmentedControl = segmentedControlState.get();
+
+    /* Change segmented control state to Near Me */
+    $scope.nearMeView = function()
+    {
+        segmentedControlState.set("nearMeState");
+        $scope.museumTabState = segmentedControlState.get();
+    };
+
+    /* Change segmented control state to Objects */
+    $scope.objectsView = function()
+    {
+        segmentedControlState.set("objectsState");
+        $scope.museumTabState = segmentedControlState.get();
+    };
+
+    /* Change segmented control state to Exhibitions */
+    $scope.exhibitionsView = function()
+    {
+        segmentedControlState.set("exhibitionsState");
+        $scope.museumTabState = segmentedControlState.get();
+    }
+
+})
+
+.controller('CollectionObjectListCtrl', function($scope, AppNavigationTitles, MuseumObjects){
+
+    $scope.museumObjects = MuseumObjects.all();
+    })
+
+.controller('ObjectViewCtrl', function($scope, MuseumObjects, $stateParams, $ionicModal)
+{
+
+    $ionicModal.fromTemplateUrl('image-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
     });
 
+    $scope.openModal = function() {
+        $scope.modal.show();
+    };
+
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hide', function() {
+        // Execute action
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+        // Execute action
+    });
+    $scope.$on('modal.shown', function() {
+        console.log('Modal is shown!');
+    });
+
+    console.log($stateParams.objectId);
+    $scope.museumObject = MuseumObjects.get($stateParams.objectId);
+    $scope.showImage = function(index) {
+        $scope.imageSrc  = 'http://ionicframework.com/img/homepage/phones-weather-demo@2x.png';
+        $scope.openModal()
+
+
+    }
+
+});
