@@ -3,6 +3,8 @@ angular.module('app-services', [])
     .factory('AppNavigationTitles', function()
 {
 
+
+
     var lang = "ENGLISH";
     var navigationTitles =
     {
@@ -59,6 +61,16 @@ angular.module('app-services', [])
                 "nearMeButton": "Near Me",
                 "objectsButton": "Objects",
                 "exhibitionsButton": "Exhibitions"
+            },
+
+            "singleObject":
+            {
+                "readMoreLabel": "Read More",
+                "listenLabel": "Listen!",
+                "videosLabel": "Videos",
+                "archivesLabel": "Archives",
+                "audioLabel": "Recordings",
+                "imagesLabel":  "Images"
             }
 
 

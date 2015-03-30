@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngCordova'])
 
     .controller('DashCtrl', function($scope) {})
 
@@ -56,7 +56,7 @@ angular.module('starter.controllers', [])
 
     .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, MuseumGeneralAccordionState)
     {
-
+        //TODO: Links and Maps
         var accordionState = MuseumGeneralAccordionState;
         $scope.generalState = $scope.$parent.generalState;
         $scope.navigationTitles = AppNavigationTitles.museum;
@@ -182,18 +182,19 @@ angular.module('starter.controllers', [])
     $scope.museumObjects = MuseumObjects.all();
     })
 
-.controller('ObjectViewCtrl', function($scope, MuseumObjects, $stateParams, $ionicModal)
+.controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Media, Audio, Video)
 {
 
-    $ionicModal.fromTemplateUrl('image-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function(modal) {
-        $scope.modal = modal;
-    });
+     $scope.openModal = function(template) {
 
-    $scope.openModal = function() {
-        $scope.modal.show();
+        $ionicModal.fromTemplateUrl(template, {
+            scope: $scope,
+            animation: 'slide-in-right'
+        }).then(function(modal) {
+            $scope.modal = modal;
+            $scope.modal.show();
+
+        });
     };
 
     $scope.closeModal = function() {
@@ -215,14 +216,127 @@ angular.module('starter.controllers', [])
     $scope.$on('modal.shown', function() {
         console.log('Modal is shown!');
     });
+    /* Set up app navigation titles */
+    $scope.navigationTitles = AppNavigationTitles;
 
-    console.log($stateParams.objectId);
+    /* Get the object */
     $scope.museumObject = MuseumObjects.get($stateParams.objectId);
+    //Load image view
+
+    //Load audio if available
+
+    /* If user clicks on the listen to an audio */
+
+    $scope.playAudio = function(audio_id)
+    {
+        /* Get audio link from Media Service */
+
+        var audio_object = Media.get(audio_id);
+
+        /* Setup the Audio Stream */
+
+        //var audio = Audio.setup(src, readyPlay, notFound)
+
+        //function readyPlay()
+        //{
+        //    //$scope.change state
+        //}
+
+        //function notFound()
+        //{
+        //  Show audio can't be played at this moment
+        //}
+    };
+
+    $scope.visible = function(length)
+    {
+        if(length == 0) return "N/A";
+
+        if(length == 1) return "SINGLE";
+
+        if(length > 1) return "MULTIPLE";
+    };
+
+    $scope.playVideo = function(videoId)
+    {
+        /* Loading */
+        /* Get video link from Media service */
+        var video = Media.get(videoId);
+
+        /* Play Video */
+
+        Video.set(video);
+
+        $state.go('tab.video-view');
+    };
+
+    $scope.displayArchive = function(archiveId)
+    {
+        /* Archive Text */
+        var archive = Media.get(archiveId);
+
+        /* Display Archive */
+
+    };
+
+
+    $scope.showVideos = function()
+    {
+        /* Open up modal */
+        $scope.openModal('video-list-modal.html');
+
+
+    };
+
+
+    $scope.showArchives = function()
+    {
+        /* Show Archives */
+        $scope.openModal('archives-list-modal.html');
+
+    };
+    $scope.showAudio = function()
+    {
+        /* Open up modal */
+        $scope.openModal('audio-list-modal.html');
+
+    };
+
+    $scope.doSomething = function() {
+        console.log("Playing");
+    };
+    $scope.showImages = function()
+    {
+
+    };
     $scope.showImage = function(index) {
         $scope.imageSrc  = 'http://ionicframework.com/img/homepage/phones-weather-demo@2x.png';
-        $scope.openModal()
+        $scope.openModal('image-modal.html')
 
 
     }
 
-});
+
+
+
+
+
+
+})
+
+.controller('AudioViewCtrl', function($scope, Audio)
+    {
+
+    })
+
+.controller('VideoViewCtrl', function($scope,$sce,Video)
+    {
+        $scope.video = Video.get();
+
+        $scope.trustSrc = function(src)
+        {
+            return $sce.trustAsResourceUrl(src);
+        }
+
+
+    });

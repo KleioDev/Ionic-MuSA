@@ -47,4 +47,11 @@ angular.module('starter.directives', [])
             templateUrl: 'templates/tab-collection/collection-exhibitions.html'
 
         }
+    })
+
+.directive('audioViewDir', function()
+    {
+        return{
+            templateUrl: 'templates/tab-collection/audio-view.html'
+        }
     });

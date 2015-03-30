@@ -19,6 +19,14 @@ img {
     background: url("https://raw.githubusercontent.com/joframart/LlamaBucket/master/images/bg/brushed_alu.png");
 }
 
+.thumb {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border: 3px solid #C6C6C6;
+    background-position: center center;
+    background-size: cover;
+}
 .fullscreen-image {
     max-width: 100%;
     max-height: 100%;
@@ -47,3 +55,55 @@ img {
     left: 0 !important;
     opacity:1;
 }
+
+.square-img-div
+{
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    margin: 10px;
+    position: relative;
+}
+
+.square-img {
+    position:absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.audio_view:before,
+.audio_view{
+    font-size: 50px !important;
+display:block !important;
+}
+
+.audio_view_col{
+    text-align: center;
+}
+
+.audio_view_container{
+    width: auto !important;
+    max-height: 100% !important;
+}
+
+/* http://forum.ionicframework.com/t/slide-in-right-animation-for-ionicmodal/18882 */
+.slide-in-right {
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%); }
+
+.slide-in-right.ng-enter, .slide-in-right > .ng-enter {
+    -webkit-transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms;
+    transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms; }
+
+.slide-in-right.ng-enter-active, .slide-in-right > .ng-enter-active {
+    -webkit-transform: translateX(0);
+    transform: translateX(0); }
+
+.slide-in-right.ng-leave, .slide-in-right > .ng-leave {
+    -webkit-transition: all ease-in-out 250ms;
+    transition: all ease-in-out 250ms; }

@@ -2,19 +2,19 @@
 <ion-view view-title="MuSA">
     <ion-content>
         <div class="padding">
-        <h2>{{museumObject.title}}</h2>
+            <h2>{{museumObject.title}}</h2>
             <p>{{museumObject.author}}</p>
             <p>{{museumObject.date_published}}</p>
             <!--<div class="row">-->
 
-                <!--<div class="col">        <p>{{museumObject.author}}</p>-->
-                <!--</div>-->
-                <!--<div class="col"></div>-->
-                <!--<div class="col">June 3, 1950</div>-->
+            <!--<div class="col">        <p>{{museumObject.author}}</p>-->
+            <!--</div>-->
+            <!--<div class="col"></div>-->
+            <!--<div class="col">June 3, 1950</div>-->
             <!--</div>-->
 
         </div>
-    <hr>
+        <hr>
         <div class="row">
             <div class="col"></div>
             <div class="col col-90 portrait-box">
@@ -26,16 +26,16 @@
 
 
         <!--<div class="landscape-box">-->
-            <!--<img  class="padding"  src="https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xfa1/v/t1.0-9/10155300_385132964962924_6251655960579980408_n.jpg?oh=8d05c0ea341a3930dda08721b6568a6b&oe=557F12D5&__gda__=1434123747_c9bb1dc774ccc4addb5e2d9f05d4e4f6" width="100%" />-->
+        <!--<img  class="padding"  src="https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xfa1/v/t1.0-9/10155300_385132964962924_6251655960579980408_n.jpg?oh=8d05c0ea341a3930dda08721b6568a6b&oe=557F12D5&__gda__=1434123747_c9bb1dc774ccc4addb5e2d9f05d4e4f6" width="100%" />-->
 
         <!--</div>-->
         <!-- If audio content available show the option -->
         <div ng-switch="museumObject.mainAudioAvailable">
-        <div ng-switch-when="true" class="list padding">
-            <a class="item item-icon-left " href="#">
-                <i class="icon ion-headphone"></i>
-                Listen!
-            </a>
+            <div ng-switch-when="true" class="list padding">
+                <a class="item item-icon-left " ng-click="checkIfAudioAvailable(museumObject.mainAudioId)">
+                    <i class="icon ion-headphone"></i>
+                    Listen!
+                </a>
             </div>
 
             <div ng-switch-default></div>
@@ -45,9 +45,9 @@
 
         <!-- Description -->
         <div class="padding text-wrapping">
-        <h2>Description</h2>
+            <h4>Description</h4>
 
-        <p>{{museumObject.description | limitTo:200}} ...</p>
+            <p>{{museumObject.description | limitTo:200}} ...</p>
 
 
             <div class="row">
@@ -67,8 +67,157 @@
 
 
 
-        <!-- Extra content -->
 
+
+        <!-- Extra content -->
+        <div class="list ">
+
+
+            <!-- Archives Switch -->
+            <div ng-switch="visible(museumObject.archives.length)">
+                <div ng-switch-when="SINGLE">
+                    <!-- Only 1 text file -->
+                    <a class="item item-icon-left item-icon-right" href="#">
+                        <i class="icon ion-document-text"></i>
+                        {{museumObject.archives[0].title}}
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+                <div ng-switch-when="MULTIPLE" ng-click="showArchives()">
+                    <!-- Multiple archives -->
+
+                    <a class="item item-icon-left item-icon-right" href="#">
+                        <i class="icon ion-document-text"></i>
+
+                        {{navigationTitles.collection.singleObject.archivesLabel}}
+                        <span class="item-note">
+                                {{museumObject.archives.length}}
+                        </span>
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+                </div>
+                <div ng-switch-default>
+
+                </div>
+
+            </div>
+
+            <!-- Audio Switch -->
+            <div ng-switch="visible(museumObject.audio.length)">
+                <div ng-switch-when="SINGLE" >
+                    <!-- Only 1 audio file -->
+                    <a class="item item-icon-left item-icon-right" href="#">
+                        <i class="icon ion-headphone"></i>
+                        {{museumObject.audio[0].title}}
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+                </div>
+
+                <div ng-switch-when="MULTIPLE" ng-click="showAudio()">
+                    <!-- Multiple audio files -->
+
+                    <a class="item item-icon-left item-icon-right" href="#">
+                        <i class="icon ion-headphone"></i>
+
+                        {{navigationTitles.collection.singleObject.audioLabel}}
+                        <span class="item-note">
+                            {{museumObject.audio.length}}
+                        </span>
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+                </div>
+
+
+                <div ng-switch-default>
+
+                </div>
+
+            </div>
+
+
+            <!-- Videos NG-Switch -->
+
+            <div ng-switch="visible(museumObject.videos.length)">
+                <div ng-switch-when="SINGLE" ng-click="playVideo(museumObject.videos[0].id)" >
+                    <!-- Only 1 text file -->
+                    <a class="item item-icon-left item-icon-right" >
+                        <i class="icon ion-social-youtube"></i>
+                        {{museumObject.videos[0].title}}
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+                </div>
+
+                <div ng-switch-when="MULTIPLE" ng-click="showVideos()">
+                    <!-- Multiple videos -->
+
+                    <a class="item item-icon-left item-icon-right" >
+                        <i class="icon ion-social-youtube"></i>
+
+                        {{navigationTitles.collection.singleObject.videosLabel}}
+                        <span class="item-note">
+                            {{museumObject.videos.length}}
+                        </span>
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+                </div>
+
+                <div ng-switch-default>
+
+                </div>
+
+            </div>
+
+            <!-- Images switch -->
+
+            <div ng-switch="visible(museumObject.images.length)">
+                <div ng-switch-when="SINGLE" >
+                    <!-- Only 1 image -->
+                    <!-- Only 1 text file -->
+                    <a class="item item-icon-left item-icon-right" href="#">
+                        <i class="icon ion-image"></i>
+                        {{museumObject.image[0].title}}
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+                <div ng-switch-when="MULTIPLE">
+
+                    <!-- Multiple images -->
+                    <a class="item item-icon-left item-icon-right" href="#">
+                        <i class="icon ion-images"></i>
+
+                        {{navigationTitles.collection.singleObject.imagesLabel}}
+                        <span class="item-note">
+                            {{museumObject.images.length}}
+                        </span>
+                        <i class="icon ion-ios-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+                <div ng-switch-default>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+        <!-- Object Photo Modal -->
 
         <script id="image-modal.html" type="text/ng-template">
             <div class="modal image-modal transparent" ng-click="closeModal()">
@@ -77,6 +226,115 @@
                 </ion-pane>
             </div>
         </script>
+
+
+        <!-- Archives list Modal -->
+        <script id="archives-list-modal.html" type="text/ng-template">
+
+            <ion-modal-view>
+                <ion-header-bar  class="bar-positive">
+                    <button class="button button-clear" ng-click="closeModal()">Back</button>
+                    <h1 class="title">MuSA</h1>
+                </ion-header-bar>
+
+                <ion-content  has-header="true" has-subheader="false" scroll="true">
+
+                    <div class="item item-divider">
+                        {{navigationTitles.collection.singleObject.archivesLabel}}
+                    </div>
+                    <ion-list class="transparent">
+                        <ion-item class="item item-icon-right padding" ng-repeat="archive in museumObject.archives" type="item-text-wrap" ng-click="doSomething()">
+                            {{archive.title}}
+
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </ion-item>
+
+                    </ion-list>
+                </ion-content>
+            </ion-modal-view>
+        </script>
+
+
+
+        <!-- Video List Modal -->
+        <script id="video-list-modal.html" type="text/ng-template">
+
+            <ion-modal-view>
+                <ion-header-bar  class="bar-positive">
+                    <button class="button button-clear" ng-click="closeModal()">Back</button>
+
+                    <h1 class="title">MuSA</h1>
+                </ion-header-bar>
+
+
+                <ion-content  has-header="true" has-subheader="false" scroll="true">
+
+                <div class="item item-divider">
+                    {{navigationTitles.collection.singleObject.videosLabel}}
+                </div>
+                    <ion-list class="transparent">
+                        <ion-item class="item item-icon-right padding" ng-repeat="video in museumObject.videos" type="item-text-wrap" ng-click="doSomething()">
+                            {{video.title}}
+
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </ion-item>
+
+                    </ion-list>
+                    </ion-content>
+                </ion-modal-view>
+    </script>
+
+
+        <!-- Audio list Modal -->
+        <script id="audio-list-modal.html" type="text/ng-template">
+
+            <ion-modal-view>
+                <ion-header-bar  class="bar-positive">
+                    <button class="button button-clear" ng-click="closeModal()">Back</button>
+                    <h1 class="title">MuSA</h1>
+                </ion-header-bar>
+
+                <ion-content  has-header="true" has-subheader="false" scroll="true">
+
+                    <div class="item item-divider">
+                        {{navigationTitles.collection.singleObject.audioLabel}}
+                    </div>
+                    <ion-list class="transparent">
+                        <ion-item class="item item-icon-right padding" ng-repeat="audio in museumObject.audio" type="item-text-wrap" ng-click="doSomething()">
+                            {{audio.title}}
+
+                            <i class="icon ion-ios-arrow-right"></i>
+                        </ion-item>
+
+                    </ion-list>
+                </ion-content>
+            </ion-modal-view>
+        </script>
+
+        <!--<script id="images-list-modal.html" type="text/ng-template">-->
+
+            <!--<ion-modal-view>-->
+                <!--<ion-header-bar  class="bar-positive">-->
+                    <!--<button class="button button-clear" ng-click="closeModal()">Back</button>-->
+                    <!--<h1 class="title">MuSA</h1>-->
+                <!--</ion-header-bar>-->
+
+                <!--<ion-content  has-header="true" has-subheader="false" scroll="true">-->
+
+                    <!--<div class="item item-divider">-->
+                        <!--{{navigationTitles.collection.singleObject.archivesLabel}}-->
+                    <!--</div>-->
+                    <!--<ion-list class="transparent">-->
+                        <!--<ion-item class="item item-icon-right padding" ng-repeat="archive in museumObject.archives" type="item-text-wrap" ng-click="doSomething()">-->
+                            <!--{{archive.title}}-->
+
+                            <!--<i class="icon ion-ios-arrow-right"></i>-->
+                        <!--</ion-item>-->
+
+                    <!--</ion-list>-->
+                <!--</ion-content>-->
+            <!--</ion-modal-view>-->
+        <!--</script>-->
 
 
     </ion-content>

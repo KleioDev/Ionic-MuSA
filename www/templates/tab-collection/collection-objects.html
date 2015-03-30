@@ -9,7 +9,7 @@
 <div class="list">
 
     <a class="item item-thumbnail-left item-icon-right" ng-repeat="object in museumObjects | filter:searchTerm" type="item-text-wrap" href="#/tab/collection/objects/{{object.id}}">
-        <img src="img/placeholder.png"/>
+        <img src="{{object.img_href}}"/>
         <h2>{{object.title}}</h2>
         <p>{{object.author}}</p>
         <i class="icon ion-ios-arrow-right"></i>

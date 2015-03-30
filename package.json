@@ -16,5 +16,10 @@
     "karma-firefox-launcher": "^0.1.4",
     "karma-safari-launcher": "^0.1.1",
     "shelljs": "^0.3.0"
-  }
+  },
+  "cordovaPlugins": [
+    "org.apache.cordova.media",
+    "org.apache.cordova.network-information",
+    "org.apache.cordova.file"
+  ]
 }

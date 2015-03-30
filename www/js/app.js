@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in museum-services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'exhibition-services', 'app-services','starter.directives'])
+angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router'])
 
 .run(function($ionicPlatform, $rootScope) {
   $ionicPlatform.ready(function() {
@@ -20,15 +20,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'e
       StatusBar.styleDefault();
     }
 
-      $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
-            if(toState.name == "tab.museum-segmented-control") {
-
-            }
-          console.log("To State: ");
-         console.log(toState);
-          console.log("From State: ");
-          console.log(fromState);
-      });
+    //cordova.exec(success, fail, "AudioStream", "echo", ["YOYOYO"]);
+    //
+    //function success(data)
+    //                   {
+    //                  console.log(data);
+    //                   }
+    //
+    //                   function fail()
+    //                   {
+    //                   console.log("Whattap");
+    //                   }
+      //$rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
+      //      if(toState.name == "tab.museum-segmented-control") {
+      //
+      //      }
+      //    console.log("To State: ");
+      //   console.log(toState);
+      //    console.log("From State: ");
+      //    console.log(fromState);
+      //});
   });
 })
 
@@ -109,6 +120,32 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'e
               'tab-collection':{
                   templateUrl: 'templates/tab-collection/collection-single-object.html',
                   controller: 'ObjectViewCtrl'
+              }
+          }
+      })
+
+      .state('tab.audio-view',
+        {
+            url: '/audio_view/:audioId',
+            views:
+            {
+                'tab-collection':{
+                    templateUrl: 'templates/tab-collection/audio-view.html',
+                    controller: 'AudioViewCtrl'
+                }
+            }
+
+        })
+
+      .state('tab.video-view',
+      {
+          url:'/videoView/:videoId',
+          views:
+          {
+              'tab-collection':
+              {
+                  templateUrl: 'templates/tab-collection/video-view.html',
+                  controller: 'VideoViewCtrl'
               }
           }
       })
