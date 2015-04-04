@@ -1,14 +1,17 @@
+
+
+
+/* Museum Services to handle states and data */
 angular.module('museum-services', [])
 
 //=================== Museum Services ====================//
 
+    /* Segmented Control Service */
     .factory('MuseumSegmentedControlService', function()
     {
-        var segmentedControlState = {
-            "generalState": true,
-            "eventsState":false,
-            "newsState":false
-        };
+        var segmentedControlState = {};
+
+        segmentedControlState.state = "general";
 
         return {
             get :function(){
@@ -18,29 +21,7 @@ angular.module('museum-services', [])
 
             set: function(state){
 
-                /* SHOULD BE A BETTER WAY OF DOING THIS */
-                if(state == "general")
-                {
-                    segmentedControlState.generalState = true;
-                    segmentedControlState.eventsState = false;
-                    segmentedControlState.newsState = false;
-
-                }
-                if(state == "events")
-                {
-                    segmentedControlState.generalState = false;
-                    segmentedControlState.eventsState = true;
-                    segmentedControlState.newsState = false;
-
-                }
-                if(state == "news")
-                {
-                    segmentedControlState.generalState = false;
-                    segmentedControlState.eventsState = false;
-                    segmentedControlState.newsState = true;
-
-                }
-
+                segmentedControlState.state  = state;
             }
 
         };
@@ -49,6 +30,7 @@ angular.module('museum-services', [])
 
     //TODO: Museum- Setup ajax HTTP Request functionality
 
+    /* Accordion State for the view */
     .factory('MuseumGeneralAccordionState', function()
     {
 
@@ -109,22 +91,27 @@ angular.module('museum-services', [])
         }
     })
     //TODO: Events- Setup ajax HTTP Request functionality
+
+    /* Event service for getting the events from the server */
 .factory('Events', function()
 {
-
-
     var events = [
 
         {
             id: 273,
             title: "Museum Inauguration",
             description: "Museum will finally open after 13 years!",
+            location: "Museum",
+
             datetime:  moment(new Date("2015", "05", "2", "10", "30"))
 
         },
         {
             id: 300,
             title: "Speech - Zorali de Feria",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
+
             datetime:  moment(new Date("2015", "05", "2", "13", "00"))
 
         },
@@ -133,18 +120,27 @@ angular.module('museum-services', [])
 
             id: 301,
             title: "Social Activity",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
+
             datetime:  moment(new Date("2015", "05", "9", "11", "00"))
 
         },
         {
             id: 303,
             title: "Short Movie",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
             datetime:  moment(new Date("2015", "05", "9", "15", "00"))
 
         },
         {
             id: 305,
             title:"Cafe Opening",
+            location: "Museum",
+
+            description: "Museum will finally open after 13 years!",
+
             datetime:  moment(new Date("2015", "05", "11", "8", "30"))
 
         }
@@ -201,7 +197,7 @@ angular.module('museum-services', [])
 
 
     //TODO: News - Setup ajax HTTP Request functionality
-
+/* News service for getting news articles fromt he server */
 .factory('News', function()
     {
         var news = [

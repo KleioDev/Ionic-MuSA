@@ -3,17 +3,43 @@
 
     <ion-content class="padding">
 
+
+
+        <h2 class="text-wrap"> {{event.title}} </h2>
+
+        <ion-list>
+
+
+            <ion-item >
+                {{navigationTitles.eventDateLabel}}
+    <span class="item-note">
+{{event.datetime.format('ll')}}    </span>
+            </ion-item>
+
+            <ion-item>
+                {{navigationTitles.eventTimeLabel}}    <span class="item-note">
+{{event.datetime.format('h:mm A')}}    </span>
+            </ion-item>
+
+            <ion-item>
+                {{navigationTitles.eventLocationLabel}}    <span class="item-note">
+{{event.location}}  </span>
+            </ion-item>
+        </ion-list>
+
         <div class="list card" type="item-text-wrap" >
 
 
             <!--ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">-->
 
             <div class="item item-header item-icon-right">
-                <h2> {{event.title}} </h2>
+                <h2> {{navigationTitles.descriptionLabel}} </h2>
                 <!--<i class="icon ion-ios-arrow-right"></i>-->
-                <p><strong>{{navigationTitles.eventDateLabel}}: </strong>{{event.datetime.format('ll')}}</p>
-                <p><strong>{{navigationTitles.eventTimeLabel}}: </strong>{{event.datetime.format('h:mm A')}}</p>
+
             </div>
+
+
+
 
             <div class="item item-body">
                 <p>
@@ -21,17 +47,15 @@
                 </p>
             </div>
 
-            <div class="item tabs tabs-secondary  tabs-icon-left" ng-click="addToCalendar(event)">
-                <a class="tab-item">
-                    <i class="icon ion-ios-plus-outline"></i>
-                   {{navigationTitles.addToCalendarLabel}}
-                </a>
-
-            </div>
 
         </div>
 
-
+        <div class="row">
+            <div class="col col-80 col-offset-10">
+                <button  style="width: 100%;" ng-click="addToCalendar()" class="button icon-left   icon ion-ios-plus-outline button-balanced">
+                    {{navigationTitles.addToCalendarLabel}}</button>
+            </div>
+        </div>
 
 
 

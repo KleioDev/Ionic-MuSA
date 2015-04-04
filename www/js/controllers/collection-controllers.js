@@ -1,6 +1,7 @@
 angular.module('collection-controllers', [])
 
-.controller('ExhibitionSegmentedCtrl', function($scope, AppNavigationTitles, ExhibitionSegmentedControlState, Exhibitions, iBeacons)
+
+.controller('CollectionSegmentedCtrl', function($scope, AppNavigationTitles, ExhibitionSegmentedControlState, Exhibitions, iBeacons)
 {
     var segmentedControlState = ExhibitionSegmentedControlState;
 
@@ -35,13 +36,14 @@ angular.module('collection-controllers', [])
     .controller('CollectionObjectListCtrl', function($scope, AppNavigationTitles, MuseumObjects){
 
 
-        var pageNumber = 0;
+        $scope.pageNumber = 0;
         $scope.morePages = false;
         $scope.museumObjects = MuseumObjects.all();
         $scope.searchTerm = "";
 
         /* When page loads */
         $scope.$on('$stateChangeSuccess', function() {
+            $scope.pageNumber = 0;
             $scope.getPage();
         });
 
@@ -52,11 +54,11 @@ angular.module('collection-controllers', [])
 
         $scope.getPage = function()
         {
-            $scope.morePages = MuseumObjects.getPage(pageNumber,$scope.searchTerm, complete);
+            $scope.morePages = MuseumObjects.getPage($scope.pageNumber,$scope.searchTerm, complete);
 
-            console.log("Page Number: " + pageNumber+ ", More Pages: " + $scope.morePages);
+            console.log("Page Number: " + $scope.pageNumber+ ", More Pages: " + $scope.morePages);
             if($scope.morePages)
-                pageNumber++;
+                $scope.pageNumber++;
             $scope.$broadcast('scroll.infiniteScrollComplete');
 
 
@@ -70,7 +72,7 @@ angular.module('collection-controllers', [])
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
             console.log("Term changed");
             console.log($scope.searchTerm);
-            pageNumber = 0;
+            $scope.pageNumber = 0;
             $scope.getPage();
 
         });
@@ -81,21 +83,25 @@ angular.module('collection-controllers', [])
     .controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Media, Audio, Video)
     {
 
+        $scope.modalAvailable = false;
 
+        var modals = new Array();
         $scope.openModal = function(template) {
 
             $ionicModal.fromTemplateUrl(template, {
                 scope: $scope,
-                animation: 'slide-in-right'
+                animation: 'slide-in-up'
             }).then(function(modal) {
-                $scope.modal = modal;
-                $scope.modal.show();
+
+                modal.show();
+                modals.push(modal);
 
             });
         };
 
         $scope.closeModal = function() {
-            $scope.modal.hide();
+
+            modals.pop().hide();
         };
 
         //Cleanup the modal when we're done with it!
@@ -123,6 +129,21 @@ angular.module('collection-controllers', [])
             $scope.navigationTitles = AppNavigationTitles.get();
         });
 
+
+        $scope.loadDescription = function()
+        {
+            $scope.text = {};
+            $scope.text.title = $scope.navigationTitles.collection.singleObject.descriptionLabel;
+            $scope.text.content = $scope.museumObject.description;
+            console.log($scope.text);
+            $scope.openModal('text-view.html');
+        };
+
+
+        $scope.closePage = function()
+        {
+            $scope.closeModal();
+        };
         //Load image view
 
         //Load audio if available
@@ -131,24 +152,45 @@ angular.module('collection-controllers', [])
 
         $scope.playAudio = function(audio_id)
         {
-            /* Get audio link from Media Service */
+            var src = "http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuitar.mp3";
 
-            var audio_object = Media.get(audio_id);
 
-            /* Setup the Audio Stream */
 
-            //var audio = Audio.setup(src, readyPlay, notFound)
 
-            //function readyPlay()
-            //{
-            //    //$scope.change state
-            //}
+            Audio.create(src, null, null);
 
-            //function notFound()
-            //{
-            //  Show audio can't be played at this moment
-            //}
+            $scope.audio = Audio.get();
+
+            Audio.play();
+
+
+
+            $scope.openModal('audio-view.html');
+
         };
+
+        $scope.imageGrid = function()
+        {
+            function chunk(arr, size) {
+                var newArr = [];
+                for (var i=0; i<arr.length; i+=size) {
+                    newArr.push(arr.slice(i, i+size));
+                }
+                return newArr;
+            }
+
+            $scope.images = chunk($scope.museumObject.images, 3);
+
+            $scope.openModal('image-grid.html');
+        };
+
+        $scope.displayImage = function(image)
+        {
+            $scope.image = image;
+
+            $scope.openModal('image-preview.html');
+        }
+
 
         $scope.visible = function(length)
         {
@@ -159,25 +201,63 @@ angular.module('collection-controllers', [])
             if(length > 1) return "MULTIPLE";
         };
 
-        $scope.playVideo = function(videoId)
-        {
+        $scope.playVideo = function(videoId) {
             /* Loading */
             /* Get video link from Media service */
             var video = Media.get(videoId);
 
             /* Play Video */
-
             Video.set(video);
 
+            if ($scope.museumObject.videos.length > 1){
+                    $scope.closeModal();
+
+            }
             $state.go('tab.video-view');
+
+
         };
+
+        $scope.playStream = function()
+        {
+            console.log("Playing Stream");
+            Audio.play();
+        };
+
+        $scope.pauseStream = function()
+        {
+            console.log("Pausing Stream");
+            Audio.pause();
+        }
+
+        $scope.$watch('audio.stream.volume', function(oldvalue, newValue){
+            console.log($scope.audio.stream.volume);
+            Audio.setVolume($scope.audio.stream.volume);
+
+        });
+
+        $scope.$watch('audio.stream.seekTo', function(oldValue, newValue)
+        {
+            console.log("Seek: " + $scope.audio.stream.seekTo);
+            Audio.seekTo($scope.audio.stream.seekTo + '');
+        })
+
+        $scope.$on('$stateChangeSuccess', function() {
+
+
+        });
 
         $scope.displayArchive = function(archiveId)
         {
             /* Archive Text */
+            console.log(archiveId);
             var archive = Media.get(archiveId);
 
             /* Display Archive */
+            $scope.text = {};
+            $scope.text.title = archive.title;
+            $scope.text.content = archive.content;
+            $scope.openModal('text-view.html');
 
         };
 
@@ -227,6 +307,7 @@ angular.module('collection-controllers', [])
 
     .controller('VideoViewCtrl', function($scope,$sce,Video)
     {
+        console.log("Video Mode");
         $scope.video = Video.get();
 
         $scope.trustSrc = function(src)
@@ -269,21 +350,23 @@ angular.module('collection-controllers', [])
 
 
 
-        var pageNumber = 0;
+        $scope.pageNumber = 0;
         $scope.morePages = false;
         $scope.exhibitions = Exhibitions.all();
         $scope.searchTerm = "";
 
         /* When page loads */
         $scope.$on('$stateChangeSuccess', function() {
+            $scope.pageNumber = 0;
+
             $scope.getPage();
         });
 
         $scope.getPage = function()
         {
-            $scope.morePages = Exhibitions.getPage(pageNumber,$scope.searchTerm,  complete);
+            $scope.morePages = Exhibitions.getPage($scope.pageNumber,$scope.searchTerm,  complete);
             if($scope.morePages)
-                pageNumber++;
+                $scope.pageNumber++;
             $scope.$broadcast('scroll.infiniteScrollComplete');
 
             function complete() {

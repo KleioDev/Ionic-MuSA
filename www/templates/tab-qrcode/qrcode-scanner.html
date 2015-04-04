@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<ion-view title="MuSA">
 
-</body>
-</html>
+    <ion-content>
+
+
+        <br><br><br><br><br>
+        <div class="row">
+
+            <div class="col-10"></div>
+
+            <div class="col-80" style="text-align:center">
+
+                <button  style="width: 100%;" class="button icon-left   icon ion-qr-scanner" ng-click="openScanner()">{{navigationTitles.scanner.scanObjectsLabel}}</button>
+
+<br>
+                <br>
+                <br>
+                <button  style="width: 100%;" class="button icon-left ion-ios-game-controller-a" ng-click="playMatchHunt()">{{navigationTitles.scanner.matchHuntLabel}}</button>
+
+
+            </div>
+            <div class="col-10"></div>
+
+        </div>
+
+
+
+
+
+    </ion-content>
+</ion-view>

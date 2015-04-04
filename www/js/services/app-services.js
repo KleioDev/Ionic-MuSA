@@ -1,95 +1,706 @@
-angular.module('app-services', [])
+angular.module('app-services', ['ngCordova'])
 
-    .factory('AppNavigationTitles', function()
+    .factory('AppNavigationTitles', function($rootScope)
 {
 
 
 
     var lang = "ENGLISH";
-    var navigationTitles =
-    {
-        /* Museum Tab navigation Lang */
-        "museum":
+
+    var languages = [
+
         {
-            /* Museum page Segmented Control */
-            "buttonBar":
+            "lang": "English",
+            "english": "English",
+            "spanish" : "Inglés"
+        },
+        {
+            "lang": "Español",
+            "english": "Spanish",
+            "spanish": "Español"
+        }
+    ];
+
+    var languageLabels = {
+
+        "english": {
+            "title": "MuSA",
+            /* Museum Tab navigation Lang */
+            "museum":
             {
-                "generalButton":"General",
-                "eventsButton": "Events",
-                "newsButton": "News"
+
+                /* Museum page Segmented Control */
+                "buttonBar":
+                {
+                    "generalButton":"General",
+                    "eventsButton": "Events",
+                    "newsButton": "News"
+                },
+                /* General nav buttons */
+                "general": {
+
+                    "hoursOfOperation": (lang == "ENGLISH") ? "Hours of Operation" : "Horario",
+                    "directions": "Location",
+                    "directionsButtonLabel": "Directions",
+                    "links": "Links"
+
+                },
+
+
+                "events": {
+
+                    "navHappeningToday": "Happening Today",
+                    "navUpcomingToday": "Upcoming Events"
+                },
+
+                "eventsSingle": {
+                    "titleLabel": "Event",
+                    "eventDateLabel": "Date",
+                    "eventTimeLabel": "Time",
+                    "eventLocationLabel": "Location",
+                    "descriptionLabel": "Description",
+                    "addToCalendarLabel": "Add To Calendar",
+
+                    "dialogCalendar": {
+
+                        addToCalendarQuestion: "Add to Calendar?",
+                        successDialog: "Success!",
+                        successBody: "Event was successfully added to your calendar!",
+                        failureBody: "Could not add event to your calendar at this time.",
+                        failureDialog: "Failure!"
+                    }
+                },
+
+                "news":
+                {
+                    "recentNewsLabel": "This Week",
+                    "lastNewsLabel": "Past Weeks"
+
+                },
+
+                "newsSingle": {
+
+                    "titleLabel": "News"
+                }
             },
-            /* General nav buttons */
-            "general": {
-
-                "hoursOfOperation": (lang == "ENGLISH") ? "Hours of Operation" : "Horario",
-                "directions": "Location",
-                "links": "Links"
-
-            },
-
-
-            "events": {
-
-                "navHappeningToday": "Happening Today",
-                "navUpcomingToday": "Upcoming Events"
-            },
-
-            "eventsSingle": {
-                "titleLabel": "Event",
-                "eventDateLabel": "Date",
-                "eventTimeLabel": "Time",
-                "eventLocationLabel": "Location",
-                "descriptionLabel": "Description",
-                "addToCalendarLabel": "Add To Calendar"
-            },
-
-            "news":
+            "collection":
             {
-                "recentNewsLabel": "This Week",
-                "lastNewsLabel": "Past Weeks"
+                "buttonBar":{
+                    "nearMeButton": "Near Me",
+                    "objectsButton": "Objects",
+                    "exhibitionsButton": "Exhibitions"
+                },
+
+                "singleObject":
+                {
+                    "readMoreLabel": "Read More",
+                    "listenLabel": "Listen!",
+                    "videosLabel": "Videos",
+                    "archivesLabel": "Archives",
+                    "audioLabel": "Recordings",
+                    "imagesLabel":  "Images",
+
+                    "descriptionLabel": "Description"
+                },
+
+                "exhibitionView":
+                {
+                    "title": "Exhibitions",
+                    "objectsLabel": "Works of Art",
+                    "description": "Description"
+                },
+
+                "nearMeView": {
+                    "searchingForBeaconsLabel": "Searching for Exhibitions Near You..."
+                }
+
 
             },
 
-            "newsSingle": {
+            "scanner":
+            {
+                "scanObjectsLabel": "Scan Object QR Code",
+                "matchHuntLabel": "Match Hunt",
+                "takeAGuessLabel": "Take A Guess"
 
-                "titleLabel": "News"
+
+            },
+            "map":
+            {
+                "entryLevelButtonLabel": "Entry",
+                "basementLevelButtonLabel": "Basement"
+
+            },
+            "user": {
+                "linkFacebookAccountLabel": "Link Facebook Account",
+"unlinkFacebookAccountLabel": "Unlink Facebook Account",
+                "notificationsLabel": "Notifications",
+                preferencesLabel: "Preferences",
+                "fontSizeLabel": "Font Size",
+                "languageLabel": "Language",
+                "sendFeedbackLabel": "Send Feedback",
+
+                "aboutLabel": "About",
+                "termsOfServiceLabel": "Terms of Service",
+                "emailLabel": "Email",
+                "pointsLabel": "Points",
+                "leaderboardLabel": "Leaderboards",
+                "languagesAvailable": languages,
+                feedbackForm: {
+                    title: "Send Feedback",
+                    titleLabel: "Title",
+                    titlePlaceholder: "Message Title",
+                    categoryLabel: "Category",
+                    generalFeedbackLabel: "General Feedback",
+                    applicationBugLabel: "Report an Application Bug",
+                    exhibitionContentLabel: "Problem with Exhibition Content",
+
+                    messageLabel: "Message",
+                    popUpTitleSuccessLabel: "Success!",
+                    popUpMessageSuccessLabel: "Your feedback has been received!",
+
+                    popUpTitleMissingLabel: "Missing Fields!"
+
+
+                }
+
+
+
             }
         },
-        "collection":
+
+        spanish:
         {
-            "buttonBar":{
-                "nearMeButton": "Near Me",
-                "objectsButton": "Objects",
-                "exhibitionsButton": "Exhibitions"
+            "title": "MuSA",
+            /* Museum Tab navigation Lang */
+            "museum":
+            {
+
+                /* Museum page Segmented Control */
+                "buttonBar":
+                {
+                    "generalButton":"General",
+                    "eventsButton": "Eventos",
+                    "newsButton": "Noticias"
+                },
+                /* General nav buttons */
+                "general": {
+
+                    "hoursOfOperation": "Horarios",
+                    "directions": "Location",
+                    "directionsButtonLabel": "Direcciones",
+                    "links": "Links"
+
+                },
+
+
+                "events": {
+
+                    "navHappeningToday": "Eventos Hoy",
+                    "navUpcomingToday": "Proximos Eventos"
+                },
+
+                "eventsSingle": {
+                    "titleLabel": "Evento",
+                    "eventDateLabel": "Fecha",
+                    "eventTimeLabel": "Hora",
+                    "eventLocationLabel": "Lugar",
+                    "descriptionLabel": "Descripción",
+                    "addToCalendarLabel": "Añadir al Calendario",
+
+                    "dialogCalendar": {
+
+                        addToCalendarQuestion: "Añadir al Calendario?",
+                        successDialog: "Success!",
+                        successBody: "Event was successfully added to your calendar!",
+                        failureBody: "Could not add event to your calendar at this time.",
+                        failureDialog: "Failure!"
+                    }
+                },
+
+                "news":
+                {
+                    "recentNewsLabel": "Esta Semana",
+                    "lastNewsLabel": "Pasados"
+
+                },
+
+                "newsSingle": {
+
+                    "titleLabel": "Noticias"
+                }
+            },
+            "collection":
+            {
+                "buttonBar":{
+                    "nearMeButton": "Cerca",
+                    "objectsButton": "Articulos",
+                    "exhibitionsButton": "Exhibiciones"
+                },
+
+                "singleObject":
+                {
+                    "readMoreLabel": "Read More",
+                    "listenLabel": "Listen!",
+                    "videosLabel": "Videos",
+                    "archivesLabel": "Archives",
+                    "audioLabel": "Recordings",
+                    "imagesLabel":  "Images"
+                },
+
+                "exhibitionView":
+                {
+                    "title": "Exhibitions",
+                    "objectsLabel": "Works of Art",
+                    "description": "Description"
+                },
+
+                "nearMeView": {
+                    "searchingForBeaconsLabel": "Searching for Exhibitions Near You..."
+                }
+
+
             },
 
-            "singleObject":
+            "scanner":
             {
-                "readMoreLabel": "Read More",
-                "listenLabel": "Listen!",
-                "videosLabel": "Videos",
-                "archivesLabel": "Archives",
-                "audioLabel": "Recordings",
-                "imagesLabel":  "Images"
+                "takeAGuessLabel": "Take A Guess"
+
+            },
+            "map":
+            {
+                "entryLevelButtonLabel": "Entry",
+                "basementLevelButtonLabel": "Basement"
+
+            },
+            "user": {
+                "linkFacebookAccountLabel": "Link Facebook Account",
+
+                "notificationsLabel": "Notificaciones",
+                preferencesLabel: "Preferencias",
+                "fontSizeLabel": "Font Size",
+                "languageLabel": "Idioma",
+                "sendFeedbackLabel": "Enviar Comentarios",
+
+                "aboutLabel": "Información",
+                "termsOfServiceLabel": "Terminos de Uso",
+
+                "languagesAvailable": languages,
+
+                feedbackForm: {
+                    title: "Send Feedback"
+                }
+
+
             }
-
-
-
-        },
-
-        "scanner":
-        {
-
-        },
-        "map":
-        {
-
-        },
-        "user":
-        {
-
         }
     };
+    var navigation = {};
 
-    return navigationTitles;
+    navigation.labels = languageLabels.english;
+
+    return {
+
+        get: function()
+        {
+            return navigation.labels;
+        },
+
+        apply: function(language)
+        {
+            navigation.labels = languageLabels[language.english.toLowerCase()];
+        }
+    };
 })
+
+
+.factory('iBeacons', function()
+    {
+        var beacons = [];
+
+        var beaconsNear = [];
+
+        var ranging = false;
+
+        var beaconCallback;
+        var pastState = false;
+        var proximity  = {
+            "unknown": 0,
+            "immediate": 1,
+            "near": 2,
+            "far": 3
+
+        };
+        return        {
+
+
+            get: function()
+            {
+                return beacons;
+            },
+            startRanging :  function(returnFoundBeacons) {
+
+
+                console.log("Start Ranging");
+                ranging = true;
+                /* Request Authorization */
+                estimote.beacons.requestAlwaysAuthorization();
+
+                estimote.beacons.startRangingBeaconsInRegion({}, processBeacon, onFailure);
+
+                //TODO: Finish iBeacon Search
+                function processBeacon(rangedBeacons)
+                {
+                    var beaconsChanged = false;
+
+                    var foundBeacons = rangedBeacons.beacons;
+                    var nearFoundBeacons = [];
+
+                    /* Only store the ones that are near */
+                    for(var i = 0; i < foundBeacons.length; i++)
+                    {
+                        console.log("Proximity: " + foundBeacons[i].proximity);
+
+                        if(foundBeacons[i].proximity == proximity.near)
+                        {
+                            nearFoundBeacons.push(foundBeacons[i]);
+                        }
+                    }
+
+                    if(beacons.length == 0 && nearFoundBeacons.length != 0)
+                    {
+                        beacons = nearFoundBeacons;
+                        beaconsChanged = true;
+                    }
+                    else if(nearFoundBeacons.length == 0){
+                        beaconsChanged = true;
+                        beacons= [];
+
+                    }
+
+                    else {
+                        /* Iterate through all the found beacons */
+                        for (var i = 0; i < nearFoundBeacons.length; i++) {
+                            var foundBeaconId = nearFoundBeacons[i].proximityUUID + nearFoundBeacons[i].major + nearFoundBeacons[i].minor;
+
+                            /* Go through all the stored beacons */
+
+                            var found = false;
+                            for (var k = 0; k < beacons.length; k++) {
+                                var beaconID = beacons[k].proximityUUID + beacons[k].major + beacons[k].minor;
+
+                                if (foundBeaconId == beaconID) {
+                                    found = true;
+                                }
+
+                            }
+
+                            if (!found) {
+                                beacons = nearFoundBeacons;
+                                beaconsChanged = true;
+                            }
+
+
+                        }
+                    }
+
+
+                    if(pastState == beaconsChanged)
+                    {
+                        //console.log("STATE CHANGED: " + false);
+
+                        /* Broadcast change */
+
+                    }
+                    else
+                    {
+                        pastState = !pastState;
+
+                        //if(typeof beaconCallback != 'undefined')
+
+                        console.log("STATE CHANGED: " + true);
+                    }
+                }
+
+                function onFailure()
+                {
+                    console.log("mistake happened");
+
+                }
+
+            },
+            stopRanging: function()
+            {
+                console.log("Stopping Range");
+                    ranging = false;
+                    estimote.beacons.stopRangingBeaconsInRegion({});
+
+
+
+            },
+
+            toggleRanging: function()
+            {
+                if(!ranging) {
+                    this.startRanging();
+                }
+
+                else {
+                    this.stopRanging();
+                }
+            }
+
+        };
+
+    })
+
+.factory('Facebook', function($cordovaFacebook, $ionicLoading)
+    {
+        var user = {
+
+
+        };
+
+         user.loginStatus = false;
+        user.userInfo = {};
+
+
+        return {
+
+            getUser: function()
+            {
+                return user;
+            },
+
+
+            login: function()
+            {
+                var loading = $ionicLoading.show({
+                    template: '<ion-spinner icon="ios"></ion-spinner>                '
+                });
+                var me = this;
+                $cordovaFacebook.login([ "public_profile","email"])
+                    .then(function(data) {
+
+
+                        if(data.status == 'connected') {
+                            user.loginStatus = true;
+
+                            me.getUserInfo();
+                        }
+                        else{
+                            loading.hide();
+
+                            user.loginStatus= false;
+                        }
+                        /* Get user info */
+                        loading.hide();
+
+                    }, function (error) {
+                        loading.hide();
+                        // error
+                    });
+
+
+            },
+
+            logout: function()
+            {
+                $cordovaFacebook.logout()
+                    .then(function(success) {
+
+                        user.loginStatus = false;
+                    }, function (error) {
+                        // error
+                    });
+
+            },
+
+            isLoggedIn: function()
+            {
+
+                //var loading = $ionicLoading.show({
+                //    template: '<ion-spinner icon="spinner"></ion-spinner>                '
+                //});
+                var loading = $ionicLoading.show(  {content: 'Showing Loading Indicator!',
+                    animation: 'fade-in',
+                    showBackdrop: true,
+                    maxWidth: 200,
+                    showDelay: 500});
+
+                var me = this;
+                $cordovaFacebook.getLoginStatus()
+                    .then(function(success) {
+
+                        console.log("GETTING LOGIN STATUS");
+                        if(success.status == 'connected') {
+                            user.loginStatus = true;
+                            loading.hide();
+
+                            me.getUserInfo();
+                        }
+                       else{
+                            loading.hide();
+
+                            user.loginStatus= false;
+                        }
+                        console.log(success);
+
+                    }, function (error) {
+
+                        // error
+                    });
+            },
+
+            getUserInfo: function()
+            {
+                var loading = $ionicLoading.show(  {content: 'Showing Loading Indicator!',
+                animation: 'fade-in',
+                showBackdrop: false,
+                maxWidth: 200,
+                showDelay: 500});
+
+                $cordovaFacebook.api("me", ["public_profile", "email"])
+                    .then(function(success) {
+                        console.log("GOT INFO");
+                        console.log(success);
+                        user.userInfo = success;
+                        user.userInfo.points  = 20;
+                        loading.hide();
+
+
+                    }, function (error) {
+                        loading.hide();
+
+                        // error
+                    });
+
+            }
+
+
+        }
+    })
+
+.factory('Museum', function()
+    {
+        return {
+            getLocation: function()
+            {
+                return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
+            }
+        }
+    })
+
+.factory('UserPreferences', function(AppNavigationTitles, $rootScope, $ionicLoading)
+    {
+        var preferences = {
+
+            "notifications": true,
+            "fontSize": "14px",
+            "language":  {
+                "lang": "English",
+                "english": "English",
+                "spanish" : "Inglés"
+            }
+
+
+        };
+
+        return {
+
+            get: function()
+            {
+                return preferences;
+            },
+
+            setLanguage: function(language)
+            {
+                preferences.language = language;
+
+                AppNavigationTitles.apply(language);
+
+                /* Broadcast Message to Every Controller */
+
+                $rootScope.$broadcast('preferences:updated',{});
+
+            },
+
+            getLanguage: function()
+            {
+                return preferences.language;
+            },
+
+            getAbout: function()
+            {
+                //$ionicLoading.show({
+                //    template: '<ion-spinner icon="ios"></ion-spinner>                '
+                //});
+
+                return { "title" : "About",
+
+                 "content":   "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing"
+                    + " elit</h1>"
+
+
+                    + "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing"
+                    + 'elit. Aenean commodo ligula eget dolor. Aenean massa.Cum sociis natoque penatibus et magnis dis parturient             montes, nascetur ridiculus mus. Donec quam felis,ultricies nec, pellentesque eu, pretium quis, sem.</p> <blockquote>Lorem ipsum dolor sit amet, consectetueradipiscing elit. Aenean commodo ligula eget dolor.Aenean massa <strong>strong</strong>. Cum sociisnatoque penatibus et magnis dis parturient montes,nascetur ridiculus mus. Donec quam felis, ultriciesnec, pellentesque eu, pretium quis, sem. Nulla consequatmassa quis enim. Donec pede justo, fringilla vel,aliquet nec, vulputate eget, arcu. In <em>em</em>enim justo, rhoncus ut, imperdiet a, venenatis vitae,justo. Nullam <a class="external ext" href="#">link</a>dictum felis eu pede mollis pretium. </blockquote>'
+                }
+
+
+
+            },
+
+            getTerms: function()
+            {
+                return { "title" : "Terms of Service",
+
+                    "content":   "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing"
+                    + " elit</h1>"
+
+
+                    + "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing"
+                    + 'elit. Aenean commodo ligula eget dolor. Aenean massa.Cum sociis natoque penatibus et magnis dis parturient             montes, nascetur ridiculus mus. Donec quam felis,ultricies nec, pellentesque eu, pretium quis, sem.</p> <blockquote>Lorem ipsum dolor sit amet, consectetueradipiscing elit. Aenean commodo ligula eget dolor.Aenean massa <strong>strong</strong>. Cum sociisnatoque penatibus et magnis dis parturient montes,nascetur ridiculus mus. Donec quam felis, ultriciesnec, pellentesque eu, pretium quis, sem. Nulla consequatmassa quis enim. Donec pede justo, fringilla vel,aliquet nec, vulputate eget, arcu. In <em>em</em>enim justo, rhoncus ut, imperdiet a, venenatis vitae,justo. Nullam <a class="external ext" href="#">link</a>dictum felis eu pede mollis pretium. </blockquote>'
+                }
+            }
+        }
+
+
+    })
+
+.factory('MatchHunt', function($ionicLoading)
+    {
+        var currentId = 0;
+
+
+        var currentMatchHunt = {};
+
+        return {
+
+            getMatchHunt: function (){
+
+                //TODO: HTTP Request for ID
+                //Send Random ID
+                /* Loading */
+                /* Get a match hunt object */
+
+                currentId = 1;
+
+                currentMatchHunt = {
+                    match_hunt_id: 1,
+                        hearts: 2,
+                        points: 30,
+                    img_href : 'img/placeholder2.png'
+                }
+
+                return currentMatchHunt;
+
+            },
+            get: function()
+            {
+                return currentMatchHunt;
+            }
+        }
+
+
+    });
+

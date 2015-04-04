@@ -1,10 +1,119 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<ion-view title="{{navigationTitles.scanner.matchHuntLabel}}">
 
-</body>
-</html>
+
+    <ion-content>
+
+            <!--<ion-item>-->
+
+                <!--<div class="row padding">-->
+
+                    <!--<div class="col">-->
+
+            <!--<div ng-switch="matchHunt.hearts" style="color: red;">-->
+
+
+                <!--<div ng-switch-when=0>-->
+                    <!--<i class="icon ion-ios-heart-outline"></i>-->
+                    <!--<i class="icon ion-ios-heart-outline"></i>-->
+
+                    <!--<i class="icon ion-ios-heart-outline"></i>-->
+                <!--</div>-->
+                <!--<div ng-switch-when=1>-->
+                <!--<i class="icon ion-ios-heart"></i>-->
+                <!--<i class="icon ion-ios-heart-outline"></i>-->
+
+                <!--<i class="icon ion-ios-heart-outline"></i>-->
+                <!--</div>-->
+
+                <!--<div ng-switch-when=2>-->
+                    <!--<i class="icon ion-ios-heart"></i>-->
+                    <!--<i class="icon ion-ios-heart"></i>-->
+
+                    <!--<i class="icon ion-ios-heart-outline"></i>-->
+                <!--</div>-->
+
+
+                <!--<div ng-switch-default=3>-->
+                    <!--<i class="icon ion-ios-heart"></i>-->
+                    <!--<i class="icon ion-ios-heart"></i>-->
+
+                    <!--<i class="icon ion-ios-heart"></i>-->
+                <!--</div>-->
+
+
+            <!--</div>-->
+
+                        <!--</div>-->
+
+                    <!--<div class="col" style="text-align: right">-->
+                        <!--<h3><strong>{{matchHunt.points}}</strong></h3>-->
+                   <!--</div>-->
+                    <!--</div>-->
+
+
+            <!--</ion-item>-->
+
+
+        <div class="row">
+            <div class="col"></div>
+            <div class="col col-90 portrait-box">
+
+
+                <div class="row padding">
+
+                    <div class="col">
+
+                        <div ng-switch="matchHunt.hearts" style="color: red; font-size: 150%">
+
+
+                            <div ng-switch-when=0>
+                                <i class="icon ion-ios-heart-outline"></i>
+                                <i class="icon ion-ios-heart-outline"></i>
+
+                                <i class="icon ion-ios-heart-outline"></i>
+                            </div>
+                            <div ng-switch-when=1>
+                                <i class="icon ion-ios-heart"></i>
+                                <i class="icon ion-ios-heart-outline"></i>
+
+                                <i class="icon ion-ios-heart-outline"></i>
+                            </div>
+
+                            <div ng-switch-when=2>
+                                <i class="icon ion-ios-heart"></i>
+                                <i class="icon ion-ios-heart"></i>
+
+                                <i class="icon ion-ios-heart-outline"></i>
+                            </div>
+
+
+                            <div ng-switch-default=3>
+                                <i class="icon ion-ios-heart"></i>
+                                <i class="icon ion-ios-heart"></i>
+
+                                <i class="icon ion-ios-heart"></i>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="col" style="text-align: right">
+                        <h3><strong>{{matchHunt.points}}</strong></h3>
+                    </div>
+                </div>
+
+                <img  class="match-hunt" ng-click="showImage()" src="{{matchHunt.img_href}}">
+<br><br>
+                <button  style="width: 100%; color: white;" class="button icon-left ion-qr-scanner padding" ng-click="takeAGuess()">{{navigationTitles.scanner.takeAGuessLabel}}</button>
+
+            </div>
+            <div class="col"></div>
+        </div>
+
+
+
+
+    </ion-content>
+</ion-view>

@@ -29,6 +29,8 @@
     </author>
   <content src="index.html"/>
   <access origin="*"/>
+  <access origin="geo:*" launch-external="yes"/>
+  <gap:plugin name="org.apache.cordova.media"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>

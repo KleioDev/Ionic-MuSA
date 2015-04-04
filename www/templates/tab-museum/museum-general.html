@@ -1,4 +1,3 @@
-<div ng-show="museumTabState.generalState" >
     <div ng-controller="MuseumGeneralCtrl">
 
         <img class="padding" src="img/musa_home.png" width="100%"/>
@@ -11,7 +10,7 @@
                 <i class="icon ion-ios-arrow-{{museumAccordionState.hoursOfOperation.arrow}}"></i>
             </a>
 
-            <div ng-show="museumAccordionState.hoursOfOperation.show" class="text-wrapping padding">
+            <div ng-if="museumAccordionState.hoursOfOperation.show" class="text-wrapping padding">
 
                 <p> The museum is usually open on weekdays. </p>
 
@@ -50,9 +49,19 @@
                 {{navigationTitles.general.directions}}
                 <i class="icon ion-ios-arrow-{{museumAccordionState.location.arrow}}"></i>
             </a>
-            <div ng-show="museumAccordionState.location.show" class="padding">
+            <div ng-if="museumAccordionState.location.show" class="padding">
 
-                <p> Show  Location </p>
+                <p><strong>Address</strong> </p>
+
+                <p>259 Blvd. Alfonso Valdez Cabian</p>
+                <p>Mayagüez, PR, 00680 </p>
+
+
+                <div class="row">
+                    <div class="col col-33 col-offset-33">
+                        <button ng-click="openMap()"  data-rel="external" class="button  icon-left button-balanced">{{navigationTitles.general.directionsButtonLabel}}</button>
+                    </div>
+                </div>
             </div>
 
 
@@ -61,13 +70,12 @@
                 {{navigationTitles.general.links}}
                 <i class="icon ion-ios-arrow-{{museumAccordionState.links.arrow}}"></i>
             </a>
-            <div ng-show="museumAccordionState.links.show" class="padding">
+            <div ng-if="museumAccordionState.links.show" class="padding">
 
-                <p> Show Links </p>
+
             </div>
 
 
         </ion-list>
 
     </div>
-</div>

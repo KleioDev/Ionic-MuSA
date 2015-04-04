@@ -1,10 +1,186 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<ion-view>
 
-</body>
-</html>
+    <ion-content>
+<br>
+
+
+
+
+            <div ng-if="user.loginStatus" class="list">
+                <ion-item class="item-icon-left">
+                    <i class="icon ion-ios-person"></i>
+                    {{user.userInfo.name}}
+                </ion-item>
+                <ion-item class="item-icon-left">
+                    <i class="icon ion-ios-email-outline"></i>
+                    {{user.userInfo.email}}
+                </ion-item>
+
+                <ion-item class="item-icon-left">
+                    <i class="icon ion-ribbon-b"></i>
+                    {{navigationTitles.user.pointsLabel}}
+                    <span class="item-note">
+                        {{user.userInfo.points}}
+                    </span>
+                </ion-item>
+
+                <a class="item item-icon-left item-icon-right">
+                    <i class="icon ion-trophy"></i>
+                    {{navigationTitles.user.leaderboardLabel}}
+                    <i class="icon ion-ios-arrow-right"></i>
+
+                </a>
+
+                <br>
+
+                <ion-item class="item-icon-left" ng-click="logout()">
+                    <i class="icon ion-ios-close" style="color: red;"></i>
+                    {{navigationTitles.user.unlinkFacebookAccountLabel}}
+                </ion-item>
+
+            </div>
+
+            <div ng-if="!user.loginStatus">
+                <a class="item item-icon-left" ng-click="login()">
+                    <i class="icon ion-social-facebook"  style="color:#3b5998;"></i>
+                    {{navigationTitles.user.linkFacebookAccountLabel}}
+                </a>
+            </div>
+
+
+
+        <div class="list">
+            <div class="item item-divider">
+                {{navigationTitles.user.preferencesLabel}}
+
+            </div>
+            <li class="item item-icon-left item-toggle">
+                <!--HTML5-->
+                <i class="icon ion-ios-bell"></i>
+
+                {{navigationTitles.user.notificationsLabel}}
+
+                <label class="toggle toggle-balanced">
+                    <input type="checkbox" ng-checked="{{preferences.notifications}}">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+
+            <li class="item item-icon-left range">
+                <!--HTML5-->
+                {{navigationTitles.user.fontSizeLabel}}
+
+
+                    <input type="range" name="volume" min="0" max="100" value="33">
+                    <!--<i class="icon ion-ios7-sunny"></i>-->
+
+
+            </li>
+
+            <a class="item item-icon-left item-icon-right" ng-click="showLanguages()">
+                <!--HTML5-->
+                <i class="icon ion-edit"></i>
+                {{navigationTitles.user.languageLabel}}
+                 <span  class="item-note">
+                     {{preferences.language.lang}}
+                </span>
+                <i class="icon ion-ios-arrow-right"></i>
+
+
+                <!--<i class="icon ion-ios7-sunny"></i>-->
+
+
+            </a>
+
+
+            <a class="item item-icon-left item-icon-right" href="#/tab/tab-user/feedback_form">
+                <!--HTML5-->
+                <i class="icon ion-compose"></i>
+
+
+                {{navigationTitles.user.sendFeedbackLabel}}
+
+                <i class="icon ion-ios-arrow-right"></i>
+
+
+                <!--<i class="icon ion-ios7-sunny"></i>-->
+
+
+            </a>
+            <!--<a class="item item-icon-left item-toggle">-->
+                <!--{{navigationTitles.user.notificationsLabel}}-->
+                <!--<label class="toggle toggle-stable">-->
+                    <!--<input type="checkbox" checked>-->
+                    <!--<div class="track">-->
+                        <!--<div class="handle"></div>-->
+                    <!--</div>-->
+                <!--</label>-->
+            <!--</a>-->
+
+
+
+        </div>
+
+        <div class="list">
+            <a  class="item item-icon-left item-icon-right" ng-click="loadAboutPage()">
+                <i class="icon ion-ios-information-outline"></i>
+
+                {{navigationTitles.user.aboutLabel}}
+                <i class="icon ion-ios-arrow-right"></i>
+
+            </a>
+
+            <a  class="item item-icon-left item-icon-right" ng-click="loadTermsPage()">
+                <i class="icon ion-document"></i>
+
+               <span ng-bind="navigationTitles.user.termsOfServiceLabel"></span>
+                <i class="icon ion-ios-arrow-right"></i>
+
+            </a>
+
+
+        </div>
+
+
+    </ion-content>
+
+    <script id="language-modal.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar class="bar-positive">
+                <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+
+                <h1 class="title">Choose Language</h1>
+            </ion-header-bar>
+            <ion-content>
+                <ion-list>
+                    <a class="item item-icon-right" ng-click="changeLanguage(language)" ng-repeat="language in navigationTitles.user.languagesAvailable">
+                        <i ng-if="language.english == preferences.language.english" class="icon ion-ios-checkmark-empty" ></i>
+                        {{language.lang}}
+                        <p>{{language[preferences.language.english.toLowerCase()]}}</p>
+                    </a>
+
+                </ion-list>
+            </ion-content>
+        </ion-modal-view>
+    </script>
+
+    <script id="text-view.html" type="text/ng-template">
+
+    <ion-modal-view>
+
+        <ion-header-bar class="bar-positive">
+            <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+
+            <h1 class="title">{{text.title}}</h1>
+        </ion-header-bar>
+
+
+        <ion-content>
+            <div class="padding" ng-bind-html="text.content"></div>
+
+        </ion-content>
+    </ion-modal-view>
+</script>
+</ion-view>

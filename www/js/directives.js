@@ -28,6 +28,7 @@ angular.module('starter.directives', [])
 
 .directive('collectionNearMeDir', function()
     {
+
         return {
             templateUrl: 'templates/tab-collection/collection-nearme.html'
         }

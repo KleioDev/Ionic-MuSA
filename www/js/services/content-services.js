@@ -23,26 +23,10 @@ angular.module('content-services', [])
                 //{
                 //    //Error
                 //})
+                console.log(id);
 
-                //var dummy_media =
-                //{
-                //    title: "The Life of Lorem Ipsum",
-                //    description: "Describes the life and death of Lorem Ipsum",
-                //    link: "http://www.noiseaddicts.com/samples/2563.mp3",
-                //   // link: "http://download.wavetlan.com/SVV/Media/HTTP/MP3/Helix_Mobile_Producer/HelixMobileProducer_test1_MPEG2_Mono_CBR_40kbps_16000Hz.mp3",
-                //    type: "Audio"
-                //}
-
-                var dummy_media =
-                {
-                    title: "The Life of Lorem Ipsum",
-                    description: "Describes the life and death of Lorem Ipsum",
-                    link: "https://www.youtube.com/embed/GIzDsGyxsQM",
-                    // link: "http://download.wavetlan.com/SVV/Media/HTTP/MP3/Helix_Mobile_Producer/HelixMobileProducer_test1_MPEG2_Mono_CBR_40kbps_16000Hz.mp3",
-                    type: "Video"
-                };
-
-                return dummy_media;
+                var media = mediaServer.getMediaById(id);
+                return media;
             }
 
 
@@ -55,18 +39,15 @@ angular.module('content-services', [])
 .factory('Audio', function()
     {
 
-
-        var audio = null;
+    var audio = {};
 
         return {
 
-            set: function(audio_data, success, error)
+            create: function(src, success, error)
             {
-                audio = audio_data;
+                audio.stream = new AudioStream(src, null, null);
 
-                audio.audioStream = AudioStream;
-                audio.audioStream.setupAudio(success, error, audio.link);
-
+                audio.stream.seekTo = 0;
             },
             get: function()
             {
@@ -75,26 +56,32 @@ angular.module('content-services', [])
 
             getDuration: function()
             {
-                return AudioStream.duration;
+                return audio.stream._duration;
             },
 
-            setVolume: function()
+            setVolume: function(volume)
             {
-
+                var vol = volume/10.0
+                console.log(vol);
+                audio.stream.setVolume(vol+"")
             },
 
             seekTo: function(seekTime)
             {
-
+                audio.stream.seekTo(seekTime)
             },
 
             play: function()
             {
+                audio.stream.play();
+                audio.stream.playing = true;
 
             },
 
-            stop: function()
+            pause: function()
             {
+                audio.stream.pause();
+                audio.stream.playing = false;
 
             },
 
@@ -123,4 +110,6 @@ angular.module('content-services', [])
                 return video;
             }
         }
-    })
+    });
+
+

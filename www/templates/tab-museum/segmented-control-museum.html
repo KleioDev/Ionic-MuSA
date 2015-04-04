@@ -1,26 +1,30 @@
-<ion-view view-title="General">
-<ion-content  ng-cloak >
+<ion-view view-title="{{title}}">
+<ion-content  >
 
     <div class="button-bar padding" >
 
-        <a class="button segmented-control" ng-click="museumGeneralView()" ng-class="{'active' : museumTabState.generalState}">{{navigationTitles.buttonBar.generalButton}}</a>
-        <a class="button segmented-control" ng-click="museumEventsView()" ng-class="{'active' : museumTabState.eventsState}">{{navigationTitles.buttonBar.eventsButton}}</a>
-        <a class="button segmented-control" ng-click="museumNewsView()" ng-class="{'active' : museumTabState.newsState}">{{navigationTitles.buttonBar.newsButton}}</a>
+        <a class="button segmented-control" ng-click="changeState('general')" ng-class="{'active' : museumTabState.state == 'general'}">{{navigationTitles.buttonBar.generalButton}}</a>
+        <a class="button segmented-control" ng-click="changeState('events')" ng-class="{'active' : museumTabState.state == 'events'}">{{navigationTitles.buttonBar.eventsButton}}</a>
+        <a class="button segmented-control" ng-click="changeState('news')" ng-class="{'active' : museumTabState.state == 'news'}">{{navigationTitles.buttonBar.newsButton}}</a>
 
     </div>
 
     <!--  Museum General Template -->
-    <div ng-show="museumTabState.generalState"  id="museumGeneralTemplate" museum-general-dir >
 
-    </div>
+    <div ng-switch="museumTabState.state">
 
     <!-- Museum Events Template -->
-    <div ng-show="museumTabState.eventsState" id="museumEventsTemplate" museum-events-dir>
+    <div ng-switch-when="events" id="museumEventsTemplate" museum-events-dir>
 
     </div>
 
     <!--  Museum News Template -->
-    <div ng-show="museumTabState.newsState"  id="museumNewsTemplate" museum-news-dir>
+    <div ng-switch-when="news"  id="museumNewsTemplate" museum-news-dir>
+
+    </div>
+        <div ng-switch-default  id="museumGeneralTemplate" museum-general-dir >
+
+        </div>
 
     </div>
 

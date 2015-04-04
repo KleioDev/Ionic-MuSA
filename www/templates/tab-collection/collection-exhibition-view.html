@@ -1,10 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<ion-view title="{{navigationTitles.collection.exhibitionView.title}}">
 
-</body>
-</html>
+    <ion-content>
+        <div class="padding">
+            <h2>{{exhibition.title}}</h2>
+
+            <!--<div class="row">-->
+
+            <!--<div class="col">        <p>{{museumObject.author}}</p>-->
+            <!--</div>-->
+            <!--<div class="col"></div>-->
+            <!--<div class="col">June 3, 1950</div>-->
+            <!--</div>-->
+
+</div>
+
+
+        <div class="item item-divider">
+        {{navigationTitles.collection.exhibitionView.description}}
+
+    </div>
+        <div class="text-wrap padding" ng-bind-html="exhibition.description"></div>
+
+
+
+
+
+        <div class="item item-divider">
+        {{navigationTitles.collection.exhibitionView.objectsLabel}}
+        </div>
+        <ion-list class="list">
+
+            <!--| filter:searchTerm-->
+            <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="object in exhibition.museumObjects " type="item-text-wrap" href="#/tab/collection/objects/{{object.id}}">
+                <img src="{{object.img_href}}"/>
+                <h2>{{object.title}}</h2>
+                <p>{{object.author}}</p>
+                <i class="icon ion-ios-arrow-right"></i>
+
+            </ion-item>
+
+
+
+
+        </ion-list>
+
+    </ion-content>
+</ion-view>

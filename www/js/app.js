@@ -5,14 +5,50 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in museum-services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router'])
+angular.module('starter', ['ionic', 'museum-controllers',
+    'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic'])
 
 .run(function($ionicPlatform, $rootScope) {
-  $ionicPlatform.ready(function() {
 
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+
+  $ionicPlatform.ready(function(iBeacon, AppNavigationTitles) {
+
+      var deviceInformation = ionic.Platform.device();
+console.log(deviceInformation);
+
+
+      $rootScope.$on('stateChangeSuccess',
+          function(event, toState, toParams, fromState, fromParams){
+
+              if(fromState.name == 'tab.collection')
+              {
+                  console.log(fromState.name);
+                  iBeacon.stopRanging();
+              }
+
+
+
+          });
+
+
+      var isWebView = ionic.Platform.isWebView();
+      var isIPad = ionic.Platform.isIPad();
+      var isIOS = ionic.Platform.isIOS();
+
+      $rootScope.isIOS = isIOS;
+      var isAndroid = ionic.Platform.isAndroid();
+      var isWindowsPhone = ionic.Platform.isWindowsPhone();
+
+      var currentPlatform = ionic.Platform.platform();
+      var currentPlatformVersion = ionic.Platform.version();
+
+      console.log(currentPlatform);
+      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
+
+      openFB.init({appId: '404761379705364'});
+
+      if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
     if (window.StatusBar) {
@@ -20,26 +56,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'e
       StatusBar.styleDefault();
     }
 
-    //cordova.exec(success, fail, "AudioStream", "echo", ["YOYOYO"]);
-    //
-    //function success(data)
-    //                   {
-    //                  console.log(data);
-    //                   }
-    //
-    //                   function fail()
-    //                   {
-    //                   console.log("Whattap");
-    //                   }
-      //$rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
-      //      if(toState.name == "tab.museum-segmented-control") {
-      //
-      //      }
-      //    console.log("To State: ");
-      //   console.log(toState);
-      //    console.log("From State: ");
-      //    console.log(fromState);
-      //});
+
   });
 })
 
@@ -108,7 +125,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'e
 
         'tab-collection': {
           templateUrl: 'templates/tab-collection/collection.html',
-          controller: 'ExhibitionSegmentedCtrl'
+          controller: 'CollectionSegmentedCtrl'
         }
       }
     })
@@ -149,25 +166,85 @@ angular.module('starter', ['ionic', 'starter.controllers', 'museum-services', 'e
               }
           }
       })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
 
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      .state('tab.collection-exhibition-view', {
+          url: '/collection/exhibitions/:exhibitionId',
+          views:
+          {
+              'tab-collection':{
+                  templateUrl: 'templates/tab-collection/collection-exhibition-view.html',
+                  controller: 'ExhibitionViewCtrl'
+              }
+          }
+      })
+
+      .state('tab.tab-qrcode-scanner', {
+
+          url: '/tab-qrcode/qr-code-scanner',
+          views: {
+              'tab-qrcode': {
+                  templateUrl: 'templates/tab-qrcode/qrcode-scanner.html',
+                  controller: 'QRCodeViewCtrl'
+              }
+
+          }
       }
-    }
-  });
+
+  )
+
+      .state('tab.tab-maps',{
+
+          url: '/tab-map/maps',
+          views:
+          {
+              'tab-maps':
+              {
+                  templateUrl: 'templates/tab-map/maps.html',
+                  controller: 'MapViewCtrl'
+              }
+          }
+      })
+
+      .state('tab.tab-user',{
+
+          url: '/tab-user/preferences',
+          views:
+          {
+              'tab-user':
+              {
+                  templateUrl: 'templates/tab-user/preferences.html',
+                  controller: 'UserPreferencesCtrl'
+              }
+          }
+      })
+
+      .state('tab.tab-feedback-form',{
+
+          url: '/tab-user/feedback_form',
+          views:
+          {
+              'tab-user':
+              {
+                  templateUrl: 'templates/tab-user/send-feedback.html',
+                  controller: 'FeedbackFormCtrl'
+              }
+          }
+      })
+
+      .state('tab.tab-match-hunt',{
+
+          url: '/tab-qrcode/matchhunt',
+          views: {
+
+              'tab-qrcode':
+              {
+                  templateUrl: 'templates/tab-qrcode/match-hunt.html',
+                  controller: 'MatchHuntCtrl'
+              }
+          }
+      });
+
+
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/museum-segmented-control');

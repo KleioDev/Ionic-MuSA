@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<ion-view>
 
-</body>
-</html>
+    <ion-content>
+
+        <div class="button-bar padding" >
+            <a class="button segmented-control" ng-click="changeLevel('entry')" ng-class="{'active' : segmentedControl.state == 'entry'}">{{navigationTitles.map.entryLevelButtonLabel}}</a>
+            <a class="button segmented-control" ng-click="changeLevel('basement')" ng-class="{'active' : segmentedControl.state == 'basement'}">{{navigationTitles.map.basementLevelButtonLabel}}</a>
+        </div>
+
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+
+        <!--<div class="scroll_view1">-->
+        <ion-scroll direction="xy" locking="false" zooming="true" min-zoom="1" >
+
+            <img class="modal-img map" ng-src="{{map.img_href}}"/>
+
+        </ion-scroll>
+
+    </ion-content>
+    <!--<ion-scroll direction="xy" locking="false"  zooming="true" min-zoom="1"-->
+                <!--class="animate modal-content">-->
+
+        <!--<img class="modal-img map" ng-src="img/map/entry_level.png"/>-->
+
+    <!--</ion-scroll>-->
+</ion-view>

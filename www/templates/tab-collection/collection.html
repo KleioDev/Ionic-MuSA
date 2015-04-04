@@ -3,26 +3,34 @@
 
         <div class="button-bar padding" >
 
-            <a class="button segmented-control" ng-click="nearMeView()" ng-class="{'active' : segmentedControl.nearMeState}">{{navigationTitles.buttonBar.nearMeButton}}</a>
-            <a class="button segmented-control" ng-click="objectsView()" ng-class="{'active' : segmentedControl.objectsState}">{{navigationTitles.buttonBar.objectsButton}}</a>
-            <a class="button segmented-control" ng-click="exhibitionsView()" ng-class="{'active' : segmentedControl.exhibitionsState}">{{navigationTitles.buttonBar.exhibitionsButton}}</a>
+            <a class="button segmented-control" ng-click="changeSegmentedControlState('nearMe')" ng-class="{'active' : segmentedControl.state == 'nearMe'}">{{navigationTitles.buttonBar.nearMeButton}}</a>
+            <a class="button segmented-control" ng-click="changeSegmentedControlState('objects')" ng-class="{'active' : segmentedControl.state == 'objects'}">{{navigationTitles.buttonBar.objectsButton}}</a>
+            <a class="button segmented-control" ng-click="changeSegmentedControlState('exhibitions')" ng-class="{'active' : segmentedControl.state == 'exhibitions'}">{{navigationTitles.buttonBar.exhibitionsButton}}</a>
 
         </div>
 
+
+        <div ng-switch ="segmentedControl.state">
         <!--  Near Me List Template -->
-        <div ng-show="segmentedControl.nearMeState"  id="nearMeTemplate" collection-near-me-dir >
+        <!--<div ng-show="segmentedControl.nearMeState"  id="nearMeTemplate" collection-near-me-dir >-->
+        <div ng-switch-when="nearMe"  id="nearMeTemplate" collection-near-me-dir >
 
         </div>
 
         <!-- Objects List Template -->
-        <div ng-show="segmentedControl.objectsState" id="objectsListTemplate" collection-objects-dir>
-
-        </div>
 
         <!--  Exhibitions List Template -->
-        <div ng-show="segmentedControl.exhibitionsState"  id="exhibitionsListTemplate" collection-exhibitions-dir>
+        <!--<div ng-show="segmentedControl.exhibitionsState"  id="exhibitionsListTemplate" collection-exhibitions-dir>-->
+        <div ng-switch-when="exhibitions"  id="exhibitionsListTemplate" collection-exhibitions-dir>
 
         </div>
+
+        <!--<div ng-show="segmentedControl.objectsState" id="objectsListTemplate" collection-objects-dir>-->
+        <div ng-switch-default="objects" id="objectsListTemplate" collection-objects-dir>
+
+        </div>
+            </div>
+
 
     </ion-content>
 
