@@ -294,7 +294,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Near me controller */
-    .controller('NearMeCtrl', function($scope, iBeacons, Exhibitions,Loading, AppNavigationTitles){
+    .controller('NearMeCtrl', function($scope, iBeacons, Exhibitions, AppNavigationTitles){
 
 
         /* Get the application titles */
@@ -309,8 +309,10 @@ angular.module('collection-controllers', [])
         /* Find exhibitions using the beacons */
         $scope.loadExhibitions = function()
         {
-            var beacons = iBeacons.get();
+            console.log("Loading Exhibitions");
 
+            var beacons = iBeacons.get();
+            console.log(beacons);
             /* Start loading view */
             $scope.loading.status = true;
 
@@ -360,7 +362,6 @@ angular.module('collection-controllers', [])
 
     .controller('ExhibitionsListCtrl', function($scope, Exhibitions)
     {
-
 
 
         $scope.pageNumber = 0;

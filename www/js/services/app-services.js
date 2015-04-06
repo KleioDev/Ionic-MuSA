@@ -427,11 +427,12 @@ angular.module('app-services', ['ngCordova'])
                     else
                     {
                         pastState = !pastState;
-                        //console.log("State changed true");
+                        console.log("State changed true");
                         console.log(beacons);
                         /* Broadcast change */
                         var message = {};
                         message.beacons = beacons;
+
                         $rootScope.$broadcast('beacons:stateChange',{});
 
                     }
