@@ -32,23 +32,6 @@ angular.module('user-preferences-controllers', [])
     };
 
 
-
-    $scope.closeModal = function() {
-        $scope.modal.hide();
-    };
-    //Cleanup the modal when we're done with it!
-    $scope.$on('$destroy', function() {
-        $scope.modal.remove();
-    });
-    // Execute action on hide modal
-    $scope.$on('modal.hidden', function() {
-        // Execute action
-    });
-    // Execute action on remove modal
-    $scope.$on('modal.removed', function() {
-        // Execute action
-    });
-
     $scope.$on('preferences:updated', function(event, data){
         $scope.navigationTitles = AppNavigationTitles.get();
     });
@@ -93,19 +76,14 @@ angular.module('user-preferences-controllers', [])
         Facebook.logout();
     };
 
-    //$scope.isLoggedIn = function()
-    //{
-    //    console.log(Facebook.isLoggedIn());
-    //    return Facebook.isLoggedIn();
-    //};
-    //$scope.loggedIn = false;
+
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams)
     {
         /* Check if Logged in */
-        //$scope.user = Facebook.getUser();
 
-console.log(toState);
+
+        console.log(toState);
 
         if(toState.name== 'tab.tab-user') {
             $scope.user = Facebook.getUser();
@@ -121,8 +99,7 @@ console.log(toState);
             console.log($scope.user.loginStatus);
 
         }
-        //$scope.loggedIn = true;
-        //Facebook.getUserInfo();
+
 
     })
 

@@ -1,56 +1,37 @@
 
-//=================== Museum Tab Controllers ====================//
 
-/* Describe the use case for museum segmented control */
-describe('MuseumSegmentedControl', function()
-{
 
-    beforeEach(angular.module('starter'));
+describe('museum can view general information', function() {
+    //
+    //// critical
+    //it('', function() {});
+    //it('ensure valid email addresses pass validation', function() {});
+    //it('ensure submitting form changes path', function() { });
 
-    var scope, ctrl;
+    beforeEach(module('starter'));
+    beforeEach(module('museum-services'));
+    beforeEach(module('app-services'));
+    beforeEach(module('museum-controllers'));
 
-    beforeEach(inject(function(_$rootScope_, _$controller)
-    {
+
+
+    var scope, controller;
+
+
+    beforeEach(inject(function (
+        $scope,
+        $rootScope,
+        AppNavigationTitles,
+        MuseumSegmentedControlService) {
 
         scope = $rootScope.$new();
-        ctrl = $controller('MuseumSegmentedControl', {$scope: scope, 'AppNavigationTitles': {}, 'MuseumSegmentedControlService' : {}});
-    }));
 
-
-    describe('- provides museum general information on state', function()
-    {
-
-        it('only the general template should be displayed', function()
-        {
-
-
-
-            //
-            ///* Toggle museum general view */
-            //scope.museumGeneralView();
-
-            /* Should expect museum general view to show and other views disabled */
-            expect(document.getElementById('museumGeneralTemplate').className === "").toBe(true);
-            expect(document.getElementById('museumEventsTemplate').className === "ng-hide").toBe(true);
-            expect(document.getElementById('museumNewsTemplate').className === "ng-hide").toBe(true);
+        controller = $controller('MuseumSegmentedControl', {
+            $scope: scope
 
         });
-    });
+    }));
 
-    var onlyViewAvailable = function(state)
-    {
-        if(state == 'general')
-        {
-            document.getElementById('gen')
-
-        }
-    }
-
-
-
-
-
+    console.log($scope.museumTabState);
 
 });
-
-

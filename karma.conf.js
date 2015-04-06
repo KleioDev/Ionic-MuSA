@@ -15,10 +15,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+        "www/lib/ionic/js/ionic.bundle.js",
+        "www/lib/angular-mocks/angular-mocks.js",
+        "www/lib/ngCordova/ng-cordova.js",
+        "www/js/app.js",
 
-      "www/lib/ionic/js/ionic.bundle.js",
-      "www/lib/angular-mocks/angular-mocks.js",
-      "www/js/*",
+        "www/js/services/museum-services.js",
+        "www/js/services/app-services.js",
+        "www/js/controllers/museum-controllers.js",
+
         "test-cases/controller_unit_testing.js"
     ],
 

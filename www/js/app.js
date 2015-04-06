@@ -1,20 +1,24 @@
-// Ionic Starter App
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in museum-services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'museum-controllers',
+/* MuSA Application File */
+angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-services', 'app-services',
+
+
     'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic'])
 
 .run(function($ionicPlatform, $rootScope) {
 
 
-  $ionicPlatform.ready(function(iBeacon, AppNavigationTitles) {
+        var iosConfig = {
+            "badge": true,
+            "sound": true,
+            "alert": true
+        };
+
+
+        $ionicPlatform.ready(function(iBeacon, AppNavigationTitles) {
 
       var deviceInformation = ionic.Platform.device();
-console.log(deviceInformation);
+            console.log(deviceInformation);
 
 
       $rootScope.$on('stateChangeSuccess',
@@ -31,33 +35,20 @@ console.log(deviceInformation);
           });
 
 
-      var isWebView = ionic.Platform.isWebView();
-      var isIPad = ionic.Platform.isIPad();
       var isIOS = ionic.Platform.isIOS();
 
       $rootScope.isIOS = isIOS;
-      var isAndroid = ionic.Platform.isAndroid();
-      var isWindowsPhone = ionic.Platform.isWindowsPhone();
 
-      var currentPlatform = ionic.Platform.platform();
-      var currentPlatformVersion = ionic.Platform.version();
-
-      console.log(currentPlatform);
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
 
-      openFB.init({appId: '404761379705364'});
+      //openFB.init({appId: '404761379705364'});
 
       if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      }
 
-
-  });
+        });
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -75,7 +66,9 @@ console.log(deviceInformation);
     templateUrl: "templates/tabs.html"
   })
 
-  // Each tab has its own nav history stack:
+    /* Museum Tab States */
+
+      /* Segmented Control State */
       .state('tab.museum-segmented-control',{
           cache: true,
           url: '/museum-segmented-control',
@@ -89,7 +82,7 @@ console.log(deviceInformation);
           }
       })
 
-
+        /* Single Event Page */
       .state('tab.museum-events-single',
       {
           url:'/museum-events/:eventId',
@@ -103,7 +96,7 @@ console.log(deviceInformation);
           }
 
       })
-
+        /* Single News Page */
       .state('tab.single_news_article',
       {
           url: '/museum-news/:newsId',
@@ -117,7 +110,7 @@ console.log(deviceInformation);
           }
       })
 
-
+    /* Collection segmented control */
   .state('tab.collection', {
           cache: true,
       url: '/tab-collection/collection',
@@ -130,6 +123,7 @@ console.log(deviceInformation);
       }
     })
 
+      /* Single Object View */
       .state('tab.collection-single-object',{
           url: '/collection/objects/:objectId',
           views:
@@ -141,19 +135,8 @@ console.log(deviceInformation);
           }
       })
 
-      .state('tab.audio-view',
-        {
-            url: '/audio_view/:audioId',
-            views:
-            {
-                'tab-collection':{
-                    templateUrl: 'templates/tab-collection/audio-view.html',
-                    controller: 'AudioViewCtrl'
-                }
-            }
 
-        })
-
+        /* View View State */
       .state('tab.video-view',
       {
           url:'/videoView/:videoId',
@@ -167,6 +150,7 @@ console.log(deviceInformation);
           }
       })
 
+      /* Exhibition View State */
       .state('tab.collection-exhibition-view', {
           url: '/collection/exhibitions/:exhibitionId',
           views:
@@ -178,6 +162,7 @@ console.log(deviceInformation);
           }
       })
 
+      /* QR Code Scanner View */
       .state('tab.tab-qrcode-scanner', {
 
           url: '/tab-qrcode/qr-code-scanner',
@@ -191,7 +176,7 @@ console.log(deviceInformation);
       }
 
   )
-
+        /* Map View State */
       .state('tab.tab-maps',{
 
           url: '/tab-map/maps',
@@ -205,6 +190,7 @@ console.log(deviceInformation);
           }
       })
 
+      /* User Tab State */
       .state('tab.tab-user',{
 
           url: '/tab-user/preferences',
@@ -218,6 +204,7 @@ console.log(deviceInformation);
           }
       })
 
+      /* User feedback form state */
       .state('tab.tab-feedback-form',{
 
           url: '/tab-user/feedback_form',
@@ -231,6 +218,7 @@ console.log(deviceInformation);
           }
       })
 
+      /* Match Hunt state */
       .state('tab.tab-match-hunt',{
 
           url: '/tab-qrcode/matchhunt',

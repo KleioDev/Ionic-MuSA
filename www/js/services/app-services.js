@@ -1,12 +1,13 @@
 angular.module('app-services', ['ngCordova'])
 
+    /* Service for managing the AppNavigation Labels */
     .factory('AppNavigationTitles', function($rootScope)
 {
 
-
-
+    /* Default language */
     var lang = "ENGLISH";
 
+    /* Multiple Language Support */
     var languages = [
 
         {
@@ -21,6 +22,8 @@ angular.module('app-services', ['ngCordova'])
         }
     ];
 
+
+    /* Labels for each language */
     var languageLabels = {
 
         "english": {
@@ -301,11 +304,13 @@ angular.module('app-services', ['ngCordova'])
 
     return {
 
+        /* Return the labels */
         get: function()
         {
             return navigation.labels;
         },
 
+        /* Apply a change to the language*/
         apply: function(language)
         {
             navigation.labels = languageLabels[language.english.toLowerCase()];
@@ -313,8 +318,8 @@ angular.module('app-services', ['ngCordova'])
     };
 })
 
-
-.factory('iBeacons', function()
+/* ibeacon Serice */
+.factory('iBeacons', function($rootScope)
     {
         var beacons = [];
 
@@ -322,8 +327,10 @@ angular.module('app-services', ['ngCordova'])
 
         var ranging = false;
 
-        var beaconCallback;
+        /* Variable to check if states have changed */
         var pastState = false;
+
+        /* iBeacon proximity */
         var proximity  = {
             "unknown": 0,
             "immediate": 1,
@@ -338,7 +345,7 @@ angular.module('app-services', ['ngCordova'])
             {
                 return beacons;
             },
-            startRanging :  function(returnFoundBeacons) {
+            startRanging :  function() {
 
 
                 console.log("Start Ranging");
@@ -346,12 +353,15 @@ angular.module('app-services', ['ngCordova'])
                 /* Request Authorization */
                 estimote.beacons.requestAlwaysAuthorization();
 
+                /* Start ranging for iBeacons */
                 estimote.beacons.startRangingBeaconsInRegion({}, processBeacon, onFailure);
 
                 //TODO: Finish iBeacon Search
+
+                /* Handles the ibeacons found */
                 function processBeacon(rangedBeacons)
                 {
-                    var beaconsChanged = false;
+                    var beaconsChanged = pastState;
 
                     var foundBeacons = rangedBeacons.beacons;
                     var nearFoundBeacons = [];
@@ -359,32 +369,35 @@ angular.module('app-services', ['ngCordova'])
                     /* Only store the ones that are near */
                     for(var i = 0; i < foundBeacons.length; i++)
                     {
-                        console.log("Proximity: " + foundBeacons[i].proximity);
 
-                        if(foundBeacons[i].proximity == proximity.near)
+                        if(foundBeacons[i].proximity == proximity.near || foundBeacons[i].proximity == proximity.immediate)
                         {
                             nearFoundBeacons.push(foundBeacons[i]);
                         }
                     }
 
+                    /* If lengths are different a state has changed */
                     if(beacons.length == 0 && nearFoundBeacons.length != 0)
                     {
                         beacons = nearFoundBeacons;
-                        beaconsChanged = true;
-                    }
-                    else if(nearFoundBeacons.length == 0){
-                        beaconsChanged = true;
-                        beacons= [];
-
+                        beaconsChanged = !pastState;
                     }
 
+                    /* If lengths are different a state has changed */
+                    else if(nearFoundBeacons.length == 0 && beacons.length != 0)
+                    {
+                        beacons = nearFoundBeacons;
+                        beaconsChanged = !pastState;
+                    }
+
+                    /* Check if the stored beacons and the newly found beacons are the same */
                     else {
+
                         /* Iterate through all the found beacons */
                         for (var i = 0; i < nearFoundBeacons.length; i++) {
                             var foundBeaconId = nearFoundBeacons[i].proximityUUID + nearFoundBeacons[i].major + nearFoundBeacons[i].minor;
 
                             /* Go through all the stored beacons */
-
                             var found = false;
                             for (var k = 0; k < beacons.length; k++) {
                                 var beaconID = beacons[k].proximityUUID + beacons[k].major + beacons[k].minor;
@@ -394,39 +407,41 @@ angular.module('app-services', ['ngCordova'])
                                 }
 
                             }
-
+                            /* if an iBeacon doesn't match, a state change has happened */
                             if (!found) {
                                 beacons = nearFoundBeacons;
-                                beaconsChanged = true;
+                                beaconsChanged = !pastState;
                             }
 
 
                         }
                     }
 
-
+                    /* No State Change */
                     if(pastState == beaconsChanged)
                     {
-                        //console.log("STATE CHANGED: " + false);
-
-                        /* Broadcast change */
-
+                        //console.log("STATE CHANGED: " + false)
                     }
+                    /* State Change */
+
                     else
                     {
                         pastState = !pastState;
+                        //console.log("State changed true");
+                        console.log(beacons);
+                        /* Broadcast change */
+                        var message = {};
+                        message.beacons = beacons;
+                        $rootScope.$broadcast('beacons:stateChange',{});
 
-                        //if(typeof beaconCallback != 'undefined')
-
-                        console.log("STATE CHANGED: " + true);
                     }
                 }
 
-                function onFailure()
-                {
-                    console.log("mistake happened");
+                function onFailure(){
 
+                    console.log("iBeacon FAILURE");
                 }
+
 
             },
             stopRanging: function()
@@ -435,10 +450,9 @@ angular.module('app-services', ['ngCordova'])
                     ranging = false;
                     estimote.beacons.stopRangingBeaconsInRegion({});
 
-
-
             },
 
+            /* Toggles the ranging of iBeacons */
             toggleRanging: function()
             {
                 if(!ranging) {
@@ -454,8 +468,11 @@ angular.module('app-services', ['ngCordova'])
 
     })
 
+
+    /* Service handles Facebook calls */
 .factory('Facebook', function($cordovaFacebook, $ionicLoading)
     {
+        /* User info */
         var user = {
 
 
@@ -472,7 +489,7 @@ angular.module('app-services', ['ngCordova'])
                 return user;
             },
 
-
+            /* Logins the user */
             login: function()
             {
                 var loading = $ionicLoading.show({
@@ -581,6 +598,7 @@ angular.module('app-services', ['ngCordova'])
         }
     })
 
+    /*The location of the museum */
 .factory('Museum', function()
     {
         return {
@@ -591,8 +609,10 @@ angular.module('app-services', ['ngCordova'])
         }
     })
 
+    /* Service handles user preferences */
 .factory('UserPreferences', function(AppNavigationTitles, $rootScope, $ionicLoading)
     {
+
         var preferences = {
 
             "notifications": true,
@@ -613,6 +633,7 @@ angular.module('app-services', ['ngCordova'])
                 return preferences;
             },
 
+            /* Set the language */
             setLanguage: function(language)
             {
                 preferences.language = language;
@@ -632,10 +653,7 @@ angular.module('app-services', ['ngCordova'])
 
             getAbout: function()
             {
-                //$ionicLoading.show({
-                //    template: '<ion-spinner icon="ios"></ion-spinner>                '
-                //});
-
+                /* Dummy data for the About Page */
                 return { "title" : "About",
 
                  "content":   "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing"
@@ -652,6 +670,7 @@ angular.module('app-services', ['ngCordova'])
 
             getTerms: function()
             {
+                /* Dummy data for terms of service */
                 return { "title" : "Terms of Service",
 
                     "content":   "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing"
@@ -667,6 +686,7 @@ angular.module('app-services', ['ngCordova'])
 
     })
 
+    /* Match Hunt game */
 .factory('MatchHunt', function($ionicLoading)
     {
         var currentId = 0;
@@ -702,5 +722,33 @@ angular.module('app-services', ['ngCordova'])
         }
 
 
-    });
+    })
 
+
+//.factory('Loading', function()
+//{
+//
+//    var loading ={status: false};
+//
+//    return {
+//
+//        get: function()
+//        {
+//            return loading;
+//        },
+//
+//        start: function()
+//        {
+//            loading.status = true;
+//        },
+//
+//        stop: function()
+//        {
+//            loading.status = false;
+//        }
+//
+//
+//
+//    }
+//});
+//

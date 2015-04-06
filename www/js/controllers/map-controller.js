@@ -1,28 +1,30 @@
 angular.module('map-controllers', [])
 
-
+/* Map View Controller */
 .controller('MapViewCtrl', function($scope, AppNavigationTitles, Map, SegmentedControl, iBeacons)
 {
 
-    /* Range for iBeacons */
-
-    console.log("Maps Enabled");
+    /* Create segmented control */
     if(!SegmentedControl.exists('map'))
         SegmentedControl.create('map', ["entry", "map"], 'entry');
 
+    /* Segmented control */
     $scope.segmentedControl = SegmentedControl.get('map');
 
-    console.log($scope.segmentedControl);
-
+    /* GEt application labels */
     $scope.navigationTitles = AppNavigationTitles.get();
 
+    /* Get the current map displayed */
     $scope.map =  Map.getMap();
 
+
+    /* Change the level */
     $scope.changeLevel = function(level)
     {
         SegmentedControl.set('map', level);
-
-
+        Map.setViewState(level);
+        $scope.map.img_href = Map.getMap().img_href;
+        console.log($scope.map);
     };
 
     /* When page loads */
@@ -42,13 +44,5 @@ angular.module('map-controllers', [])
         Map.getRoomWithBeaconId(beacons);
     });
 
-    $scope.beaconCallback = function(beacons)
-    {
-        console.log("Beacons Received");
 
-
-        var beaconId = beacons[0].proximityUUID + beacons[0].major + beacons[0].minor;
-        Map.getMap(beacons[0]);
-    }
-
-})
+});

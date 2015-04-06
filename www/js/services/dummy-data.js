@@ -174,9 +174,27 @@ var dummyMuseumObjects = {
 var dummyExhibitions = {
     objects: [
 
-            {"id":1,"title":"et ultrices posuere cubilia curae","description":"nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac","museumObjectsId":[1,4,7],"museumObjects":[],"author":"Lawrence Hawkins","img_href":"img/dummy-exh-images/dummy-375x500-LaserTowardsMilkyWaysCentre.jpg"},
-            {"id":2,"title":"ipsum primis in faucibus orci luctus et","description":"sit amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis","museumObjectsId":[2,5],"museumObjects":[],"author":"Deborah Gibson","img_href":"img/dummy-exh-images/dummy-454x280-Cup.jpg"},
-            {"id":3,"title":"quisque ut","description":"tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem vitae mattis nibh ligula nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia","museumObjectsId":[10,12],"museumObjects":[],"author":"Fred Gibson","img_href":"img/dummy-exh-images/dummy-500x810-Rocker.jpg"},
+            {"id":1,
+                "title":"et ultrices posuere cubilia curae",
+                "description":"nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac",
+                "museumObjectsId":[1,4,7],
+                "museumObjects":[],
+                "author":"Lawrence Hawkins",
+                "img_href":"img/dummy-exh-images/dummy-375x500-LaserTowardsMilkyWaysCentre.jpg"},
+            {"id":2,
+                "title":"ipsum primis in faucibus orci luctus et",
+                "description":"sit amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis",
+                "museumObjectsId":[2,5],
+                "museumObjects":[],
+                "author":"Deborah Gibson",
+                "img_href":"img/dummy-exh-images/dummy-454x280-Cup.jpg"},
+            {"id":3,
+                "title":"quisque ut",
+                "description":"tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem vitae mattis nibh ligula nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia",
+                "museumObjectsId":[10,12],
+                "museumObjects":[],
+                "author":"Fred Gibson",
+                "img_href":"img/dummy-exh-images/dummy-500x810-Rocker.jpg"},
             {"id":4,"title":"euismod scelerisque quam turpis adipiscing lorem vitae","description":"iaculis congue vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero ut massa volutpat convallis morbi odio odio elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit","museumObjectsId":[2,5,1,7],"museumObjects":[],"author":"Julie Riley","img_href":"img/dummy-exh-images/dummy-600x450-Buoy.jpg"},
             {"id":5,"title":"sem praesent id","description":"feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt ante vel ipsum praesent blandit lacinia","museumObjectsId":[3,8],"museumObjects":[],"author":"Douglas Jenkins","img_href":"img/dummy-exh-images/dummy-667x1000-Cup.jpg"},
             {"id":6,"title":"in consequat","description":"volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo maecenas rhoncus aliquam lacus morbi","museumObjectsId":[9,11],"museumObjects":[],"author":"Sara Ray","img_href":"img/dummy-exh-images/dummy-315x560-Matchbox.jpg"},
@@ -244,9 +262,45 @@ var dummyExhibitions = {
         }
 
         return responseObjects;
+    },
+
+    getByBeaconId: function(beaconIds)
+    {
+        console.log("IDS:");
+        console.log(beaconIds);
+        console.log(beaconIds.length);
+
+        var responseObject = [];
+
+        for(var i = 0; i < this.objects.length; i++)
+        {
+            this.objects[i].beaconId = "";
+        }
+        console.log("STEP 2");
+        this.objects[0].beaconId = "B9407F30-F5F8-466E-AFF9-25556B57FE6D5526161535";
+
+
+        console.log("STEP 3");
+
+        for(var i = 0; i < this.objects.length; i++)
+        {
+            for(var j =0; j < beaconIds.length; j++)
+            {
+                //console.log("SEARCHING");
+                if(this.objects[i].beaconId == beaconIds[j])
+                {
+
+                    responseObject.push(this.objects[i]);
+                }
+            }
+        }
+        console.log("STEP 4");
+
+        return responseObject;
     }
 
-};
+
+    };
 
 
 var mediaServer = {
@@ -328,7 +382,6 @@ var mediaServer = {
         }
     }
 }
-
 }
 
 dummyExhibitions.init();

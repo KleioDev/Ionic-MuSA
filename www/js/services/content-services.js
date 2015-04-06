@@ -3,6 +3,7 @@
  */
 angular.module('content-services', [])
 
+    /* Service for getting Media objects */
 .factory('Media', function() {
          
          
@@ -95,10 +96,12 @@ angular.module('content-services', [])
         }
     })
 
+    /* Video service for handling videos and getting videos  */
 .factory('Video', function()
     {
         var video = null;
         return {
+
 
             set: function(newVideo)
             {

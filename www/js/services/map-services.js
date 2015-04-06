@@ -87,6 +87,18 @@ angular.module('map-services', [])
             setViewState : function(state)
             {
                 mapViewState = state;
+
+
+                if(mapViewState == 'entry')
+                {
+                    map.img_href = 'img/map/entry_level.png';
+
+                }
+                else if(mapViewState == 'basement')
+                {
+                    map.img_href = 'img/map/basement_level.png';
+
+                }
             },
 
             getMap: function()

@@ -1,29 +1,51 @@
 
 
 
-        <div ng-controller="NearMeCtrl">
+<div ng-controller="NearMeCtrl">
 
 
+    <div ng-switch="loading.status">
+
+        <div  ng-switch-when=false>
+
+            <ion-list class="list">
+
+                <!--| filter:searchTerm-->
+                <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" href="#/tab/collection/exhibitions/{{exhibition.id}}">
+                    <img src="{{exhibition.img_href}}"/>
+                    <h2>{{exhibition.title}}</h2>
+                    <p>{{exhibition.museumObjects.length}}</p>
+                    <i class="icon ion-ios-arrow-right"></i>
+
+                </ion-item>
+            </ion-list>
+        </div>
+
+        <div ng-switch-default=true class="row">
+
+            <div class="col-10"></div>
+
+            <div class="col-80" style="text-align:center">
+                <br><br><br><br>
+                <i class="icon ion-ios-navigate-outline near-me-button"style="width:100%"></i>
+                <p>{{navigationTitles.collection.nearMeView.searchingForBeaconsLabel}}</p>
+
+                <ion-spinner icon="spiral"></ion-spinner>
 
 
-            <div ng-if="loading" class="row">
-
-                <div class="col-10"></div>
-
-                <div class="col-80" style="text-align:center">
-                        <br><br><br><br>
-                        <i class="icon ion-ios-navigate-outline near-me-button"style="width:100%"></i>
-                    <p>{{navigationTitles.collection.nearMeView.searchingForBeaconsLabel}}</p>
-
-
-
-                </div>
-                <div class="col-10"></div>
-
-                </div>
-
-
+            </div>
+            <div class="col-10"></div>
 
         </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 
 

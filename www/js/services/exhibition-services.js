@@ -3,12 +3,6 @@ angular.module('exhibition-services', [])
 .factory('ExhibitionSegmentedControlState', function()
 
     {
-        //var segmentedControlState = {
-        //    "nearMeState": false,
-        //    "objectsState":true,
-        //    "exhibitionsState":false
-        //};
-
         var segmentedControlState = {};
         segmentedControlState.state = 'objects';
         return {
@@ -32,17 +26,8 @@ angular.module('exhibition-services', [])
 
     })
 
-.factory('MuseumExhibitions', function()
-    {
-
-
-
-    })
-
-
 .factory('MuseumObjects', function($filter)
 {
-
 
 
     var museumObjects =
@@ -64,8 +49,7 @@ angular.module('exhibition-services', [])
                 museumObjects.length = 0;
             }
             var results = dummyMuseumObjects.getSearchResults(searchTerm,$filter, pageNumber);
-            //console.log("Results: " );
-            //console.log(results);
+
             for(var i = 0; i < results.objects.length; i++)
             {
                 museumObjects.push(results.objects[i]);
@@ -77,11 +61,9 @@ angular.module('exhibition-services', [])
         get: function(objectId) {
             /* Http get request */
             //TODO: Object HTTP Request
-            for (var i = 0; i < museumObjects.length; i++) {
-                if (museumObjects[i].id === parseInt(objectId)) {
-                    return museumObjects[i];
-                }
-            }
+
+            return dummyMuseumObjects.get(parseInt(objectId));
+
         },
 
         resetPage: function(){
@@ -136,11 +118,22 @@ angular.module('exhibition-services', [])
                 return results.morePages;
             },
 
-            getByiBeacon: function(beacons, success, failure)
+            findByBeacons: function(beacons)
             {
                 //TODO: HTTP Request for exhibitions linked with iBeacons
 
+                var beaconIdArray = [];
 
+                for(var i = 0; i < beacons.length ;i++)
+                {
+                    var beaconID = beacons[i].proximityUUID + beacons[i].major + beacons[i].minor;
+
+                    beaconIdArray.push(beaconID);
+
+                }
+
+                var exhibitions = dummyExhibitions.getByBeaconId(beaconIdArray);
+                return exhibitions;
             }
         }
     });
