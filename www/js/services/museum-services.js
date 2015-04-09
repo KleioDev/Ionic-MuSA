@@ -8,66 +8,6 @@ angular.module('museum-services', [])
 
     //TODO: Museum- Setup ajax HTTP Request functionality
 
-    /* Accordion State for the view */
-    .factory('MuseumGeneralAccordionState', function()
-    {
-
-        var museumAccordionState = {
-
-            "hoursOfOperation": {
-                "show": false,
-                "arrow": "down"
-            },
-            "location":{
-                "show": false,
-                "arrow": "down"
-            },
-            "links":{
-                "show": false,
-                "arrow": "down"
-            }
-        };
-
-        var arrowDirection = function(bool)
-        {
-            if(bool)
-                return "up";
-            else
-                return "down";
-
-        };
-
-        return {
-
-            get: function()
-            {
-                return museumAccordionState;
-            },
-            toggle: function(state)
-            {
-                if(state == "hoursOfOperation")
-                {
-                    museumAccordionState.hoursOfOperation.show = !museumAccordionState.hoursOfOperation.show;
-                    museumAccordionState.hoursOfOperation.arrow =  arrowDirection(museumAccordionState.hoursOfOperation.show);
-
-
-                }
-                if(state == "location")
-                {
-                    museumAccordionState.location.show = !museumAccordionState.location.show;
-                    museumAccordionState.location.arrow = arrowDirection(museumAccordionState.location.show);
-                }
-                if(state == "links")
-                {
-                    museumAccordionState.links.show = !museumAccordionState.links.show ;
-                    museumAccordionState.links.arrow =  arrowDirection(museumAccordionState.links.show);
-
-                }
-
-            }
-
-        }
-    })
 
 
 
@@ -131,6 +71,9 @@ angular.module('museum-services', [])
 .factory('Events', function(Routes,$http)
 {
     var events = {};
+    events.allEvents = [];
+    events.eventsToday = [];
+    events.upcomingEvents = [];
 
 
     return {
@@ -147,6 +90,7 @@ angular.module('museum-services', [])
                     //console.log(data);
                     events = data;
 
+
                 }).
                 error(function(data, status, headers, config) {
                     // called asynchronously if an error occurs
@@ -156,11 +100,14 @@ angular.module('museum-services', [])
         },
         get: function()
         {
+            var eventService = this;
             $http.get(Routes.MUSEUM_EVENTS_ROUTE).
                 success(function(data, status, headers, config) {
 
                     console.log(data);
-                    events = data.events;
+                    events.allEvents = data.events;
+                    eventService.getEventsToday();
+                    eventService.getUpcomingEvents();
 
                 }).
                 error(function(data, status, headers, config) {
@@ -171,32 +118,30 @@ angular.module('museum-services', [])
 
         getEventsToday: function()
         {
-            /* Get today's date */
+            events.eventsToday = [];
             var currentDate = moment(new Date("2015", "05", "2"));
 
-            var eventsToday = [];
-            for (var i = 0; i < events.length; i++)
+            for (var i = 0; i < events.allEvents.length; i++)
             {
                 //console.log(events[i].datetime.diff(currentDate));
-                if (events[i].datetime.diff(currentDate,'days') == 0)
+                if (events.allEvents[i].datetime.diff(currentDate,'days') == 0)
                 {
-                   eventsToday.push(events[i]);
+                    events.eventsToday.push(events[i]);
                 }
             }
-            return eventsToday;
         },
+
+
 
         getUpcomingEvents: function()
         {
-            /* Get upcoming events */
+            events.upcomingEvents = [];
             var currentDate = moment(new Date("2015", "05", "2"));
-            var upcomingEvents = [];
-            for (var i = 0; i < events.length; i++) {
-                if (events[i].datetime.diff(currentDate, 'days') != 0 ){
-                    upcomingEvents.push(events[i]);
+            for (var i = 0; i < events.allEvents.length; i++) {
+                if (events.allEvents[i].datetime.diff(currentDate, 'days') != 0 ){
+                    events.upcomingEvents.push(events[i]);
                 }
             }
-            return upcomingEvents;
         }
 
 

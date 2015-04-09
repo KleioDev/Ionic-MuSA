@@ -24,7 +24,7 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Controller that manages the Museum General View */
-    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, MuseumGeneralAccordionState, Museum)
+    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, Museum)
     {
         //TODO: Links and Maps
         $scope.generalState = $scope.$parent.generalState;
@@ -32,17 +32,8 @@ angular.module('museum-controllers', ['ngCordova'])
         /* App labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
-        /* Accordion State of buttons */
-        $scope.museumAccordionState = MuseumGeneralAccordionState.get();
-
         /* Get information from the museum */
         $scope.museum = Museum.get();
-
-        /* Toggle the accordion state */
-        $scope.toggle = function(tag)
-        {
-            MuseumGeneralAccordionState.toggle(tag);
-        };
 
         /* Open the map */
         $scope.openMap = function()
@@ -69,11 +60,11 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.events = Events.all();
 
 
-            /* Get the events that are happening today */
-        $scope.eventsToday = Events.getEventsToday();
-
-        /* Get the upcoming events */
-        $scope.upcomingEvents = Events.getUpcomingEvents();
+        //    /* Get the events that are happening today */
+        //$scope.eventsToday = $scope.events.eventsToday;
+        //
+        ///* Get the upcoming events */
+        //$scope.upcomingEvents = Events.getUpcomingEvents();
 
         /* Open the event */
         $scope.openEvent = function(eventId)

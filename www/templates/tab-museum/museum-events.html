@@ -3,7 +3,7 @@
         {{navigationTitles.events.navHappeningToday}}
     </div>
 
-    <div class="list card event-card" ng-repeat="event in eventsToday" type="item-text-wrap" ng-click="openEvent(event.id)">
+    <div class="list card event-card" ng-repeat="event in events.eventsToday" type="item-text-wrap" ng-click="openEvent(event.id)">
         <div class="item item-header item-icon-right">
             <h2> {{event.title}}</h2>
             <i class="icon ion-ios-arrow-right"></i>
@@ -29,7 +29,7 @@
     </div>
 
 
-    <div class="list card"  ng-repeat="event in upcomingEvents" type="item-text-wrap" ng-click="openEvent(event.id)">
+    <div class="list card"  ng-repeat="event in events.upcomingEvents" type="item-text-wrap" ng-click="openEvent(event.id)">
 
         <div class="item item-header item-icon-right">
             <h2> {{event.title}}</h2>
