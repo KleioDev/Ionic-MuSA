@@ -5,20 +5,20 @@
 angular.module('museum-controllers', ['ngCordova'])
 
     /* Controller that manages the segmented control for the museum view */
-    .controller('MuseumSegmentedControl', function( $scope, $rootScope, AppNavigationTitles, MuseumSegmentedControlService)
+    .controller('MuseumSegmentedControl', function( $scope, AppNavigationTitles, SegmentedControl)
     {
         /* Get the navigation titles */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
-        $scope.museumTabState = MuseumSegmentedControlService.get();
+        $scope.museumTabState = SegmentedControl.create('museum', ['general', 'events', 'news'], 'general');
 
         /* Change the view state */
         $scope.changeState = function(state)
         {
-            MuseumSegmentedControlService.set(state);
+            $scope.museumTabState.set(state);
         };
 
         /* Update the view on preferences update */
-        $scope.$on('preferences:updated', function(event, data){
+        $scope.$on('preferences:updated', function(){
             $scope.navigationTitles = AppNavigationTitles.get().museum;
         });
     })
@@ -32,9 +32,11 @@ angular.module('museum-controllers', ['ngCordova'])
         /* App labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
-
         /* Accordion State of buttons */
         $scope.museumAccordionState = MuseumGeneralAccordionState.get();
+
+        /* Get information from the museum */
+        $scope.museum = Museum.get();
 
         /* Toggle the accordion state */
         $scope.toggle = function(tag)
@@ -52,18 +54,22 @@ angular.module('museum-controllers', ['ngCordova'])
         };
 
         /* Update the view to the preferences */
-        $scope.$on('preferences:updated', function(event, data){
+        $scope.$on('preferences:updated', function(){
             $scope.navigationTitles = AppNavigationTitles.get().museum;
         });
     })
 
     /* Events list controller */
-    .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events)
+    .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events, Connection)
     {
+        Connection.checkConnection();
         /* Update navigation labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
+        Events.get();
+        $scope.events = Events.all();
 
-        /* Get the events that are happening today */
+
+            /* Get the events that are happening today */
         $scope.eventsToday = Events.getEventsToday();
 
         /* Get the upcoming events */
@@ -76,7 +82,7 @@ angular.module('museum-controllers', ['ngCordova'])
         };
 
         /* Update preferences */
-        $scope.$on('preferences:updated', function(event, data){
+        $scope.$on('preferences:updated', function(){
             $scope.navigationTitles = AppNavigationTitles.get().museum;
         });
 
@@ -103,17 +109,17 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
 
         /* Pass the event to the view */
-        $scope.event = Events.get($stateParams.eventId);
+        $scope.event = Events.getSingleEvent($stateParams.eventId);
 
         /* Update the view labels */
         $scope.$on('preferences:updated', function(event, data){
             $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
         });
 
-        /* Pop up to add the calendar */
+        /* Add the calendar */
         $scope.addToCalendar = function() {
 
-            /* Show Confirm  popup */
+            /* Show Confirm  popup to add the calendar */
             var confirmPopup = $ionicPopup.confirm({
 
                 title: $scope.navigationTitles.dialogCalendar.addToCalendarQuestion,
@@ -126,9 +132,7 @@ angular.module('museum-controllers', ['ngCordova'])
             confirmPopup.then(function(res)
             {
                 if(res)
-                {   //Add event to calendar!
-
-
+                {
                     /* Create an event to pass to the local calendar application */
                     $cordovaCalendar.createEventInteractively({
                         title: $scope.event.title,
@@ -138,26 +142,21 @@ angular.module('museum-controllers', ['ngCordova'])
                         endDate: moment($scope.event.datetime).add('1', 'hour').toDate()
                     }).then(function (result) {
 
-
-
                     }, function (err) {
-                        console.log("ERROR");
+                        console.log(err);
                         var failurePopup = $ionicPopup.alert({
                             title: $scope.navigationTitles.dialogCalendar.failureDialog,
                             template: '<p>' + $scope.navigationTitles.dialogCalendar.failureBody + '</p>'
                         });
 
                         failurePopup.then(function(res) {
-                            console.log('Thank you for not eating my delicious ice cream cone');
+
                         });
-                        // error
                     });
 
                 }
                 else{
 
-                    //NO
-                    console.log('No');
                 }
 
             });
@@ -167,7 +166,7 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Single News View Controller */
-    .controller('MuseumSingleNewsCtrl', function($scope, $stateParams, $cordovaCalendar, AppNavigationTitles,News)
+    .controller('MuseumSingleNewsCtrl', function($scope, $stateParams, AppNavigationTitles,News)
     {
         /* App navigation labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;
@@ -176,7 +175,7 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.news = News.get($stateParams.newsId);
 
         /* Update preferences */
-        $scope.$on('preferences:updated', function(event, data){
+        $scope.$on('preferences:updated', function(){
             $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;
         });
 

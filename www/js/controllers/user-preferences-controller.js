@@ -59,7 +59,7 @@ angular.module('user-preferences-controllers', [])
 
     $scope.closePage = function()
     {
-        $scope.closeModal();
+        $scope.modal.hide();
     }
 
     $scope.login = function()

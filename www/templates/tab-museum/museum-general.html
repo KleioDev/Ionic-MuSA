@@ -1,55 +1,47 @@
     <div ng-controller="MuseumGeneralCtrl">
 
-        <img class="padding" src="img/musa_home.png" width="100%"/>
+        <div class="padding" >
+            <h2 class="paheader-dark">Museo de Arte Mayaguez</h2>
+            <hr>
 
-        <ion-list>
+        </div>
+        <div class="row">
 
-            <a class="item item-icon-left item-icon-right ion-accordion" ng-click="toggle('hoursOfOperation')" >
-                <i class="icon ion-ios-clock-outline"></i>
-                {{navigationTitles.general.hoursOfOperation}}
-                <i class="icon ion-ios-arrow-{{museumAccordionState.hoursOfOperation.arrow}}"></i>
-            </a>
+            <div class="col-80 col-offset-10">
+                <img class="padding" src="img/musa_home.png" width="100%"/>
 
-            <div ng-if="museumAccordionState.hoursOfOperation.show" class="text-wrapping padding">
+            </div>
+            <div class="col"></div>
+        </div>
 
-                <p> The museum is usually open on weekdays. </p>
 
-                <table cellpadding="1" cellspacing="1" style="width:100%">
-                    <tbody>
-                    <tr>
-                        <td><strong>Monday</strong></td>
-                        <td>8:30 AM - 5:30 PM</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tuesday</strong></td>
-                        <td>8:30 AM - 5:30 PM</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Wednesday</strong></td>
-                        <td>8:30 AM - 7:30 PM</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Thursday</strong></td>
-                        <td>8:30 AM - 5:30 PM</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Friday</strong></td>
-                        <td>8:30 AM - 6:30 PM</td>
-                    </tr>
-                    </tbody>
-                </table>
 
-                <p>&nbsp;</p>
+
+
+        <ion-list >
+            <div class="padding">
+            <!--<ion-item class="item item-icon-left ion-accordion"  >-->
+                <!--<i class="icon ion-ios-clock-outline"></i>-->
+                <!--{{navigationTitles.general.hoursOfOperation}}-->
+            <!--</ion-item>-->
+            <h4 class="dark">{{navigationTitles.general.hoursOfOperation}}</h4>
+            <hr>
+
+
+            <div ng-bind-html ='museum.info.hoursOfOperation' class="text-wrapping padding">
+
 
                 </div>
 
 
-            <a class="item item-icon-left item-icon-right ion-accordion" ng-click="toggle('location')" ng-show="museumAccordionState.location" >
-                <i class="icon ion-ios-location-outline"></i>
-                {{navigationTitles.general.directions}}
-                <i class="icon ion-ios-arrow-{{museumAccordionState.location.arrow}}"></i>
-            </a>
-            <div ng-if="museumAccordionState.location.show" class="padding">
+            <!--<ion-item class="item item-icon-left ion-accordion" >-->
+                <!--<i class="icon ion-ios-location-outline"></i>-->
+                <!--{{navigationTitles.general.directions}}-->
+            <!--</ion-item>-->
+            <h4 class="dark">{{navigationTitles.general.directions}}</h4>
+            <hr>
+
+            <div  class="padding">
 
                 <p><strong>Address</strong> </p>
 
@@ -65,16 +57,18 @@
             </div>
 
 
-            <a class="item item-icon-left item-icon-right ion-accordion" ng-click="toggle('links')" ng-show="museumAccordionState.links" >
-                <i class="icon ion-ios-browsers-outline"></i>
-                {{navigationTitles.general.links}}
-                <i class="icon ion-ios-arrow-{{museumAccordionState.links.arrow}}"></i>
-            </a>
-            <div ng-if="museumAccordionState.links.show" class="padding">
+            <!--<ion-item class="item item-icon-left  ion-accordion" ng-click="toggle('links')"  >-->
+                <!--<i class="icon ion-ios-browsers-outline"></i>-->
+                <!--{{navigationTitles.general.links}}-->
+            <!--</ion-item>-->
+
+            <h4 class="dark"> {{navigationTitles.general.links}}</h4>
+            <hr class=style="border: 1px dashed;" />
+            <div  class="padding">
 
 
             </div>
-
+            </div>
 
         </ion-list>
 

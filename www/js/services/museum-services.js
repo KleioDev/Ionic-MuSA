@@ -6,28 +6,6 @@ angular.module('museum-services', [])
 
 //=================== Museum Services ====================//
 
-    /* Segmented Control Service */
-    .factory('MuseumSegmentedControlService', function()
-    {
-        var segmentedControlState = {};
-
-        segmentedControlState.state = "general";
-
-        return {
-            get :function(){
-
-                return segmentedControlState;
-            },
-
-            set: function(state){
-
-                segmentedControlState.state  = state;
-            }
-
-        };
-
-    })
-
     //TODO: Museum- Setup ajax HTTP Request functionality
 
     /* Accordion State for the view */
@@ -90,75 +68,105 @@ angular.module('museum-services', [])
 
         }
     })
-    //TODO: Events- Setup ajax HTTP Request functionality
 
-    /* Event service for getting the events from the server */
-.factory('Events', function()
-{
-    var events = [
 
-        {
-            id: 273,
-            title: "Museum Inauguration",
-            description: "Museum will finally open after 13 years!",
-            location: "Museum",
 
-            datetime:  moment(new Date("2015", "05", "2", "10", "30"))
-
-        },
-        {
-            id: 300,
-            title: "Speech - Zorali de Feria",
-            description: "Museum will finally open after 13 years!",
-            location: "Museum",
-
-            datetime:  moment(new Date("2015", "05", "2", "13", "00"))
-
-        },
-
+    .factory('Museum', function(Routes, $http)
+    {
+        //TODO: SET Generic Information
+        var general = {};
+        general.info =
         {
 
-            id: 301,
-            title: "Social Activity",
-            description: "Museum will finally open after 13 years!",
-            location: "Museum",
+            "description": "",
+            "hoursOfOperation": '',
+            "museumTitle": "",
+            "directions":"",
+            "socialMediaLinks":[]
 
-            datetime:  moment(new Date("2015", "05", "9", "11", "00"))
+        };
 
-        },
-        {
-            id: 303,
-            title: "Short Movie",
-            description: "Museum will finally open after 13 years!",
-            location: "Museum",
-            datetime:  moment(new Date("2015", "05", "9", "15", "00"))
+        return {
 
-        },
-        {
-            id: 305,
-            title:"Cafe Opening",
-            location: "Museum",
+            getInfo: function()
+            {
+                return general;
+            },
 
-            description: "Museum will finally open after 13 years!",
+            get: function()
+            {
 
-            datetime:  moment(new Date("2015", "05", "11", "8", "30"))
+
+                $http.get(Routes.MUSEUM_GENERAL_ROUTE).
+                    success(function(data, status, headers, config) {
+
+                        //console.log(data);
+                        general.info = data;
+                        console.log("general");
+
+                    }).
+                    error(function(data, status, headers, config) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                    });
+
+                return general;
+
+
+            },
+            getLocation: function()
+            {
+                return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
+            }
+
+
+
 
         }
 
-    ];
+    })
+    //TODO: Events- Setup ajax HTTP Request functionality
+
+    /* Event service for getting the events from the server */
+.factory('Events', function(Routes,$http)
+{
+    var events = {};
+
 
     return {
 
         all: function() {
             return events;
         },
-        get: function(id)
+
+        getSingleEvent : function(id)
         {
-            for (var i = 0; i < events.length; i++) {
-                if (events[i].id === parseInt(id)) {
-                    return events[i];
-                }
-            }
+            $http.get(Routes.MUSEUM_EVENTS_ROUTE + id).
+                success(function(data, status, headers, config) {
+
+                    //console.log(data);
+                    events = data;
+
+                }).
+                error(function(data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+
+        },
+        get: function()
+        {
+            $http.get(Routes.MUSEUM_EVENTS_ROUTE).
+                success(function(data, status, headers, config) {
+
+                    console.log(data);
+                    events = data.events;
+
+                }).
+                error(function(data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
         },
 
         getEventsToday: function()

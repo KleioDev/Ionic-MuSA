@@ -25,6 +25,7 @@ $font-family-base:                $font-family-sans-serif !default;
 $font-size-base:                  14px !default;
 $font-size-large:                 18px !default;
 $font-size-small:                 11px !default;
+$color:     $dark !default;
 
 $line-height-base:                1.428571429 !default; // 20/14
 $line-height-computed:            floor($font-size-base * $line-height-base) !default; // ~20px
@@ -36,7 +37,7 @@ $headings-font-weight:            500 !default;
 $headings-line-height:            1.2 !default;
 
 $base-background-color:           #fff !default;
-$base-color:                      #000 !default;
+$base-color:                      $dark !default;
 
 $link-color:                      $positive !default;
 $link-hover-color:                darken($link-color, 15%) !default;

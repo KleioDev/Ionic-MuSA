@@ -2,324 +2,330 @@ angular.module('app-services', ['ngCordova'])
 
     /* Service for managing the AppNavigation Labels */
     .factory('AppNavigationTitles', function($rootScope)
-{
+    {
 
-    /* Default language */
-    var lang = "ENGLISH";
+        /* Default language */
+        var lang = "ENGLISH";
 
-    /* Multiple Language Support */
-    var languages = [
+        /* Multiple Language Support */
+        var languages = [
 
-        {
-            "lang": "English",
-            "english": "English",
-            "spanish" : "Inglés"
-        },
-        {
-            "lang": "Español",
-            "english": "Spanish",
-            "spanish": "Español"
-        }
-    ];
-
-
-    /* Labels for each language */
-    var languageLabels = {
-
-        "english": {
-            "title": "MuSA",
-            /* Museum Tab navigation Lang */
-            "museum":
             {
+                "lang": "English",
+                "english": "English",
+                "spanish" : "Inglés"
+            },
+            {
+                "lang": "Español",
+                "english": "Spanish",
+                "spanish": "Español"
+            }
+        ];
 
-                /* Museum page Segmented Control */
-                "buttonBar":
+
+        /* Labels for each language */
+        var languageLabels = {
+
+            "english": {
+                "title": "MuSA",
+                "app":
                 {
-                    "generalButton":"General",
-                    "eventsButton": "Events",
-                    "newsButton": "News"
+                    "noConnectionLabel": "No Internet Connection Found!",
+                    "noConnectionContent": "Internet access is required to use this app",
+                    "httpErrorLabel": "The server can't be reached at this time."
                 },
-                /* General nav buttons */
-                "general": {
+                /* Museum Tab navigation Lang */
+                "museum":
+                {
 
-                    "hoursOfOperation": (lang == "ENGLISH") ? "Hours of Operation" : "Horario",
-                    "directions": "Location",
-                    "directionsButtonLabel": "Directions",
-                    "links": "Links"
+                    /* Museum page Segmented Control */
+                    "buttonBar":
+                    {
+                        "generalButton":"General",
+                        "eventsButton": "Events",
+                        "newsButton": "News"
+                    },
+                    /* General nav buttons */
+                    "general": {
 
-                },
+                        "hoursOfOperation": (lang == "ENGLISH") ? "Hours of Operation" : "Horario",
+                        "directions": "Location",
+                        "directionsButtonLabel": "Directions",
+                        "links": "Links"
+
+                    },
 
 
-                "events": {
+                    "events": {
 
-                    "navHappeningToday": "Happening Today",
-                    "navUpcomingToday": "Upcoming Events"
-                },
+                        "navHappeningToday": "Happening Today",
+                        "navUpcomingToday": "Upcoming Events"
+                    },
 
-                "eventsSingle": {
-                    "titleLabel": "Event",
-                    "eventDateLabel": "Date",
-                    "eventTimeLabel": "Time",
-                    "eventLocationLabel": "Location",
-                    "descriptionLabel": "Description",
-                    "addToCalendarLabel": "Add To Calendar",
+                    "eventsSingle": {
+                        "titleLabel": "Event",
+                        "eventDateLabel": "Date",
+                        "eventTimeLabel": "Time",
+                        "eventLocationLabel": "Location",
+                        "descriptionLabel": "Description",
+                        "addToCalendarLabel": "Add To Calendar",
 
-                    "dialogCalendar": {
+                        "dialogCalendar": {
 
-                        addToCalendarQuestion: "Add to Calendar?",
-                        successDialog: "Success!",
-                        successBody: "Event was successfully added to your calendar!",
-                        failureBody: "Could not add event to your calendar at this time.",
-                        failureDialog: "Failure!"
+                            addToCalendarQuestion: "Add to Calendar?",
+                            successDialog: "Success!",
+                            successBody: "Event was successfully added to your calendar!",
+                            failureBody: "Could not add event to your calendar at this time.",
+                            failureDialog: "Failure!"
+                        }
+                    },
+
+                    "news":
+                    {
+                        "recentNewsLabel": "This Week",
+                        "lastNewsLabel": "Past Weeks"
+
+                    },
+
+                    "newsSingle": {
+
+                        "titleLabel": "News"
                     }
                 },
-
-                "news":
+                "collection":
                 {
-                    "recentNewsLabel": "This Week",
-                    "lastNewsLabel": "Past Weeks"
+                    "buttonBar":{
+                        "nearMeButton": "Near Me",
+                        "objectsButton": "Objects",
+                        "exhibitionsButton": "Exhibitions"
+                    },
+
+                    "singleObject":
+                    {
+                        "readMoreLabel": "Read More",
+                        "listenLabel": "Listen!",
+                        "videosLabel": "Videos",
+                        "archivesLabel": "Archives",
+                        "audioLabel": "Recordings",
+                        "imagesLabel":  "Images",
+
+                        "descriptionLabel": "Description"
+                    },
+
+                    "exhibitionView":
+                    {
+                        "title": "Exhibitions",
+                        "objectsLabel": "Works of Art",
+                        "description": "Description"
+                    },
+
+                    "nearMeView": {
+                        "searchingForBeaconsLabel": "Searching for Exhibitions Near You..."
+                    }
+
 
                 },
 
-                "newsSingle": {
-
-                    "titleLabel": "News"
-                }
-            },
-            "collection":
-            {
-                "buttonBar":{
-                    "nearMeButton": "Near Me",
-                    "objectsButton": "Objects",
-                    "exhibitionsButton": "Exhibitions"
-                },
-
-                "singleObject":
+                "scanner":
                 {
-                    "readMoreLabel": "Read More",
-                    "listenLabel": "Listen!",
-                    "videosLabel": "Videos",
-                    "archivesLabel": "Archives",
-                    "audioLabel": "Recordings",
-                    "imagesLabel":  "Images",
+                    "scanObjectsLabel": "Scan Object QR Code",
+                    "matchHuntLabel": "Match Hunt",
+                    "takeAGuessLabel": "Take A Guess"
 
-                    "descriptionLabel": "Description"
+
                 },
-
-                "exhibitionView":
+                "map":
                 {
-                    "title": "Exhibitions",
-                    "objectsLabel": "Works of Art",
-                    "description": "Description"
+                    "entryLevelButtonLabel": "Entry",
+                    "basementLevelButtonLabel": "Basement"
+
                 },
+                "user": {
+                    "linkFacebookAccountLabel": "Link Facebook Account",
+                    "unlinkFacebookAccountLabel": "Unlink Facebook Account",
+                    "notificationsLabel": "Notifications",
+                    preferencesLabel: "Preferences",
+                    "fontSizeLabel": "Font Size",
+                    "languageLabel": "Language",
+                    "sendFeedbackLabel": "Send Feedback",
 
-                "nearMeView": {
-                    "searchingForBeaconsLabel": "Searching for Exhibitions Near You..."
-                }
+                    "aboutLabel": "About",
+                    "termsOfServiceLabel": "Terms of Service",
+                    "emailLabel": "Email",
+                    "pointsLabel": "Points",
+                    "leaderboardLabel": "Leaderboards",
+                    "languagesAvailable": languages,
+                    feedbackForm: {
+                        title: "Send Feedback",
+                        titleLabel: "Title",
+                        titlePlaceholder: "Message Title",
+                        categoryLabel: "Category",
+                        generalFeedbackLabel: "General Feedback",
+                        applicationBugLabel: "Report an Application Bug",
+                        exhibitionContentLabel: "Problem with Exhibition Content",
+
+                        messageLabel: "Message",
+                        popUpTitleSuccessLabel: "Success!",
+                        popUpMessageSuccessLabel: "Your feedback has been received!",
+
+                        popUpTitleMissingLabel: "Missing Fields!"
 
 
-            },
+                    }
 
-            "scanner":
-            {
-                "scanObjectsLabel": "Scan Object QR Code",
-                "matchHuntLabel": "Match Hunt",
-                "takeAGuessLabel": "Take A Guess"
-
-
-            },
-            "map":
-            {
-                "entryLevelButtonLabel": "Entry",
-                "basementLevelButtonLabel": "Basement"
-
-            },
-            "user": {
-                "linkFacebookAccountLabel": "Link Facebook Account",
-"unlinkFacebookAccountLabel": "Unlink Facebook Account",
-                "notificationsLabel": "Notifications",
-                preferencesLabel: "Preferences",
-                "fontSizeLabel": "Font Size",
-                "languageLabel": "Language",
-                "sendFeedbackLabel": "Send Feedback",
-
-                "aboutLabel": "About",
-                "termsOfServiceLabel": "Terms of Service",
-                "emailLabel": "Email",
-                "pointsLabel": "Points",
-                "leaderboardLabel": "Leaderboards",
-                "languagesAvailable": languages,
-                feedbackForm: {
-                    title: "Send Feedback",
-                    titleLabel: "Title",
-                    titlePlaceholder: "Message Title",
-                    categoryLabel: "Category",
-                    generalFeedbackLabel: "General Feedback",
-                    applicationBugLabel: "Report an Application Bug",
-                    exhibitionContentLabel: "Problem with Exhibition Content",
-
-                    messageLabel: "Message",
-                    popUpTitleSuccessLabel: "Success!",
-                    popUpMessageSuccessLabel: "Your feedback has been received!",
-
-                    popUpTitleMissingLabel: "Missing Fields!"
 
 
                 }
+            },
 
-
-
-            }
-        },
-
-        spanish:
-        {
-            "title": "MuSA",
-            /* Museum Tab navigation Lang */
-            "museum":
+            spanish:
             {
-
-                /* Museum page Segmented Control */
-                "buttonBar":
+                "title": "MuSA",
+                /* Museum Tab navigation Lang */
+                "museum":
                 {
-                    "generalButton":"General",
-                    "eventsButton": "Eventos",
-                    "newsButton": "Noticias"
-                },
-                /* General nav buttons */
-                "general": {
 
-                    "hoursOfOperation": "Horarios",
-                    "directions": "Location",
-                    "directionsButtonLabel": "Direcciones",
-                    "links": "Links"
+                    /* Museum page Segmented Control */
+                    "buttonBar":
+                    {
+                        "generalButton":"General",
+                        "eventsButton": "Eventos",
+                        "newsButton": "Noticias"
+                    },
+                    /* General nav buttons */
+                    "general": {
 
-                },
+                        "hoursOfOperation": "Horarios",
+                        "directions": "Location",
+                        "directionsButtonLabel": "Direcciones",
+                        "links": "Links"
+
+                    },
 
 
-                "events": {
+                    "events": {
 
-                    "navHappeningToday": "Eventos Hoy",
-                    "navUpcomingToday": "Proximos Eventos"
-                },
+                        "navHappeningToday": "Eventos Hoy",
+                        "navUpcomingToday": "Proximos Eventos"
+                    },
 
-                "eventsSingle": {
-                    "titleLabel": "Evento",
-                    "eventDateLabel": "Fecha",
-                    "eventTimeLabel": "Hora",
-                    "eventLocationLabel": "Lugar",
-                    "descriptionLabel": "Descripción",
-                    "addToCalendarLabel": "Añadir al Calendario",
+                    "eventsSingle": {
+                        "titleLabel": "Evento",
+                        "eventDateLabel": "Fecha",
+                        "eventTimeLabel": "Hora",
+                        "eventLocationLabel": "Lugar",
+                        "descriptionLabel": "Descripción",
+                        "addToCalendarLabel": "Añadir al Calendario",
 
-                    "dialogCalendar": {
+                        "dialogCalendar": {
 
-                        addToCalendarQuestion: "Añadir al Calendario?",
-                        successDialog: "Success!",
-                        successBody: "Event was successfully added to your calendar!",
-                        failureBody: "Could not add event to your calendar at this time.",
-                        failureDialog: "Failure!"
+                            addToCalendarQuestion: "Añadir al Calendario?",
+                            successDialog: "Success!",
+                            successBody: "Event was successfully added to your calendar!",
+                            failureBody: "Could not add event to your calendar at this time.",
+                            failureDialog: "Failure!"
+                        }
+                    },
+
+                    "news":
+                    {
+                        "recentNewsLabel": "Esta Semana",
+                        "lastNewsLabel": "Pasados"
+
+                    },
+
+                    "newsSingle": {
+
+                        "titleLabel": "Noticias"
                     }
                 },
-
-                "news":
+                "collection":
                 {
-                    "recentNewsLabel": "Esta Semana",
-                    "lastNewsLabel": "Pasados"
+                    "buttonBar":{
+                        "nearMeButton": "Cerca",
+                        "objectsButton": "Articulos",
+                        "exhibitionsButton": "Exhibiciones"
+                    },
+
+                    "singleObject":
+                    {
+                        "readMoreLabel": "Read More",
+                        "listenLabel": "Listen!",
+                        "videosLabel": "Videos",
+                        "archivesLabel": "Archives",
+                        "audioLabel": "Recordings",
+                        "imagesLabel":  "Images"
+                    },
+
+                    "exhibitionView":
+                    {
+                        "title": "Exhibitions",
+                        "objectsLabel": "Works of Art",
+                        "description": "Description"
+                    },
+
+                    "nearMeView": {
+                        "searchingForBeaconsLabel": "Searching for Exhibitions Near You..."
+                    }
+
 
                 },
 
-                "newsSingle": {
-
-                    "titleLabel": "Noticias"
-                }
-            },
-            "collection":
-            {
-                "buttonBar":{
-                    "nearMeButton": "Cerca",
-                    "objectsButton": "Articulos",
-                    "exhibitionsButton": "Exhibiciones"
-                },
-
-                "singleObject":
+                "scanner":
                 {
-                    "readMoreLabel": "Read More",
-                    "listenLabel": "Listen!",
-                    "videosLabel": "Videos",
-                    "archivesLabel": "Archives",
-                    "audioLabel": "Recordings",
-                    "imagesLabel":  "Images"
-                },
+                    "takeAGuessLabel": "Take A Guess"
 
-                "exhibitionView":
+                },
+                "map":
                 {
-                    "title": "Exhibitions",
-                    "objectsLabel": "Works of Art",
-                    "description": "Description"
+                    "entryLevelButtonLabel": "Entry",
+                    "basementLevelButtonLabel": "Basement"
+
                 },
+                "user": {
+                    "linkFacebookAccountLabel": "Link Facebook Account",
 
-                "nearMeView": {
-                    "searchingForBeaconsLabel": "Searching for Exhibitions Near You..."
+                    "notificationsLabel": "Notificaciones",
+                    preferencesLabel: "Preferencias",
+                    "fontSizeLabel": "Font Size",
+                    "languageLabel": "Idioma",
+                    "sendFeedbackLabel": "Enviar Comentarios",
+
+                    "aboutLabel": "Información",
+                    "termsOfServiceLabel": "Terminos de Uso",
+
+                    "languagesAvailable": languages,
+
+                    feedbackForm: {
+                        title: "Send Feedback"
+                    }
+
+
                 }
-
-
-            },
-
-            "scanner":
-            {
-                "takeAGuessLabel": "Take A Guess"
-
-            },
-            "map":
-            {
-                "entryLevelButtonLabel": "Entry",
-                "basementLevelButtonLabel": "Basement"
-
-            },
-            "user": {
-                "linkFacebookAccountLabel": "Link Facebook Account",
-
-                "notificationsLabel": "Notificaciones",
-                preferencesLabel: "Preferencias",
-                "fontSizeLabel": "Font Size",
-                "languageLabel": "Idioma",
-                "sendFeedbackLabel": "Enviar Comentarios",
-
-                "aboutLabel": "Información",
-                "termsOfServiceLabel": "Terminos de Uso",
-
-                "languagesAvailable": languages,
-
-                feedbackForm: {
-                    title: "Send Feedback"
-                }
-
-
             }
-        }
-    };
-    var navigation = {};
+        };
+        var navigation = {};
 
-    navigation.labels = languageLabels.english;
+        navigation.labels = languageLabels.english;
 
-    return {
+        return {
 
-        /* Return the labels */
-        get: function()
-        {
-            return navigation.labels;
-        },
+            /* Return the labels */
+            get: function()
+            {
+                return navigation.labels;
+            },
 
-        /* Apply a change to the language*/
-        apply: function(language)
-        {
-            navigation.labels = languageLabels[language.english.toLowerCase()];
-        }
-    };
-})
+            /* Apply a change to the language*/
+            apply: function(language)
+            {
+                navigation.labels = languageLabels[language.english.toLowerCase()];
+            }
+        };
+    })
 
-/* ibeacon Serice */
-.factory('iBeacons', function($rootScope)
+    /* ibeacon Serice */
+    .factory('iBeacons', function($rootScope)
     {
         var beacons = [];
 
@@ -448,8 +454,8 @@ angular.module('app-services', ['ngCordova'])
             stopRanging: function()
             {
                 console.log("Stopping Range");
-                    ranging = false;
-                    estimote.beacons.stopRangingBeaconsInRegion({});
+                ranging = false;
+                estimote.beacons.stopRangingBeaconsInRegion({});
 
             },
 
@@ -471,7 +477,7 @@ angular.module('app-services', ['ngCordova'])
 
 
     /* Service handles Facebook calls */
-.factory('Facebook', function($cordovaFacebook, $ionicLoading)
+    .factory('Facebook', function($cordovaFacebook, $ionicLoading)
     {
         /* User info */
         var user = {
@@ -479,7 +485,7 @@ angular.module('app-services', ['ngCordova'])
 
         };
 
-         user.loginStatus = false;
+        user.loginStatus = false;
         user.userInfo = {};
 
 
@@ -557,7 +563,7 @@ angular.module('app-services', ['ngCordova'])
 
                             me.getUserInfo();
                         }
-                       else{
+                        else{
                             loading.hide();
 
                             user.loginStatus= false;
@@ -573,10 +579,10 @@ angular.module('app-services', ['ngCordova'])
             getUserInfo: function()
             {
                 var loading = $ionicLoading.show(  {content: 'Showing Loading Indicator!',
-                animation: 'fade-in',
-                showBackdrop: false,
-                maxWidth: 200,
-                showDelay: 500});
+                    animation: 'fade-in',
+                    showBackdrop: false,
+                    maxWidth: 200,
+                    showDelay: 500});
 
                 $cordovaFacebook.api("me", ["public_profile", "email"])
                     .then(function(success) {
@@ -599,19 +605,9 @@ angular.module('app-services', ['ngCordova'])
         }
     })
 
-    /*The location of the museum */
-.factory('Museum', function()
-    {
-        return {
-            getLocation: function()
-            {
-                return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
-            }
-        }
-    })
 
     /* Service handles user preferences */
-.factory('UserPreferences', function(AppNavigationTitles, $rootScope, $ionicLoading)
+    .factory('UserPreferences', function(AppNavigationTitles, $rootScope, $ionicLoading)
     {
 
         var preferences = {
@@ -657,7 +653,7 @@ angular.module('app-services', ['ngCordova'])
                 /* Dummy data for the About Page */
                 return { "title" : "About",
 
-                 "content":   "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing"
+                    "content":   "<h1>Lorem ipsum dolor sit amet consectetuer adipiscing"
                     + " elit</h1>"
 
 
@@ -688,7 +684,7 @@ angular.module('app-services', ['ngCordova'])
     })
 
     /* Match Hunt game */
-.factory('MatchHunt', function($ionicLoading)
+    .factory('MatchHunt', function($ionicLoading)
     {
         var currentId = 0;
 
@@ -708,8 +704,8 @@ angular.module('app-services', ['ngCordova'])
 
                 currentMatchHunt = {
                     match_hunt_id: 1,
-                        hearts: 2,
-                        points: 30,
+                    hearts: 2,
+                    points: 30,
                     img_href : 'img/placeholder2.png'
                 }
 
@@ -725,31 +721,147 @@ angular.module('app-services', ['ngCordova'])
 
     })
 
+    .factory('SegmentedControl', function()
+    {
 
-//.factory('Loading', function()
-//{
-//
-//    var loading ={status: false};
-//
-//    return {
-//
-//        get: function()
-//        {
-//            return loading;
-//        },
-//
-//        start: function()
-//        {
-//            loading.status = true;
-//        },
-//
-//        stop: function()
-//        {
-//            loading.status = false;
-//        }
-//
-//
-//
-//    }
-//});
-//
+        var segmentedControls = [];
+
+
+        function SegmentedControl(name,states,  initialState)
+        {
+            this.name = name;
+            this.state = initialState;
+            this.states = states;
+
+            this.set = function(state)
+            {
+                this.state = state;
+            }
+        }
+
+        return {
+
+            create: function(name, states, initialState)
+            {
+                var segControl = new SegmentedControl(name, states, initialState);
+                segmentedControls.push(segControl);
+                return segControl;
+
+            },
+
+            get: function(name)
+            {
+
+                for(var i = 0; i < segmentedControls.length; i++)
+                {
+                    if(segmentedControls[i].name == name)
+                    {
+                        return segmentedControls[i];
+                    }
+
+                }
+
+                return null;
+            },
+
+            set: function(name, state)
+            {
+                for(var i = 0; i < segmentedControls.length; i++)
+                {
+                    if(segmentedControls[i].name == name)
+                    {
+                        console.log(state);
+                        segmentedControls[i].set(state);
+                    }
+
+                }
+            },
+
+            exists: function(name)
+            {
+                for(var i = 0; i < segmentedControls.length; i++)
+                {
+                    if(segmentedControls[i].name == name)
+                    {
+                        return true;
+                    }
+
+                }
+
+                return false;
+
+            }
+
+
+        }
+
+
+    })
+
+    /* Service for figuring out if there is a connection available for the app */
+    .factory('Connection', function($ionicPopup)
+    {
+
+        return {
+
+            /* Checks if connection is available */
+            checkConnection: function()
+            {
+
+
+                //var networkState = navigator.connection.type;
+                //
+                //var states = {};
+                //states[Connection.UNKNOWN]  = 'Unknown connection';
+                //states[Connection.ETHERNET] = 'Ethernet connection';
+                //states[Connection.WIFI]     = 'WiFi connection';
+                //states[Connection.CELL_2G]  = 'Cell 2G connection';
+                //states[Connection.CELL_3G]  = 'Cell 3G connection';
+                //states[Connection.CELL_4G]  = 'Cell 4G connection';
+                //states[Connection.CELL]     = 'Cell generic connection';
+                //states[Connection.NONE]     = 'No network connection';
+                //
+                //
+                //if(states[Connection.NONE] == states[networkState])
+                //{
+                //    return false;
+                //}
+                //else
+                //{
+                //    return true;
+                //}
+
+                return true;
+
+
+
+            }
+        }
+    })
+
+    .factory('Routes', function()
+    {
+        var VERSION = "/v1";
+
+        var routes = {
+
+            /* API Version */
+            //======== Museum Routes ========//
+
+            /* Museum */
+            MUSEUM_GENERAL_ROUTE : VERSION + "/museum/general",
+
+            /* Events */
+            MUSEUM_EVENTS_ROUTE :  VERSION + "/museum/events",
+            MUSEUM_SINGLE_EVENT_ROUTE : VERSION+ "/museum/events/",
+
+            /* News */
+            MUSEUM_NEWS_ROUTE : VERSION + "/museum/news",
+            MUSEUM_CURRENT_NEWS_ROUTE : VERSION + "/museum/news/current",
+            MUSEUM_SINGLE_NEWS_ROUTE : VERSION + "/museum/news/"
+        };
+
+        return routes;
+
+    });
+
