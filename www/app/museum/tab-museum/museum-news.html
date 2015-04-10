@@ -6,26 +6,31 @@
 
     <div class="list" >
 
-        <a class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.currentNews" type="item-text-wrap"  href="#/tab/museum-news/{{_news.id}}">
-            <img src="{{_news.img_href}}">
+        <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.currentNews" type="item-text-wrap"  href="#/tab/museum-news/{{_news.id}}">
+            <img ng-src="{{_news.img_href}}">
             <h2>{{_news.title}}</h2>
             <p>{{_news.author}}</p>
             <p>{{_news.datetime.format('lll')}}</p>
             <i class="icon ion-ios-arrow-right"></i>
         </a>
 
-    </div>
 
     <div class="item item-divider">
         {{navigationTitles.news.lastNewsLabel}}
     </div>
 
-    <a class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" href="#/tab/museum-news/{{_news.id}}">
-        <img src="{{_news.img_href}}">
+    <div class="list" >
+
+
+    <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" href="#/tab/museum-news/{{_news.id}}">
+        <img ng-src="{{_news.img_href}}">
         <h2>{{_news.title}}</h2>
         <p>{{_news.author}}</p>
         <p>{{_news.datetime.format('lll')}}</p>
         <i class="icon ion-ios-arrow-right"></i>
     </a>
 
-</div>
+    </div>
+
+
+    </div>

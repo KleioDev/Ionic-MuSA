@@ -81,31 +81,29 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
         });
 
-        $httpBackend.whenGET('templates/tab-museum/museum-single-event.html').passThrough();
-        $httpBackend.whenGET('templates/tab-museum/museum-events.html').passThrough();
-        $httpBackend.whenGET('templates/tab-museum/segmented-control-museum.html').passThrough();
-        $httpBackend.whenGET('templates/tab-museum/museum-news.html').passThrough();
-        $httpBackend.whenGET('templates/tab-museum/museum-single-news-article.html').passThrough();
-        $httpBackend.whenGET('templates/tab-museum/museum-general.html').passThrough();
+        $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
+        $httpBackend.whenGET('app/museum/tab-museum/museum-events.html').passThrough();
+        $httpBackend.whenGET('app/museum/tab-museum/segmented-control-museum.html').passThrough();
+        $httpBackend.whenGET('app/museum/tab-museum/museum-news.html').passThrough();
+        $httpBackend.whenGET('app/museum/tab-museum/museum-single-news-article.html').passThrough();
+        $httpBackend.whenGET('app/museum/tab-museum/museum-general.html').passThrough();
 
-        $httpBackend.whenGET('templates/tab-collection/collection.html').passThrough();
-        $httpBackend.whenGET('templates/tab-collection/collection-nearme.html').passThrough();
-        $httpBackend.whenGET('templates/tab-collection/collection-objects.html').passThrough();
-        $httpBackend.whenGET('templates/tab-collection/collection-exhibitions.html').passThrough();
-        $httpBackend.whenGET('templates/tab-collection/collection-exhibition-view.html').passThrough();
-        $httpBackend.whenGET('templates/tab-collection/collection-single-object.html').passThrough();
-        $httpBackend.whenGET('templates/tab-collection/video-view.html').passThrough();
-
-
-        $httpBackend.whenGET('templates/tab-map/maps.html').passThrough();
-        $httpBackend.whenGET('templates/tab-qrcode/match-hunt.html').passThrough();
-        $httpBackend.whenGET('templates/tab-qrcode/qrcode-scanner.html').passThrough();
-        $httpBackend.whenGET('templates/tab-user/preferences.html').passThrough();
-        $httpBackend.whenGET('templates/tab-user/send-feedback.html').passThrough();
-        $httpBackend.whenGET('templates/tab-user/text-view.html').passThrough();
-        $httpBackend.whenGET('templates/tabs.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/collection.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/collection-nearme.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/collection-objects.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/collection-exhibitions.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/collection-exhibition-view.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/collection-single-object.html').passThrough();
+        $httpBackend.whenGET('app/collection/tab-collection/video-view.html').passThrough();
 
 
+        $httpBackend.whenGET('app/maps/tab-map/maps.html').passThrough();
+        $httpBackend.whenGET('app/qrcode/tab-qrcode/match-hunt.html').passThrough();
+        $httpBackend.whenGET('app/qrcode/tab-qrcode/qrcode-scanner.html').passThrough();
+        $httpBackend.whenGET('app/user/tab-user/preferences.html').passThrough();
+        $httpBackend.whenGET('app/user/tab-user/send-feedback.html').passThrough();
+        $httpBackend.whenGET('app/user/tab-user/text-view.html').passThrough();
+        $httpBackend.whenGET('app/tabs.html').passThrough();
 
 
 
@@ -116,7 +114,9 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
 
 
-        $httpBackend.whenGET('templates/tab-museum/museum-single-event.html').passThrough();
+
+
+        $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
 
 
 
@@ -191,7 +191,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
             .state('tab', {
                 url: "/tab",
                 abstract: true,
-                templateUrl: "templates/tabs.html"
+                templateUrl: "app/tabs.html"
             })
 
             /* Museum Tab States */
@@ -204,7 +204,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 {
                     'tab-museum':{
 
-                        templateUrl: 'templates/tab-museum/segmented-control-museum.html',
+                        templateUrl: 'app/museum/tab-museum/segmented-control-museum.html',
                         controller: 'MuseumSegmentedControl'
                     }
                 }
@@ -218,7 +218,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 {
                     'tab-museum':
                     {
-                        templateUrl: 'templates/tab-museum/museum-single-event.html',
+                        templateUrl: 'app/museum/tab-museum/museum-single-event.html',
                         controller: 'MuseumSingleEventCtrl'
                     }
                 }
@@ -232,7 +232,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 views: {
                     'tab-museum':
                     {
-                        templateUrl: 'templates/tab-museum/museum-single-news-article.html',
+                        templateUrl: 'app/museum/tab-museum/museum-single-news-article.html',
                         controller: 'MuseumSingleNewsCtrl'
                     }
                 }
@@ -245,7 +245,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 views: {
 
                     'tab-collection': {
-                        templateUrl: 'templates/tab-collection/collection.html',
+                        templateUrl: 'app/collection/tab-collection/collection.html',
                         controller: 'CollectionSegmentedCtrl'
                     }
                 }
@@ -257,7 +257,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 views:
                 {
                     'tab-collection':{
-                        templateUrl: 'templates/tab-collection/collection-single-object.html',
+                        templateUrl: 'app/collection/tab-collection/collection-single-object.html',
                         controller: 'ObjectViewCtrl'
                     }
                 }
@@ -272,7 +272,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 {
                     'tab-collection':
                     {
-                        templateUrl: 'templates/tab-collection/video-view.html',
+                        templateUrl: 'app/collection/tab-collection/video-view.html',
                         controller: 'VideoViewCtrl'
                     }
                 }
@@ -284,7 +284,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 views:
                 {
                     'tab-collection':{
-                        templateUrl: 'templates/tab-collection/collection-exhibition-view.html',
+                        templateUrl: 'app/collection/tab-collection/collection-exhibition-view.html',
                         controller: 'ExhibitionViewCtrl'
                     }
                 }
@@ -296,7 +296,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 url: '/tab-qrcode/qr-code-scanner',
                 views: {
                     'tab-qrcode': {
-                        templateUrl: 'templates/tab-qrcode/qrcode-scanner.html',
+                        templateUrl: 'app/qrcode/tab-qrcode/qrcode-scanner.html',
                         controller: 'QRCodeViewCtrl'
                     }
 
@@ -312,7 +312,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 {
                     'tab-maps':
                     {
-                        templateUrl: 'templates/tab-map/maps.html',
+                        templateUrl: 'app/maps/tab-map/maps.html',
                         controller: 'MapViewCtrl'
                     }
                 }
@@ -326,7 +326,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 {
                     'tab-user':
                     {
-                        templateUrl: 'templates/tab-user/preferences.html',
+                        templateUrl: 'app/user/tab-user/preferences.html',
                         controller: 'UserPreferencesCtrl'
                     }
                 }
@@ -340,7 +340,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 {
                     'tab-user':
                     {
-                        templateUrl: 'templates/tab-user/send-feedback.html',
+                        templateUrl: 'app/user/tab-user/send-feedback.html',
                         controller: 'FeedbackFormCtrl'
                     }
                 }
@@ -354,7 +354,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
                     'tab-qrcode':
                     {
-                        templateUrl: 'templates/tab-qrcode/match-hunt.html',
+                        templateUrl: 'app/qrcode/tab-qrcode/match-hunt.html',
                         controller: 'MatchHuntCtrl'
                     }
                 }

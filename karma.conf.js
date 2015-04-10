@@ -18,11 +18,11 @@ module.exports = function(config) {
         "www/lib/ionic/js/ionic.bundle.js",
         "www/lib/angular-mocks/angular-mocks.js",
         "www/lib/ngCordova/ng-cordova.js",
-        "www/js/app.js",
+        "www/app/app.js",
 
-        "www/js/services/museum-services.js",
-        "www/js/services/app-services.js",
-        "www/js/controllers/museum-controllers.js",
+        "www/app/museum/museum-services.js",
+        "www/app/app-services.js",
+        "www/app/museum/museum-controllers.js",
 
         "test-cases/controller_unit_testing.js"
     ],

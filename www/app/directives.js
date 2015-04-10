@@ -6,7 +6,7 @@ angular.module('starter.directives', [])
 .directive('museumGeneralDir', function()
     {
         return{
-            templateUrl: 'templates/tab-museum/museum-general.html'
+            templateUrl: 'app/museum/tab-museum/museum-general.html'
         }
     })
 
@@ -14,14 +14,14 @@ angular.module('starter.directives', [])
     {
 
         return{
-            templateUrl: 'templates/tab-museum/museum-events.html'
+            templateUrl: 'app/museum/tab-museum/museum-events.html'
         }
     })
     .directive('museumNewsDir', function()
     {
 
         return{
-            templateUrl: 'templates/tab-museum/museum-news.html'
+            templateUrl: 'app/museum/tab-museum/museum-news.html'
         }
     })
 
@@ -30,14 +30,14 @@ angular.module('starter.directives', [])
     {
 
         return {
-            templateUrl: 'templates/tab-collection/collection-nearme.html'
+            templateUrl: 'app/collection/tab-collection/collection-nearme.html'
         }
     })
 
 .directive('collectionObjectsDir', function()
     {
         return{
-            templateUrl: 'templates/tab-collection/collection-objects.html'
+            templateUrl: 'app/collection/tab-collection/collection-objects.html'
 
         }
     })
@@ -45,14 +45,7 @@ angular.module('starter.directives', [])
 .directive('collectionExhibitionsDir', function()
     {
         return{
-            templateUrl: 'templates/tab-collection/collection-exhibitions.html'
+            templateUrl: 'app/collection/tab-collection/collection-exhibitions.html'
 
-        }
-    })
-
-.directive('audioViewDir', function()
-    {
-        return{
-            templateUrl: 'templates/tab-collection/audio-view.html'
         }
     });

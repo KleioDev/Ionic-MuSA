@@ -85,6 +85,9 @@ angular.module('museum-controllers', ['ngCordova'])
         /* Get the labels for the application */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
+        //$scope.news = {};
+        //$scope.news.currentNews = [];
+        //$scope.news.pastWeekNews = [];
         /* Get the news */
         News.getNews().then(function(news)
         {
@@ -104,6 +107,7 @@ angular.module('museum-controllers', ['ngCordova'])
         /* Get the labels for the view */
         $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
 
+        $scope.event = {};
         /* Pass the event to the view */
         Events.getSingleEvent($stateParams.eventId).then(function(event)
         {
