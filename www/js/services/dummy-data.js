@@ -390,6 +390,51 @@ dummyExhibitions.init();
 
 var museumServer ={
 
+    news: [
+        {
+            id: 310,
+            title: "MuSA Opens its Doors",
+            content: "Lorem Ipsum",
+            author: "Zorali de Feria",
+            content:'<h1>Heading 1</h1>   <h2>Heading 2</h2> <h3>Heading 3</h3>  <h4>Heading 4</h4>  <h5>Heading 5</h5>  <h6>Heading 6</h6>  <div  class="more-info">More info: <a href="/html/tags/html_h1_tag.cfm"><code>&lt;h1&gt;</code></a>, <a href="/html/tags/html_h2_tag.cfm"><code>&lt;h2&gt;</code></a>, <a href="/html/tags/html_h3_tag.cfm"><code>&lt;h4&gt;</code></a>, <a href="/html/tags/html_h4_tag.cfm"><code>&lt;h4&gt;</code></a>, <a href="/html/tags/html_h5_tag.cfm"><code>&lt;h5&gt;</code></a>, and <a href="/html/tags/html_h6_tag.cfm"><code>&lt;h6&gt;</code></a>.</div>',
+            datetime:  moment(new Date("2015", "05", "23", "10", "3")),
+            img_href:"img/placeholder.png"
+
+        },
+        {
+            id: 311,
+            title: "Café is Open!",
+            content: "Lorem Ipsum",
+            author: "MuSA",
+            datetime:  moment(new Date("2015", "05", "21", "7", "30")),
+            img_href:"img/placeholder.png"
+
+
+
+        },
+
+        {
+            id: 321,
+            title: "Gift Shop has new Merchandise",
+            content: "Lorem Ipsum",
+            author: "Nilda",
+            datetime:  moment(new Date("2015", "05", "20", "8", "10")),
+            img_href:"img/placeholder.png"
+
+
+        },
+
+        {
+            id: 331,
+            title: "Finally reached 100 visitors",
+            content: "Lorem Ipsum",
+            author: "MuSA",
+            datetime:  moment(new Date("2015", "05", "12", "8", "10")),
+            img_href:"img/placeholder.png"
+
+        }
+    ],
+
 
     events:[
 
@@ -452,5 +497,15 @@ var museumServer ={
                 return this.events[i];
             }
         }
-    }
+    },
+
+    getNewsById: function(id)
+    {
+        for(var i = 0; i < this.news.length; i++)
+        {
+            if(this.news[i].id == id)
+            {
+                return this.news[i];
+            }
+        }    }
 }

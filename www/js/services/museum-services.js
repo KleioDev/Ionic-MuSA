@@ -91,110 +91,64 @@ angular.module('museum-services', [])
 })
 
 
-    //TODO: News - Setup ajax HTTP Request functionality
 /* News service for getting news articles fromt he server */
-.factory('News', function()
+.factory('News', function($http, Routes)
     {
-        var news = [
-            {
-                id: 310,
-                title: "MuSA Opens its Doors",
-                content: "Lorem Ipsum",
-                author: "Zorali de Feria",
-                content:'<h1>Heading 1</h1>   <h2>Heading 2</h2> <h3>Heading 3</h3>  <h4>Heading 4</h4>  <h5>Heading 5</h5>  <h6>Heading 6</h6>  <div  class="more-info">More info: <a href="/html/tags/html_h1_tag.cfm"><code>&lt;h1&gt;</code></a>, <a href="/html/tags/html_h2_tag.cfm"><code>&lt;h2&gt;</code></a>, <a href="/html/tags/html_h3_tag.cfm"><code>&lt;h4&gt;</code></a>, <a href="/html/tags/html_h4_tag.cfm"><code>&lt;h4&gt;</code></a>, <a href="/html/tags/html_h5_tag.cfm"><code>&lt;h5&gt;</code></a>, and <a href="/html/tags/html_h6_tag.cfm"><code>&lt;h6&gt;</code></a>.</div>',
-                datetime:  moment(new Date("2015", "05", "23", "10", "3"))
+        var news = {};
 
-            },
-            {
-                id: 311,
-                title: "Café is Open!",
-                content: "Lorem Ipsum",
-                author: "MuSA",
-                datetime:  moment(new Date("2015", "05", "21", "7", "30"))
+        /* Get the news */
+        news.getNews = function()
+        {
 
+            return  $http.get(Routes.MUSEUM_NEWS_ROUTE)
+                .then(function(response)
+                {
+                    console.log("RES:");
+                    console.log(response);
 
-            },
+                    var _news = response.data;
+                    console.log(_news);
 
-            {
-                id: 321,
-                title: "Gift Shop has new Merchandise",
-                content: "Lorem Ipsum",
-                author: "Nilda",
-                datetime:  moment(new Date("2015", "05", "20", "8", "10"))
+                    /* Current Date */
+                    var currentDate = moment(new Date("2015", "05", "23", "10", "3"));
 
-            },
+                    /* This weeks current News */
+                    news.currentNews = [];
+                    for (var i = 0; i < _news.length; i++) {
 
-            {
-                id: 331,
-                title: "Finally reached 100 visitors",
-                content: "Lorem Ipsum",
-                author: "MuSA",
-                datetime:  moment(new Date("2015", "05", "12", "8", "10"))
-            }
-        ];
-
-        return {
-
-            all: function() {
-                return news;
-            },
-
-            get: function(id)
-            {
-                for (var i = 0; i < news.length; i++) {
-                    if (news[i].id === parseInt(id)) {
-                        return news[i];
-                    }
-                }
-            },
-
-
-            currentNews:function()
-            {
-
-
-                var currentDate = moment(new Date("2015", "05", "23", "10", "3"));
-
-                /* Get today's date */
-                var currentNews = [];
-                for (var i = 0; i < news.length; i++) {
-
-                    if (currentDate.diff(news[i].datetime, 'days') <= 7)
-                    {
-                        currentNews.push(news[i]);
+                        console.log(_news[i]);
+                        if (currentDate.diff(_news[i].datetime, 'days') <= 7)
+                        {
+                            news.currentNews.push(_news[i]);
+                        }
                     }
 
+                    /* News past week */
 
-                }
+                    news.pastWeekNews = [];
+                    for (var i = 0; i < _news.length; i++) {
 
-                return currentNews;
-
-            },
-
-            pastWeekNews: function()
-            {
-                var numDaysBetween = function(d1, d2) {
-                    var diff = Math.abs(d1.getTime() - d2.getTime());
-                    return diff / (1000 * 60 * 60 * 24);
-                };
-
-                var currentDate = moment(new Date("2015", "05", "23", "10", "3"));
-
-                /* Get today's date */
-                var pastWeekNews = [];
-                for (var i = 0; i < news.length; i++) {
-
-                    if (currentDate.diff(news[i].datetime, 'days') > 7)
-                    {
-                        pastWeekNews.push(news[i]);
+                        if (currentDate.diff(_news[i].datetime, 'days') > 7)
+                        {
+                            news.pastWeekNews.push(_news[i]);
+                        }
                     }
+                    console.log(news);
+                    return news;
 
+                });
+        };
 
-                }
+        /* Get a news article by id */
+        news.getNewsById = function(id)
+        {
+            return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id)
+                .then(function(response)
+                {   /* Returns the single event */
+                    return response.data;
+                });
+        };
 
-                return pastWeekNews;
-
-            }
-        }
+        return news;
 
     });

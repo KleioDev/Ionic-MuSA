@@ -37,7 +37,6 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
        }
        );
 
-
         $httpBackend.whenGET(Routes.MUSEUM_EVENTS_ROUTE).respond({
 
                 "events": museumServer.events}
@@ -56,6 +55,25 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
             if(typeof event != 'undefined')
             {
                 return [200, event];
+            }
+            else{
+                return [400, ''];
+            }
+
+        });
+
+        $httpBackend.whenGET(Routes.MUSEUM_NEWS_ROUTE).respond(200,museumServer.news);
+        $httpBackend.whenGET(new RegExp(Routes.MUSEUM_SINGLE_NEWS_ROUTE+'[0-9]*')).respond(function(method,url,params)
+        {
+
+            var re = /.*\/museum\/news\/(\w+)/;
+            var newsId = parseInt(url.replace(re, '$1'), 10);
+
+            var news = museumServer.getNewsById(newsId);
+
+            if(typeof news != 'undefined')
+            {
+                return [200, news];
             }
             else{
                 return [400, ''];

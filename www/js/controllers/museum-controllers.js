@@ -86,11 +86,16 @@ angular.module('museum-controllers', ['ngCordova'])
         /* Get the labels for the application */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
-        /* Get the current news */
-        $scope.currentNews = News.currentNews();
+        /* Get the news */
+        News.getNews().then(function(news)
+        {
+            $scope.news = news;
+        });
 
-        /* Get the past week news */
-        $scope.pastWeekNews = News.pastWeekNews();
+        /* Update happened */
+        $scope.$on('preferences:updated', function(){
+            $scope.navigationTitles = AppNavigationTitles.get().museum;
+        });
 
     })
 
@@ -168,7 +173,11 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;
 
         /* News article to view */
-        $scope.news = News.get($stateParams.newsId);
+        News.getNewsById($stateParams.newsId).
+            then(function(news)
+            {
+               $scope.news = news;
+            });
 
         /* Update preferences */
         $scope.$on('preferences:updated', function(){

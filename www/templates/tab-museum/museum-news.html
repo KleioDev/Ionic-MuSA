@@ -6,11 +6,11 @@
 
     <div class="list" >
 
-        <a class="item item-thumbnail-left  item-icon-right" ng-repeat="news in currentNews" type="item-text-wrap"  href="#/tab/museum-news/{{news.id}}">
-            <img src="img/placeholder.png">
-            <h2>{{news.title}}</h2>
-            <p>{{news.author}}</p>
-            <p>{{news.datetime.format('lll')}}</p>
+        <a class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.currentNews" type="item-text-wrap"  href="#/tab/museum-news/{{_news.id}}">
+            <img src="{{_news.img_href}}">
+            <h2>{{_news.title}}</h2>
+            <p>{{_news.author}}</p>
+            <p>{{_news.datetime.format('lll')}}</p>
             <i class="icon ion-ios-arrow-right"></i>
         </a>
 
@@ -20,11 +20,11 @@
         {{navigationTitles.news.lastNewsLabel}}
     </div>
 
-    <a class="item item-thumbnail-left  item-icon-right" ng-repeat="news in pastWeekNews" type="item-text-wrap" href="#/tab/museum-news/{{news.id}}">
-        <img src="img/placeholder.png">
-        <h2>{{news.title}}</h2>
-        <p>{{news.author}}</p>
-        <p>{{news.datetime.format('lll')}}</p>
+    <a class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" href="#/tab/museum-news/{{_news.id}}">
+        <img src="{{_news.img_href}}">
+        <h2>{{_news.title}}</h2>
+        <p>{{_news.author}}</p>
+        <p>{{_news.datetime.format('lll')}}</p>
         <i class="icon ion-ios-arrow-right"></i>
     </a>
 
