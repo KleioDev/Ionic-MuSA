@@ -1,30 +1,6 @@
 angular.module('exhibition-services', [])
 
-.factory('ExhibitionSegmentedControlState', function()
 
-    {
-        var segmentedControlState = {};
-        segmentedControlState.state = 'objects';
-        return {
-            get :function(){
-
-                return segmentedControlState;
-            },
-
-            set: function(state){
-
-                /* SHOULD BE A BETTER WAY OF DOING THIS */
-                segmentedControlState.state = state;
-
-
-            }
-
-        };
-
-
-
-
-    })
 
 .factory('MuseumObjects', function($filter)
 {
@@ -72,12 +48,6 @@ angular.module('exhibition-services', [])
     }
 
 })
-
-.factory('MuseumExhibitionsNearMe', function(){
-
-
-
-    })
 
 .factory('Exhibitions', function($filter)
     {

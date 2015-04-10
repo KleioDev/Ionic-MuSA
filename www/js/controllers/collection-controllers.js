@@ -3,20 +3,21 @@
 angular.module('collection-controllers', [])
 
 /* Segmented Control for the Collection Tab */
-.controller('CollectionSegmentedCtrl', function($scope, AppNavigationTitles, ExhibitionSegmentedControlState, Exhibitions, iBeacons)
+.controller('CollectionSegmentedCtrl', function($scope, AppNavigationTitles, SegmentedControl, Exhibitions, iBeacons)
 {
+    $scope.navigationTitles = AppNavigationTitles.get().collection;
+
     /* Segmented Control State */
-    var segmentedControlState = ExhibitionSegmentedControlState;
-    $scope.segmentedControl = segmentedControlState.get();
+    $scope.segmentedControl = SegmentedControl.create('collection', ['nearMe', 'objects', 'exhibitions'], 'objects');
+
+    /* Change the view state */
+    $scope.changeSegmentedControlState = function(state)
+    {
+        $scope.segmentedControl.set(state);
+    };
 
     /* Navigation Titles */
     $scope.navigationTitles = AppNavigationTitles.get().collection;
-
-    /* Change State */
-    $scope.changeSegmentedControlState = function(state)
-    {
-        segmentedControlState.set(state);
-    };
 
     /* When preferences are updated */
     $scope.$on('preferences:updated', function(event, data){

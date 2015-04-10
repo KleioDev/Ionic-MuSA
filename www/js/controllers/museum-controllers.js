@@ -1,4 +1,3 @@
-/********* Museum Tab Controllers *********/
 
 /* Author: Jose F. Martinez Rivera */
 /* Museum Controller Module */

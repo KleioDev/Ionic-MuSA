@@ -743,9 +743,15 @@ angular.module('app-services', ['ngCordova'])
 
             create: function(name, states, initialState)
             {
-                var segControl = new SegmentedControl(name, states, initialState);
-                segmentedControls.push(segControl);
-                return segControl;
+                if(this.exists(name))
+                {
+                    return this.get(name);
+                }
+                else {
+                    var segControl = new SegmentedControl(name, states, initialState);
+                    segmentedControls.push(segControl);
+                    return segControl;
+                }
 
             },
 
