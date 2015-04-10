@@ -6,7 +6,6 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
     'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic','ngMockE2E'])
 
     .run(function($ionicPlatform, AppNavigationTitles,  $rootScope, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
-        document.addEventListener("offline", function(){ console.log("NO INTERNET STUFF");}, false);
 
 
         $rootScope.$on('loading:show', function() {
@@ -16,7 +15,18 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
         $rootScope.$on('loading:hide', function() {
             $ionicLoading.hide();
         });
-       $httpBackend.whenGET(Routes.MUSEUM_GENERAL_ROUTE).respond(
+
+        $rootScope.$on('http:error', function()
+        {
+            var alertPopup = $ionicPopup.alert({
+                title: $rootScope.navigationTitles.app.httpErrorLabel});
+            alertPopup.then(function(res) {
+
+            });
+
+        });
+       $httpBackend.whenGET(Routes.MUSEUM_GENERAL_ROUTE).respond(200,
+
        {
                 "description": "",
                 "hoursOfOperation": '<p> The museum is usually open on weekdays. </p> <table cellpadding="1" cellspacing="1" style="width:100%"> <tbody> <tr> <td><strong>Monday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Tuesday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Wednesday</strong></td> <td>8:30 AM - 7:30 PM</td> </tr> <tr> <td><strong>Thursday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Friday</strong></td> <td>8:30 AM - 6:30 PM</td> </tr> </tbody> </table> <p>&nbsp;</p>',
@@ -30,59 +40,28 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
         $httpBackend.whenGET(Routes.MUSEUM_EVENTS_ROUTE).respond({
 
-                "events":[
-
-                    {
-                        id: 273,
-                        title: "Museum Inauguration",
-                        description: "Museum will finally open after 13 years!",
-                        location: "Museum",
-
-                        datetime:  moment(new Date("2015", "05", "2", "10", "30"))
-
-                    },
-                    {
-                        id: 300,
-                        title: "Speech - Zorali de Feria",
-                        description: "Museum will finally open after 13 years!",
-                        location: "Museum",
-
-                        datetime:  moment(new Date("2015", "05", "2", "13", "00"))
-
-                    },
-
-                    {
-
-                        id: 301,
-                        title: "Social Activity",
-                        description: "Museum will finally open after 13 years!",
-                        location: "Museum",
-
-                        datetime:  moment(new Date("2015", "05", "9", "11", "00"))
-
-                    },
-                    {
-                        id: 303,
-                        title: "Short Movie",
-                        description: "Museum will finally open after 13 years!",
-                        location: "Museum",
-                        datetime:  moment(new Date("2015", "05", "9", "15", "00"))
-
-                    },
-                    {
-                        id: 305,
-                        title:"Cafe Opening",
-                        location: "Museum",
-
-                        description: "Museum will finally open after 13 years!",
-
-                        datetime:  moment(new Date("2015", "05", "11", "8", "30"))
-
-                    }
-
-                ]}
+                "events": museumServer.events}
 
             );
+
+        $httpBackend.whenGET(new RegExp(Routes.MUSEUM_SINGLE_EVENT_ROUTE+'[0-9]*')).respond(function(method,url,params)
+        {
+
+            var re = /.*\/museum\/events\/(\w+)/;
+            var eventId = parseInt(url.replace(re, '$1'), 10);
+
+            var event = museumServer.getEventById(eventId);
+            console.log("SERVER: ");
+            console.log(event);
+            if(typeof event != 'undefined')
+            {
+                return [200, event];
+            }
+            else{
+                return [400, ''];
+            }
+
+        });
 
         $httpBackend.whenGET('templates/tab-museum/museum-single-event.html').passThrough();
         $httpBackend.whenGET('templates/tab-museum/museum-events.html').passThrough();
@@ -125,7 +104,6 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
 
 
-
         var iosConfig = {
             "badge": true,
             "sound": true,
@@ -161,15 +139,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
         });
 
-        $rootScope.$on('http:error', function()
-        {
-            var alertPopup = $ionicPopup.alert({
-                title: $rootScope.navigationTitles.app.httpErrorLabel});
-            alertPopup.then(function(res) {
 
-            });
-
-        });
 
 
 
@@ -378,25 +348,45 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
         $urlRouterProvider.otherwise('/tab/museum-segmented-control');
 
 
-            $httpProvider.interceptors.push(function($rootScope) {
-                return {
-                    request: function(config) {
-                        $rootScope.$broadcast('loading:show');
-                        return config
-                    },
-                    response: function(response) {
-                        var status = response.status;
-                        $rootScope.$broadcast('loading:hide');
+        var interceptor = ['$rootScope', '$q', function (scope, $q) {
 
-                        if(status >= 400)
-                        {
-                            $rootScope.$broadcast('http:error');
-                        }
+            function success(response) {
+                return response;
+            }
 
-                        return response
-                    }
-                }
-            });
+            function error(response) {
+                var status = response.status;
+                console.log("ERROR@");
+                //if (status == 401) {
+                //    window.location = "./index.html";
+                //    return;
+                //}
+                // otherwise
+                return $q.reject(response);
+
+            }
+
+            return function (promise) {
+                return promise.then(success, error);
+            }
+
+        }];
+        $httpProvider.interceptors.push('HTTPInterceptor');
+
+            //$httpProvider.interceptors.push(function($rootScope) {
+            //    return {
+            //        request: function(config) {
+            //            $rootScope.$broadcast('loading:show');
+            //            return config
+            //        },
+            //        response: function(response) {
+            //            $rootScope.$broadcast('loading:hide');
+            //            console.log(response.status);
+            //
+            //            return response
+            //        }
+            //    }
+            //});
 
 
 

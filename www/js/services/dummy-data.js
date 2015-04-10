@@ -386,3 +386,71 @@ var mediaServer = {
 
 dummyExhibitions.init();
 
+
+
+var museumServer ={
+
+
+    events:[
+
+        {
+            id: 273,
+            title: "Museum Inauguration",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
+
+            datetime:  moment(new Date("2015", "05", "2", "10", "30"))
+
+        },
+        {
+            id: 300,
+            title: "Speech - Zorali de Feria",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
+
+            datetime:  moment(new Date("2015", "05", "2", "13", "00"))
+
+        },
+
+        {
+
+            id: 301,
+            title: "Social Activity",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
+
+            datetime:  moment(new Date("2015", "05", "9", "11", "00"))
+
+        },
+        {
+            id: 303,
+            title: "Short Movie",
+            description: "Museum will finally open after 13 years!",
+            location: "Museum",
+            datetime:  moment(new Date("2015", "05", "9", "15", "00"))
+
+        },
+        {
+            id: 305,
+            title:"Cafe Opening",
+            location: "Museum",
+
+            description: "Museum will finally open after 13 years!",
+
+            datetime:  moment(new Date("2015", "05", "11", "8", "30"))
+
+        }
+
+    ],
+
+    getEventById : function(id)
+    {
+        for(var i = 0; i < this.events.length; i++)
+        {
+            if(this.events[i].id == id)
+            {
+                return this.events[i];
+            }
+        }
+    }
+}

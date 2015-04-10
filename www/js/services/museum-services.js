@@ -5,64 +5,28 @@
 angular.module('museum-services', [])
 
 //=================== Museum Services ====================//
-
-    //TODO: Museum- Setup ajax HTTP Request functionality
-
-
-
-
+    //TODO: Might need some initial data
     .factory('Museum', function(Routes, $http)
     {
-        //TODO: SET Generic Information
         var general = {};
-        general.info =
+
+        /* Get general museum info */
+        general.getGeneralMuseumInfo = function()
         {
-
-            "description": "",
-            "hoursOfOperation": '',
-            "museumTitle": "",
-            "directions":"",
-            "socialMediaLinks":[]
-
+            return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(function(response)
+            {
+                return response.data;
+            })
         };
 
-        return {
+        /* Get the location */
+        general.getLocation = function()
+        {
+            return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
+        };
 
-            getInfo: function()
-            {
-                return general;
-            },
+        return general;
 
-            get: function()
-            {
-
-
-                $http.get(Routes.MUSEUM_GENERAL_ROUTE).
-                    success(function(data, status, headers, config) {
-
-                        //console.log(data);
-                        general.info = data;
-                        console.log("general");
-
-                    }).
-                    error(function(data, status, headers, config) {
-                        // called asynchronously if an error occurs
-                        // or server returns response with an error status.
-                    });
-
-                return general;
-
-
-            },
-            getLocation: function()
-            {
-                return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
-            }
-
-
-
-
-        }
 
     })
     //TODO: Events- Setup ajax HTTP Request functionality
@@ -71,81 +35,59 @@ angular.module('museum-services', [])
 .factory('Events', function(Routes,$http)
 {
     var events = {};
-    events.allEvents = [];
-    events.eventsToday = [];
-    events.upcomingEvents = [];
 
-
-    return {
-
-        all: function() {
-            return events;
-        },
-
-        getSingleEvent : function(id)
-        {
-            $http.get(Routes.MUSEUM_EVENTS_ROUTE + id).
-                success(function(data, status, headers, config) {
-
-                    //console.log(data);
-                    events = data;
-
-
-                }).
-                error(function(data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                });
-
-        },
-        get: function()
-        {
-            var eventService = this;
-            $http.get(Routes.MUSEUM_EVENTS_ROUTE).
-                success(function(data, status, headers, config) {
-
-                    console.log(data);
-                    events.allEvents = data.events;
-                    eventService.getEventsToday();
-                    eventService.getUpcomingEvents();
-
-                }).
-                error(function(data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                });
-        },
-
-        getEventsToday: function()
-        {
-            events.eventsToday = [];
-            var currentDate = moment(new Date("2015", "05", "2"));
-
-            for (var i = 0; i < events.allEvents.length; i++)
+    /* Get the events with a promise  */
+    events.getEvents = function(){
+        return  $http.get(Routes.MUSEUM_EVENTS_ROUTE)
+            .then(function(response)
             {
-                //console.log(events[i].datetime.diff(currentDate));
-                if (events.allEvents[i].datetime.diff(currentDate,'days') == 0)
+                var data = response.data;
+                console.log(data);
+
+                /* Save today's events */
+                events.eventsToday = [];
+                var currentDate = moment(new Date("2015", "05", "2"));
+
+                for (var i = 0; i < data.events.length; i++)
                 {
-                    events.eventsToday.push(events[i]);
+                    //console.log(events[i].datetime.diff(currentDate));
+                    if (data.events[i].datetime.diff(currentDate,'days') == 0)
+                    {
+                        events.eventsToday.push(data.events[i]);
+                    }
                 }
-            }
-        },
 
-
-
-        getUpcomingEvents: function()
-        {
-            events.upcomingEvents = [];
-            var currentDate = moment(new Date("2015", "05", "2"));
-            for (var i = 0; i < events.allEvents.length; i++) {
-                if (events.allEvents[i].datetime.diff(currentDate, 'days') != 0 ){
-                    events.upcomingEvents.push(events[i]);
+                /* Store the upcoming events */
+                events.upcomingEvents = [];
+                var currentDate = moment(new Date("2015", "05", "2"));
+                for (var i = 0; i < data.events.length; i++) {
+                    if (data.events[i].datetime.diff(currentDate, 'days') != 0 ){
+                        events.upcomingEvents.push(data.events[i]);
+                    }
                 }
-            }
-        }
+
+                console.log(events);
+                return events;
+
+            });
 
 
-    }
+    };
+
+    /* Get a single event */
+    events.getSingleEvent = function(id)
+    {
+       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id)
+            .then(function(response)
+            {
+                var event = response.data;
+
+                return event;
+            });
+    };
+
+    return events;
+
 })
 
 

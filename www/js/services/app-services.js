@@ -863,5 +863,39 @@ angular.module('app-services', ['ngCordova'])
 
         return routes;
 
-    });
+    })
+
+// register the interceptor as a service
+.factory('HTTPInterceptor', function($q, $rootScope) {
+
+        return {
+        // optional method
+        'request': function(config) {
+            // do something on success
+            $rootScope.$broadcast('loading:show');
+            return config;
+        },
+
+        // optional method
+        'requestError': function(rejection) {
+            console.log("MY MISTAKE");
+            return $q.reject(rejection);
+        },
+
+
+
+        // optional method
+        'response': function(response) {
+            $rootScope.$broadcast('loading:hide');
+            return response;
+        },
+
+        // optional method
+        'responseError': function(rejection) {
+            $rootScope.$broadcast('loading:hide');
+            $rootScope.$broadcast('http:error');
+            return $q.reject(rejection);
+        }
+    };
+});
 

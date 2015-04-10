@@ -33,7 +33,11 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
         /* Get information from the museum */
-        $scope.museum = Museum.get();
+        $scope.museum = {};
+        Museum.getGeneralMuseumInfo().then(function(museumGeneralInfo)
+        {
+            $scope.museum = museumGeneralInfo;
+        });
 
         /* Open the map */
         $scope.openMap = function()
@@ -53,18 +57,15 @@ angular.module('museum-controllers', ['ngCordova'])
     /* Events list controller */
     .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events, Connection)
     {
-        Connection.checkConnection();
+        //Connection.checkConnection();
         /* Update navigation labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
-        Events.get();
-        $scope.events = Events.all();
 
+        Events.getEvents().then(function(events)
+        {
+            $scope.events = events;
 
-        //    /* Get the events that are happening today */
-        //$scope.eventsToday = $scope.events.eventsToday;
-        //
-        ///* Get the upcoming events */
-        //$scope.upcomingEvents = Events.getUpcomingEvents();
+        });
 
         /* Open the event */
         $scope.openEvent = function(eventId)
@@ -100,7 +101,10 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
 
         /* Pass the event to the view */
-        $scope.event = Events.getSingleEvent($stateParams.eventId);
+        Events.getSingleEvent($stateParams.eventId).then(function(event)
+        {
+            $scope.event = event;
+        });
 
         /* Update the view labels */
         $scope.$on('preferences:updated', function(event, data){
@@ -109,6 +113,7 @@ angular.module('museum-controllers', ['ngCordova'])
 
         /* Add the calendar */
         $scope.addToCalendar = function() {
+            console.log($scope.event);
 
             /* Show Confirm  popup to add the calendar */
             var confirmPopup = $ionicPopup.confirm({
