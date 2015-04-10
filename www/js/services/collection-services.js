@@ -1,51 +1,35 @@
 angular.module('exhibition-services', [])
 
 
-
-.factory('MuseumObjects', function($filter)
+/* Manages Museum objects related features */
+.factory('MuseumObjects', function($filter, Routes, $http)
 {
 
+    var museumObjects = {};
 
-    var museumObjects =
-        [
 
-        ];
-
-    return {
-        all: function()
-        {
-            return museumObjects;
-        },
-
-        getPage: function(pageNumber, searchTerm)
-        {
-            //TODO: HTTP Requests
-            if(pageNumber == 0)
+    museumObjects.getPage = function(pageNumber,searchTerm)
+    {
+        var queryString = "?page="+pageNumber+"&search="+searchTerm.replace(" ", "%20");
+        return $http.get(Routes.COLLECTION_OBJECTS+queryString)
+            .then(function(response)
             {
-                museumObjects.length = 0;
-            }
-            var results = dummyMuseumObjects.getSearchResults(searchTerm,$filter, pageNumber);
+                return response.data;
+            });
+    };
 
-            for(var i = 0; i < results.objects.length; i++)
+    museumObjects.getById = function(id)
+    {
+        return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id)
+            .then(function(response)
             {
-                museumObjects.push(results.objects[i]);
-            }
+               return response.data;
+            });
+    };
 
-            return results.morePages;
-        },
 
-        get: function(objectId) {
-            /* Http get request */
-            //TODO: Object HTTP Request
 
-            return dummyMuseumObjects.get(parseInt(objectId));
-
-        },
-
-        resetPage: function(){
-
-        }
-    }
+    return museumObjects;
 
 })
 

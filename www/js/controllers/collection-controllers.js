@@ -48,7 +48,7 @@ angular.module('collection-controllers', [])
         $scope.morePages = false;
 
         /* Copy museum objects for changes */
-        $scope.museumObjects = MuseumObjects.all();
+        $scope.museumObjects = [];
 
         /* Set search term to empty */
         $scope.searchTerm = "";
@@ -59,26 +59,39 @@ angular.module('collection-controllers', [])
             $scope.getPage();
         });
 
-        /* When preferences are updated */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
 
         /* Get a page when scrolling down */
         $scope.getPage = function()
         {
             $scope.morePages = MuseumObjects.getPage($scope.pageNumber,$scope.searchTerm, complete);
 
-            if($scope.morePages)
-                $scope.pageNumber++;
-            $scope.$broadcast('scroll.infiniteScrollComplete');
+            MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
+                .then(function(objects)
+                {
+                    if(typeof objects == 'undefined' || objects === null)
+                    {
+                        $scope.morePages = false;
+                    }
 
-            /* Callback func */
-            function complete() {
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-            }
+                    else if(objects.length == 0)
+                    {
+                        $scope.morePages = false;
+                    }
+                    else
+                    {
+                    $scope.museumObjects.concat(objects);
+                    }
+
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+
+                });
 
         };
+
+        /* When preferences are updated */
+        $scope.$on('preferences:updated', function(event, data){
+            $scope.navigationTitles = AppNavigationTitles.get();
+        });
 
         /* When search term changes, do a query */
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {

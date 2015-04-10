@@ -863,8 +863,13 @@ angular.module('app-services', ['ngCordova'])
 
             /* News */
             MUSEUM_NEWS_ROUTE : VERSION + "/museum/news",
-            MUSEUM_CURRENT_NEWS_ROUTE : VERSION + "/museum/news/current",
-            MUSEUM_SINGLE_NEWS_ROUTE : VERSION + "/museum/news/"
+            MUSEUM_CURRENT_NEWS_ROUTE : VERSION + "/museum/news",
+            MUSEUM_SINGLE_NEWS_ROUTE : VERSION + "/museum/news/",
+
+            /* Collection */
+            COLLECTION_OBJECTS: VERSION + "/objects",
+            COLLECTION_SINGLE_OBJECT: VERSION + "/objects/",
+            COLLECTION_MUSEUM_EXHIBITIONS: VERSION + "/exhibitions"
         };
 
         return routes;
