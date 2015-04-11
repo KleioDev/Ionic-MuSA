@@ -54,9 +54,8 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Events list controller */
-    .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events, Connection)
+    .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events)
     {
-        //Connection.checkConnection();
         /* Update navigation labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
@@ -69,7 +68,17 @@ angular.module('museum-controllers', ['ngCordova'])
         /* Open the event */
         $scope.openEvent = function(eventId)
         {
-            $state.go('tab.museum-events-single', {eventId: eventId});
+
+            /* Load the event before opening */
+            Events.getSingleEvent(eventId)
+                .then(function(response){
+
+                    if(response.status == 200)
+                    {
+                        Events.setEvent(response.data);
+                        $state.go('tab.museum-events-single', {eventId: eventId});
+                    }
+                });
         };
 
         /* Update preferences */
@@ -80,19 +89,32 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* News list controller */
-    .controller('MuseumNewsCtrl', function($scope, AppNavigationTitles, News)
+    .controller('MuseumNewsCtrl', function($scope,$state, AppNavigationTitles, News)
     {
         /* Get the labels for the application */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
 
-        //$scope.news = {};
-        //$scope.news.currentNews = [];
-        //$scope.news.pastWeekNews = [];
         /* Get the news */
         News.getNews().then(function(news)
         {
             $scope.news = news;
         });
+
+        /* Open a news article */
+        $scope.openNewsArticle = function(newsId)
+        {
+
+            News.getNewsById(newsId)
+                .then(function(response){
+
+                    if(response.status == 200)
+                    {
+                        News.setNewsArticle(response.data);
+                        $state.go('tab.single_news_article',{newsId: newsId});
+
+                    }
+                })
+        };
 
         /* Update happened */
         $scope.$on('preferences:updated', function(){
@@ -107,12 +129,9 @@ angular.module('museum-controllers', ['ngCordova'])
         /* Get the labels for the view */
         $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
 
-        $scope.event = {};
         /* Pass the event to the view */
-        Events.getSingleEvent($stateParams.eventId).then(function(event)
-        {
-            $scope.event = event;
-        });
+        $scope.event = Events.event;
+
 
         /* Update the view labels */
         $scope.$on('preferences:updated', function(event, data){
@@ -175,12 +194,7 @@ angular.module('museum-controllers', ['ngCordova'])
         /* App navigation labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;
 
-        /* News article to view */
-        News.getNewsById($stateParams.newsId).
-            then(function(news)
-            {
-               $scope.news = news;
-            });
+        $scope.news = News.getNewsArticle();
 
         /* Update preferences */
         $scope.$on('preferences:updated', function(){

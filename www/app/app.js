@@ -5,7 +5,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic','ngMockE2E'])
 
-    .run(function($ionicPlatform, AppNavigationTitles,  $rootScope, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function($ionicPlatform, AppNavigationTitles,$filter,  $rootScope, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
 
         $rootScope.$on('loading:show', function() {
@@ -31,8 +31,9 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                 "description": "",
                 "hoursOfOperation": '<p> The museum is usually open on weekdays. </p> <table cellpadding="1" cellspacing="1" style="width:100%"> <tbody> <tr> <td><strong>Monday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Tuesday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Wednesday</strong></td> <td>8:30 AM - 7:30 PM</td> </tr> <tr> <td><strong>Thursday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Friday</strong></td> <td>8:30 AM - 6:30 PM</td> </tr> </tbody> </table> <p>&nbsp;</p>',
                 "museumTitle": "",
-                "directions": "",
-                "socialMediaLinks": []
+                "address": "<p><strong>Address</strong> </p> <p>259 Blvd. Alfonso Valdez Cabian</p> <p>Mayagüez, PR, 00680 </p>",
+                "coordinates": "",
+                "socialMediaLinks": {"facebook": "https://www.facebook.com/pages/Museo-de-Arte-RUM-MUSA/385132481629639?fref=ts"}
 
        }
        );
@@ -74,6 +75,49 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
             if(typeof news != 'undefined')
             {
                 return [200, news];
+            }
+            else{
+                return [400, ''];
+            }
+
+
+
+        });
+
+        $httpBackend.when('GET', new RegExp(Routes.COLLECTION_OBJECTS+'.*'))
+            .respond(function(method, url)
+            {
+                console.log(url);
+                function getJsonFromUrl(url) {
+                    var query = url.substr(url.indexOf('?')+1);
+                    var result = {};
+                    query.split("&").forEach(function(part) {
+                        var item = part.split("=");
+                        result[item[0]] = decodeURIComponent(item[1]).replace('+', ' ');
+                    });
+                    return result;
+                }
+                var params = getJsonFromUrl(url);
+                console.log("PARAMS");
+                console.log(params);
+                var objects = dummyMuseumObjects.getSearchResults(params.searchTerm, $filter, params.pageNumber);
+                //console.log(objects);
+                return [200, objects]
+            });
+
+
+        $httpBackend.whenGET(new RegExp(Routes.COLLECTION_SINGLE_OBJECT+'[0-9]*')).respond(function(method,url,params)
+        {
+            console.log("GETTING OBJECT");
+            console.log(url);
+            var re = /.*\/museum\/news\/(\w+)/;
+            var objectId = parseInt(url.replace(re, '$1'), 10);
+
+            var object = dummyMuseumObjects.get(parseInt(objectId));
+
+            if(typeof object != 'undefined')
+            {
+                return [200, object];
             }
             else{
                 return [400, ''];

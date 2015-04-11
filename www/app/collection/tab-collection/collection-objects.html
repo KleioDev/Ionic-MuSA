@@ -1,36 +1,72 @@
 
 <div ng-controller="CollectionObjectListCtrl">
 
-<ion-list class="list-inset">
-    <label class="item item-input">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input ng-model="searchTerm" type="text" placeholder="Search by Author or Object Title">
-    </label>
+    <ion-list class="list-inset">
+        <label class="item item-input">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input ng-model="searchTerm" type="text" placeholder="{{navigationTitles.collection.objectSearchBar}}">
+        </label>
 
+    </ion-list>
 
+    <div ng-switch="loading">
 
-</ion-list>
+        <div ng-switch-default="false">
+    <ion-list class="list">
 
-<ion-list class="list">
+        <!--| filter:searchTerm-->
+        <ion-item ng-click="loadObject(object.id)" class="item item-thumbnail-left item-icon-right" ng-repeat="object in museumObjects " type="item-text-wrap">
+            <img ng-src="{{object.img_href}}"/>
+            <h2>{{object.title}}</h2>
+            <p>{{object.author}}</p>
+            <i class="icon ion-ios-arrow-right"></i>
 
-    <!--| filter:searchTerm-->
-    <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="object in museumObjects " type="item-text-wrap" href="#/tab/collection/objects/{{object.id}}">
-        <img src="{{object.img_href}}"/>
-        <h2>{{object.title}}</h2>
-        <p>{{object.author}}</p>
-        <i class="icon ion-ios-arrow-right"></i>
-
-    </ion-item>
-
-
-
-
-</ion-list>
+        </ion-item>
+    </ion-list>
 
     <ion-infinite-scroll
-            ng-if="morePages"
+            ng-if=morePages
             on-infinite="getPage()"
             distance="1%">
     </ion-infinite-scroll>
+
+            <div ng-if="museumObjects.length == 0">
+
+                <div class="row">
+
+                    <div class="col-10"></div>
+
+                    <div class="col-80" style="text-align:center">
+                        <br><br><br><br>
+
+                        <h2 class="dark">{{navigationTitles.app.noSearchResultsFound}}</h2>
+
+                    </div>
+                    <div class="col-10"></div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="true">
+
+            <div class="row">
+
+                <div class="col-10"></div>
+
+                <div class="col-80" style="text-align:center">
+                    <br><br><br><br>
+
+                    <ion-spinner icon="spiral"></ion-spinner>
+                    <h2 class="dark">{{navigationTitles.app.loading}}</h2>
+
+
+
+                </div>
+                <div class="col-10"></div>
+            </div>
+        </div>
+
+
+    </div>
 
 </div>

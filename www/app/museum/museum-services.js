@@ -26,9 +26,8 @@ angular.module('museum-services', [])
         };
 
         return general;
-
-
     })
+
     //TODO: Events- Setup ajax HTTP Request functionality
 
     /* Event service for getting the events from the server */
@@ -59,7 +58,6 @@ angular.module('museum-services', [])
 
                 /* Store the upcoming events */
                 events.upcomingEvents = [];
-                var currentDate = moment(new Date("2015", "05", "2"));
                 for (var i = 0; i < data.events.length; i++) {
                     if (data.events[i].datetime.diff(currentDate, 'days') != 0 ){
                         events.upcomingEvents.push(data.events[i]);
@@ -77,13 +75,13 @@ angular.module('museum-services', [])
     /* Get a single event */
     events.getSingleEvent = function(id)
     {
-       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id)
-            .then(function(response)
-            {
-                var event = response.data;
+       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id);
+    };
 
-                return event;
-            });
+    /* Event */
+    events.setEvent = function(event)
+    {
+        events.event = event;
     };
 
     return events;
@@ -143,11 +141,20 @@ angular.module('museum-services', [])
         news.getNewsById = function(id)
         {
             return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id)
-                .then(function(response)
-                {   /* Returns the single event */
-                    return response.data;
-                });
+
         };
+
+        /* Set a news article for the next view */
+        news.setNewsArticle = function(newsArticle)
+        {
+            news.newsArticle = newsArticle;
+        };
+
+        /* Get the news Article */
+        news.getNewsArticle = function()
+        {
+            return news.newsArticle;
+        }
 
         return news;
 

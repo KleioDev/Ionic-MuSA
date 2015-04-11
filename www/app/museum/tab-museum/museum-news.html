@@ -6,7 +6,7 @@
 
     <div class="list" >
 
-        <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.currentNews" type="item-text-wrap"  href="#/tab/museum-news/{{_news.id}}">
+        <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.currentNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
             <img ng-src="{{_news.img_href}}">
             <h2>{{_news.title}}</h2>
             <p>{{_news.author}}</p>
@@ -22,7 +22,7 @@
     <div class="list" >
 
 
-    <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" href="#/tab/museum-news/{{_news.id}}">
+    <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
         <img ng-src="{{_news.img_href}}">
         <h2>{{_news.title}}</h2>
         <p>{{_news.author}}</p>

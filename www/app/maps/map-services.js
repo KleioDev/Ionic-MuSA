@@ -6,6 +6,13 @@ angular.module('map-services', [])
 .factory('Map', function($ionicLoading)
     {
 
+
+        var map = {};
+
+        map.getMap = function(beaconIds)
+        {
+            return $http.get()
+        };
         var rooms = [
 
             {

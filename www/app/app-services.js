@@ -32,7 +32,9 @@ angular.module('app-services', ['ngCordova'])
                 {
                     "noConnectionLabel": "No Internet Connection Found!",
                     "noConnectionContent": "Internet access is required to use this app",
-                    "httpErrorLabel": "The server can't be reached at this time."
+                    "httpErrorLabel": "The server can't be reached at this time.",
+                    "loading": "Loading...",
+                    "noSearchResultsFound": "No Search Results Found"
                 },
                 /* Museum Tab navigation Lang */
                 "museum":
@@ -94,6 +96,8 @@ angular.module('app-services', ['ngCordova'])
                 },
                 "collection":
                 {
+                    "exhibitionSearchBar": "Search by Exhibition Title",
+                    "objectSearchBar": "Search by Author or Object Title",
                     "buttonBar":{
                         "nearMeButton": "Near Me",
                         "objectsButton": "Objects",
@@ -870,6 +874,15 @@ angular.module('app-services', ['ngCordova'])
             COLLECTION_OBJECTS: VERSION + "/objects",
             COLLECTION_SINGLE_OBJECT: VERSION + "/objects/",
             COLLECTION_MUSEUM_EXHIBITIONS: VERSION + "/exhibitions"
+
+
+            /* QR Code */
+
+
+            /* Map */
+
+
+            /* User */
         };
 
         return routes;

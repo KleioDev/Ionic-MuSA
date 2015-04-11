@@ -40,6 +40,7 @@ angular.module('collection-controllers', [])
 
     /* Collection Object List Controller */
     .controller('CollectionObjectListCtrl', function($scope, AppNavigationTitles, MuseumObjects){
+        $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Set page number to 0 */
         $scope.pageNumber = 0;
@@ -55,38 +56,68 @@ angular.module('collection-controllers', [])
 
         /* When page loads, load the first page*/
         $scope.$on('$stateChangeSuccess', function() {
+            $scope.museumObjects = [];
             $scope.pageNumber = 0;
             $scope.getPage();
         });
 
+        $scope.loading = false;
 
         /* Get a page when scrolling down */
         $scope.getPage = function()
         {
-            $scope.morePages = MuseumObjects.getPage($scope.pageNumber,$scope.searchTerm, complete);
 
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
-                .then(function(objects)
+                .then(function(page)
                 {
-                    if(typeof objects == 'undefined' || objects === null)
+                    if(typeof page == 'object')
                     {
-                        $scope.morePages = false;
+
+                        if(page.objects.length > 0)
+                        {
+                            console.log("1 more page");
+                            $scope.museumObjects =  $scope.museumObjects.concat(page.objects);
+
+                            $scope.morePages = true;
+                            $scope.pageNumber++;
+                            $scope.$broadcast('scroll.infiniteScrollComplete');
+
+                        }
+                        else
+                        {
+                            $scope.morePages = false;
+                        }
+
                     }
 
-                    else if(objects.length == 0)
+                    else if($scope.pageNumber == 0 && $scope.museumObjects.length == 0)
                     {
-                        $scope.morePages = false;
+                        console.log("No Objects Found");
                     }
+
                     else
                     {
-                    $scope.museumObjects.concat(objects);
+                        console.log("Mistake Happened");
                     }
 
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                    $scope.loading = false;
+                });
+
+        };
+
+        /* Load Object */
+        $scope.loadObject = function(id)
+        {
+            MuseumObjects.getById(id)
+                .then(function(response)
+                {
+                    MuseumObjects.loadedObject = object;
+
 
                 });
 
         };
+
 
         /* When preferences are updated */
         $scope.$on('preferences:updated', function(event, data){
@@ -95,6 +126,8 @@ angular.module('collection-controllers', [])
 
         /* When search term changes, do a query */
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
+            $scope.loading= true;
+            $scope.museumObjects = [];
             $scope.pageNumber = 0;
             $scope.getPage();
 
@@ -134,7 +167,15 @@ angular.module('collection-controllers', [])
         $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Get the object */
-        $scope.museumObject = MuseumObjects.get($stateParams.objectId);
+        MuseumObjects.getById($stateParams.objectId)
+            .then(function(museumObject)
+            {
+                console.log("DAH");
+                console.log(museumObject);
+                $scope.museumObject = museumObject;
+
+            });
+        $scope.museumObject = MuseumObjects.getById($stateParams.objectId);
         console.log("Museums!");
 
         /* When prefrences are updated, update to the settings */
@@ -405,6 +446,7 @@ angular.module('collection-controllers', [])
 
 
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
+            console.log("CHANGED");
             $scope.pageNumber = 0;
             $scope.getPage();
 
