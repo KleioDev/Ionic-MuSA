@@ -39,7 +39,7 @@ angular.module('collection-controllers', [])
 })
 
     /* Collection Object List Controller */
-    .controller('CollectionObjectListCtrl', function($scope, AppNavigationTitles, MuseumObjects){
+    .controller('CollectionObjectListCtrl', function($scope, $state, AppNavigationTitles, MuseumObjects){
         $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Set page number to 0 */
@@ -111,8 +111,12 @@ angular.module('collection-controllers', [])
             MuseumObjects.getById(id)
                 .then(function(response)
                 {
-                    MuseumObjects.loadedObject = object;
-
+                    if(response.status == 200)
+                    {
+                        MuseumObjects.setActiveObject(response.data);
+                        //Change state
+                        $state.go('tab.collection-single-object');
+                    }
 
                 });
 
@@ -137,10 +141,22 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Media, Audio, Video)
+    .controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Audio, Video)
     {
         /* Maintains the stack of modals */
         var modals = new Array();
+
+        /* Set up app navigation titles */
+        $scope.navigationTitles = AppNavigationTitles.get();
+
+        /* Get the active object */
+        $scope.museumObject = MuseumObjects.getActiveObject();
+
+        /* When prefrences are updated, update to the settings */
+        $scope.$on('preferences:updated', function(event, data){
+            $scope.navigationTitles = AppNavigationTitles.get();
+        });
+
 
         /* Opens a modal with a specific template, whether its to view images, videos or text */
         $scope.openModal = function(template) {
@@ -157,31 +173,19 @@ angular.module('collection-controllers', [])
         };
 
         /* Close the modal */
-        $scope.closeModal = function() {
-
+        $scope.closePage = function()
+        {
             modals.pop().hide();
         };
 
 
-        /* Set up app navigation titles */
-        $scope.navigationTitles = AppNavigationTitles.get();
+        /* Close the modal */
+        $scope.closeModal = function() {
+            modals.pop().hide();
 
-        /* Get the object */
-        MuseumObjects.getById($stateParams.objectId)
-            .then(function(museumObject)
-            {
-                console.log("DAH");
-                console.log(museumObject);
-                $scope.museumObject = museumObject;
+        };
 
-            });
-        $scope.museumObject = MuseumObjects.getById($stateParams.objectId);
-        console.log("Museums!");
 
-        /* When prefrences are updated, update to the settings */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
 
         /* Load the description of the element */
         $scope.loadDescription = function()
@@ -194,11 +198,6 @@ angular.module('collection-controllers', [])
 
         };
 
-        /* Close the modal */
-        $scope.closePage = function()
-        {
-            $scope.closeModal();
-        };
 
 
         /* If user clicks on the listen to an audio */
@@ -213,6 +212,7 @@ angular.module('collection-controllers', [])
             $scope.openModal('audio-view.html');
 
         };
+
 
         /* Displays the image grid */
         $scope.imageGrid = function()
@@ -249,22 +249,33 @@ angular.module('collection-controllers', [])
             if(length > 1) return "MULTIPLE";
         };
 
+
+        /* Shows the list of videos */
+        $scope.showVideos = function()
+        {
+            /* Open up modal */
+            $scope.openModal('video-list-modal.html');
+
+        };
+
         /* Play a video */
         $scope.playVideo = function(videoId) {
-            /* Loading */
-            /* Get video link from Media service */
-            var video = Media.get(videoId);
 
-            /* Play Video */
-            Video.set(video);
+            /* Need to get the video from http request*/
+            Video.getVideo(videoId)
+                .then(function(response)
+                {
+                    /* If acceptable */
+                    if(response.status == 200)
+                    {
 
-            if ($scope.museumObject.videos.length > 1){
-                    $scope.closeModal();
-
-            }
-            $state.go('tab.video-view');
-
-
+                        Video.setVideo(response.data);
+                        if ($scope.museumObject.videos.length > 1){
+                            $scope.closeModal();
+                        }
+                        $state.go('tab.video-view');
+                    }
+                });
         };
 
         /* Play the audio stream */
@@ -294,6 +305,15 @@ angular.module('collection-controllers', [])
             Audio.seekTo($scope.audio.stream.seekTo + '');
         });
 
+
+        /* List of archives */
+        $scope.showArchives = function()
+        {
+            /* Show Archives */
+            $scope.openModal('archives-list-modal.html');
+
+        };
+
         /* Displays a text archives */
         $scope.displayArchive = function(archiveId)
         {
@@ -305,23 +325,6 @@ angular.module('collection-controllers', [])
             $scope.text.title = archive.title;
             $scope.text.content = archive.content;
             $scope.openModal('text-view.html');
-
-        };
-
-        /* Shows the list of videos */
-        $scope.showVideos = function()
-        {
-            /* Open up modal */
-            $scope.openModal('video-list-modal.html');
-
-
-        };
-
-        /* List of archives */
-        $scope.showArchives = function()
-        {
-            /* Show Archives */
-            $scope.openModal('archives-list-modal.html');
 
         };
 
@@ -338,13 +341,13 @@ angular.module('collection-controllers', [])
     /* Video view controller */
     .controller('VideoViewCtrl', function($scope,$sce,Video)
     {
-        $scope.video = Video.get();
+        /* Get active video */
+        $scope.video = Video.getActiveVideo();
 
         $scope.trustSrc = function(src)
         {
             return $sce.trustAsResourceUrl(src);
         }
-
 
     })
 

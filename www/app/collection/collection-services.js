@@ -22,14 +22,20 @@ angular.module('exhibition-services', [])
 
     museumObjects.getById = function(id)
     {
-        return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id)
-            .then(function(response)
-            {
-               return response.data;
-            });
+        return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id);
     };
 
-    museumObjects.loadedObject = {};
+
+    museumObjects.setActiveObject = function(object)
+    {
+        museumObjects.activeObject = object;
+    };
+
+    museumObjects.getActiveObject = function()
+    {
+        return museumObjects.activeObject;
+    };
+
 
     return museumObjects;
 

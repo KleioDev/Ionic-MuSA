@@ -873,7 +873,7 @@ angular.module('app-services', ['ngCordova'])
             /* Collection */
             COLLECTION_OBJECTS: VERSION + "/objects",
             COLLECTION_SINGLE_OBJECT: VERSION + "/objects/",
-            COLLECTION_MUSEUM_EXHIBITIONS: VERSION + "/exhibitions"
+            COLLECTION_MUSEUM_EXHIBITIONS: VERSION + "/exhibitions",
 
 
             /* QR Code */
@@ -883,6 +883,12 @@ angular.module('app-services', ['ngCordova'])
 
 
             /* User */
+
+
+            /* Media */
+            VIDEO_ROUTE: VERSION + "/artifact/videos/",
+            IMAGE_ROUTE: VERSION + "/artifact/image/"
+
         };
 
         return routes;

@@ -4,38 +4,6 @@
 angular.module('content-services', [])
 
     /* Service for getting Media objects */
-.factory('Media', function() {
-         
-         
-
-        return {
-
-            //Get Audio link from ID
-
-            get: function(id)
-            {
-                //$http.get('').success(function(data, status, headers,config)
-                //{
-                //    /* Get the info related to the audio */
-                //
-                //
-                //
-                //}).error(function(data, status, headers, config)
-                //{
-                //    //Error
-                //})
-                console.log(id);
-
-                var media = mediaServer.getMediaById(id);
-                return media;
-            }
-
-
-        }
-
-
-    }
-)
     /* Audio Service to store information about the current Audio playing */
 .factory('Audio', function()
     {
@@ -97,22 +65,50 @@ angular.module('content-services', [])
     })
 
     /* Video service for handling videos and getting videos  */
-.factory('Video', function()
+.factory('Video', function($http, Routes)
     {
-        var video = null;
-        return {
+
+        var video = {};
+
+        video.getVideo = function(id)
+        {
+            return $http.get(Routes.VIDEO_ROUTE + id);
+        };
+
+        video.setVideo = function(_video)
+        {
+            video.activeVideo =_video;
+        };
+
+        video.getActiveVideo = function()
+        {
+            return video.activeVideo;
+        };
 
 
-            set: function(newVideo)
-            {
-                video = newVideo;
-            },
+        return video;
 
-            get: function()
-            {
-                return video;
-            }
+    })
+
+.factory('Gallery',function($http, Routes)
+    {
+
+        var gallery = {};
+
+        gallery.getImage = function(id)
+        {
+            return $http.get(Routes.IMAGE_ROUTE + id);
+        };
+
+        gallery.setImage = function(_image)
+        {
+
         }
-    });
+    })
+
+.factory('Archive', function($http, Routes)
+{
+
+});
 
 
