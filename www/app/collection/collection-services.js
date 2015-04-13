@@ -41,18 +41,38 @@ angular.module('exhibition-services', [])
 
 })
 
-.factory('Exhibitions', function($filter)
+.factory('Exhibitions', function($filter, Routes, $http)
     {
 
         var exhibitions = {};
 
         exhibitions.getPage = function(pageNumber, searchTerm)
         {
-            return $http.get(Routes.COLLECTION_MUSEUM_EXHIBITIONS)
+            return $http.get(Routes.COLLECTION_MUSEUM_EXHIBITIONS,{
+                params: {
+                    pageNumber: pageNumber,
+                    searchTerm: searchTerm
+                }})
                 .then(function(response)
                 {
-                   return response.data;
+                    return response.data;
                 });
+        };
+
+        exhibitions.getById = function(id)
+        {
+            return $http.get(Routes.COLLECTION_SINGLE_EXHIBITION + id);
+        };
+
+
+        exhibitions.setActiveExhibition = function(object)
+        {
+            exhibitions.activeObject = object;
+        };
+
+        exhibitions.getActiveExhibition = function()
+        {
+            return exhibitions.activeObject;
         };
 
 

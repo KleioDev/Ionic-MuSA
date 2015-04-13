@@ -183,6 +183,46 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
         });
 
+        $httpBackend.when('GET', new RegExp(Routes.COLLECTION_MUSEUM_EXHIBITIONS+'\\?pageNumber=[0-9]*&searchTerm=.*'))
+            .respond(function(method, url)
+            {
+                console.log(url);
+                function getJsonFromUrl(url) {
+                    var query = url.substr(url.indexOf('?')+1);
+                    var result = {};
+                    query.split("&").forEach(function(part) {
+                        var item = part.split("=");
+                        result[item[0]] = decodeURIComponent(item[1]).replace('+', ' ');
+                    });
+                    return result;
+                }
+                var params = getJsonFromUrl(url);
+                console.log("PARAMS");
+                console.log(params);
+                var exhibitions = dummyExhibitions.getSearchResults(params.searchTerm, $filter, params.pageNumber);
+                //console.log(objects);
+                return [200, exhibitions]
+            });
+
+        $httpBackend.whenGET(new RegExp(Routes.COLLECTION_SINGLE_EXHIBITION+'[0-9]*')).respond(function(method,url,params)
+        {
+            console.log("GETTING OBJECT");
+            console.log(url);
+            var re = /.*\/exhibitions\/(\w+)/;
+            var exhibitionId = parseInt(url.replace(re, '$1'), 10);
+
+            var exhibition = dummyExhibitions.get(parseInt(exhibitionId));
+
+            if(typeof exhibition != 'undefined')
+            {
+                return [200, exhibition];
+            }
+            else{
+                return [400, ''];
+            }
+
+        });
+
         $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
         $httpBackend.whenGET('app/museum/tab-museum/museum-events.html').passThrough();
         $httpBackend.whenGET('app/museum/tab-museum/segmented-control-museum.html').passThrough();

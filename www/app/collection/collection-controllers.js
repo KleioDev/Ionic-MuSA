@@ -152,11 +152,10 @@ angular.module('collection-controllers', [])
         /* Get the active object */
         $scope.museumObject = MuseumObjects.getActiveObject();
 
-        /* When prefrences are updated, update to the settings */
+        /* When preferences are updated, update to the settings */
         $scope.$on('preferences:updated', function(event, data){
             $scope.navigationTitles = AppNavigationTitles.get();
         });
-
 
         /* Opens a modal with a specific template, whether its to view images, videos or text */
         $scope.openModal = function(template) {
@@ -172,15 +171,11 @@ angular.module('collection-controllers', [])
             });
         };
 
-
-
         /* Close the modal */
         $scope.closeModal = function() {
             modals.pop().hide();
 
         };
-
-
 
         /* Load the description of the element */
         $scope.loadDescription = function()
@@ -192,8 +187,6 @@ angular.module('collection-controllers', [])
             $scope.openModal('text-view.html');
 
         };
-
-
 
         /* If user clicks on the listen to an audio */
         $scope.playAudio = function(audio_id)
@@ -207,7 +200,6 @@ angular.module('collection-controllers', [])
             $scope.openModal('audio-view.html');
 
         };
-
 
         /* Displays the image grid */
         $scope.imageGrid = function()
@@ -229,14 +221,9 @@ angular.module('collection-controllers', [])
                             $scope.museumObject.images = response.data;
                             $scope.images = chunk($scope.museumObject.images, 3);
                             $scope.openModal('image-grid.html');
-
-
                         }
                 });
-
-
         };
-
 
         //TODO: If there's time left we should add a loading spinner for images while they are loading!
         /* Displays an image preview */
@@ -294,6 +281,7 @@ angular.module('collection-controllers', [])
             $scope.openModal('image-modal.html');
         };
 
+        //TODO: Need to fix AUDIO ASAP
         /* Play the audio stream */
         $scope.playStream = function()
         {
@@ -320,7 +308,6 @@ angular.module('collection-controllers', [])
             console.log("Seek: " + $scope.audio.stream.seekTo);
             Audio.seekTo($scope.audio.stream.seekTo + '');
         });
-
 
         /* List of archives */
         $scope.showArchives = function()
@@ -372,7 +359,6 @@ angular.module('collection-controllers', [])
 
     /* Near me controller */
     .controller('NearMeCtrl', function($scope, iBeacons, Exhibitions, AppNavigationTitles){
-
 
         /* Get the application titles */
         $scope.navigationTitles = AppNavigationTitles.get();
@@ -437,38 +423,90 @@ angular.module('collection-controllers', [])
 
     })
 
-    .controller('ExhibitionsListCtrl', function($scope, Exhibitions)
+    .controller('ExhibitionsListCtrl', function($scope, $state, Exhibitions, AppNavigationTitles)
     {
+        /* Navigation Labels */
+        $scope.navigationTitles = AppNavigationTitles.get();
 
-
+        /* Page Number to 0 */
         $scope.pageNumber = 0;
+
+        /* No more pages */
         $scope.morePages = false;
-        $scope.exhibitions = Exhibitions.all();
+
+        /* Exhibition holds the objects for the list */
+        $scope.exhibitions = [];
+
+        /* Empty out the term */
         $scope.searchTerm = "";
 
         /* When page loads */
         $scope.$on('$stateChangeSuccess', function() {
             $scope.pageNumber = 0;
-
+            $scope.exhibitions = [];
             $scope.getPage();
         });
 
+
+        /* Get an exhibition page */
         $scope.getPage = function()
         {
-            $scope.morePages = Exhibitions.getPage($scope.pageNumber,$scope.searchTerm,  complete);
-            if($scope.morePages)
-                $scope.pageNumber++;
-            $scope.$broadcast('scroll.infiniteScrollComplete');
 
-            function complete() {
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-            }
+            Exhibitions.getPage($scope.pageNumber, $scope.searchTerm)
+                .then(function(page)
+                {
 
+                    /* if it is actually an object */
+                    if(typeof page == 'object') {
+                        if (page.objects.length > 0) {
+
+                            $scope.exhibitions = $scope.exhibitions.concat(page.objects);
+                            $scope.morePages = true;
+                            $scope.pageNumber++;
+                            $scope.$broadcast('scroll.infiniteScrollComplete');
+                        }
+
+                        else
+                        {
+                            $scope.morePages = false;
+                        }
+
+                    }
+
+                    else if($scope.pageNumber == 0 && $scope.museumObjects.length == 0)
+                    {
+                        console.log("No Objects Found");
+                    }
+
+                    else
+                    {
+                        console.log("Mistake Happened");
+                    }
+
+                    $scope.loading = false;
+                });
+
+
+        };
+
+        $scope.loadExhibition = function(id)
+        {
+            Exhibitions.getById(id)
+                .then(function(response)
+                {
+                    if(response.status == 200)
+                    {
+                        Exhibitions.setActiveExhibition(response.data);
+                        $state.go('tab.collection-exhibition-view');
+                    }
+                })
         };
 
 
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
             console.log("CHANGED");
+            $scope.loading = true;
+            $scope.exhibitions = [];
             $scope.pageNumber = 0;
             $scope.getPage();
 
@@ -477,12 +515,12 @@ angular.module('collection-controllers', [])
 
     })
 
-    .controller('ExhibitionViewCtrl', function($scope, AppNavigationTitles, Exhibitions, $stateParams)
+    .controller('ExhibitionViewCtrl', function($scope, $state, AppNavigationTitles, Exhibitions, MuseumObjects)
     {
 
         /* Get exhibition stuff */
 
-        $scope.exhibition = Exhibitions.get($stateParams.exhibitionId);
+        $scope.exhibition = Exhibitions.getActiveExhibition();
 
         /* Set titles */
         $scope.navigationTitles = AppNavigationTitles.get();
@@ -490,6 +528,26 @@ angular.module('collection-controllers', [])
         $scope.$on('preferences:updated', function(event, data){
             $scope.navigationTitles = AppNavigationTitles.get();
         });
+
+        /* Load Object */
+        $scope.loadObject = function(id)
+        {
+            MuseumObjects.getById(id)
+                .then(function(response)
+                {
+                    if(response.status == 200)
+                    {
+                        MuseumObjects.setActiveObject(response.data);
+                        //Change state
+                        $state.go('tab.collection-single-object');
+                    }
+
+                });
+
+        };
+
+
+
 
 
     });
