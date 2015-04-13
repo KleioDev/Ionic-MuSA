@@ -95,7 +95,7 @@ angular.module('content-services', [])
 
         var gallery = {};
 
-        gallery.getImage = function(id)
+        gallery.getImages = function(id)
         {
             return $http.get(Routes.IMAGE_ROUTE + id);
         };
@@ -103,12 +103,35 @@ angular.module('content-services', [])
         gallery.setImage = function(_image)
         {
 
-        }
+        };
+
+        gallery.getActiveImage = function()
+        {
+
+        };
+        return gallery;
     })
 
 .factory('Archive', function($http, Routes)
 {
 
+    var archives = {};
+
+    archives.getArchive = function(id)
+    {
+        return $http.get(Routes.ARCHIVE_ROUTE + id);
+    };
+    archives.setActiveArchive = function(_archive)
+    {
+      archives.activeArchive = _archive;
+    };
+
+    archives.getActiveArchive = function()
+    {
+        return archives.activeArchive;
+    };
+
+    return archives;
 });
 
 

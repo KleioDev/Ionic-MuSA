@@ -10,6 +10,7 @@
             <h2>{{museumObject.title}}</h2>
             <p>{{museumObject.author}}</p>
             <p>{{museumObject.date_published}}</p>
+            <p>{{museumObject.type_media}}</p>
 
             <!--<div class="row">-->
 
@@ -57,7 +58,7 @@
             <div ng-switch-when="true" class="list padding">
                 <a class="item item-icon-left " ng-click="checkIfAudioAvailable(museumObject.mainAudioId)">
                     <i class="icon ion-headphone"></i>
-                    Listen!
+                    {{navigationTitles.collection.singleObject.listenLabel}}
                 </a>
             </div>
 
@@ -78,7 +79,7 @@
                 <div class="col"></div>
                 <div class="col"></div>
                 <div class="col" style="color: blue;" ><button ng-click="loadDescription()" class="button button-clear button-positive">
-                    Read More!
+                    {{navigationTitles.collection.singleObject.readMoreLabel}}
                 </button></div>
 
             </div>
@@ -256,7 +257,7 @@
 
             <ion-modal-view>
                 <ion-header-bar  class="bar-positive">
-                    <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+                    <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
                     <h1 class="title">MuSA</h1>
                 </ion-header-bar>
 
@@ -284,7 +285,7 @@
 
             <ion-modal-view>
                 <ion-header-bar  class="bar-positive">
-                    <button class="button button-clear" ng-click="closePage()">Back</button>
+                    <button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                     <h1 class="title">MuSA</h1>
                 </ion-header-bar>
@@ -313,7 +314,7 @@
 
             <ion-modal-view>
                 <ion-header-bar  class="bar-positive">
-                    <button class="button button-clear" ng-click="closeModal()">Back</button>
+                    <button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
                     <h1 class="title">MuSA</h1>
                 </ion-header-bar>
 
@@ -338,7 +339,7 @@
 
             <!--<ion-modal-view>-->
                 <!--<ion-header-bar  class="bar-positive">-->
-                    <!--<button class="button button-clear" ng-click="closeModal()">Back</button>-->
+                    <!--<button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>-->
                     <!--<h1 class="title">MuSA</h1>-->
                 <!--</ion-header-bar>-->
 
@@ -366,7 +367,7 @@
             <ion-modal-view>
 
                 <ion-header-bar class="bar-positive">
-                    <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+                    <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                     <h1 class="title">{{text.title}}</h1>
                 </ion-header-bar>
@@ -384,7 +385,7 @@
         <ion-modal-view>
 
             <ion-header-bar class="bar-positive">
-                <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+                <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                 <h1 class="title">Video</h1>
             </ion-header-bar>
@@ -416,7 +417,7 @@
 
             <ion-modal-view>
                 <ion-header-bar class="bar-positive">
-                    <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+                    <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                     <h1 class="title">Audio</h1>
                 </ion-header-bar>
@@ -481,7 +482,7 @@
         <ion-modal-view>
 
             <ion-header-bar class="bar-positive">
-                <button class="button button-icon ion-ios-arrow-left" ng-click="closePage()">Back</button>
+                <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                 <h1 class="title">Images</h1>
             </ion-header-bar>

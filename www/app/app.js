@@ -143,6 +143,46 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
             }
         });
 
+        $httpBackend.whenGET(new RegExp(Routes.ARCHIVE_ROUTE + '[0-9]*')).respond(function(method, url)
+        {
+            var re = /.*\/artifact\/text\/(\w+)/;
+            var archiveId = parseInt(url.replace(re, '$1'), 10);
+
+            console.log("Archive ID: " + archiveId);
+
+            var archive = mediaServer.getMediaById(parseInt(archiveId));
+
+            if(typeof archive != 'undefined')
+            {
+                console.log(archive);
+                return [200, archive];
+            }
+            else{
+                return [400, ''];
+            }
+
+        });
+
+        $httpBackend.whenGET(new RegExp(Routes.IMAGE_ROUTE + '[0-9]*')).respond(function(method, url)
+        {
+            var re = /.*\/artifact\/image\/(\w+)/;
+            var galleryId = parseInt(url.replace(re, '$1'), 10);
+
+            console.log("Gallery ID: " + galleryId);
+
+            var gallery = dummyMuseumObjects.getImagesFromObject(parseInt(galleryId));
+
+            if(typeof gallery != 'undefined')
+            {
+                console.log(gallery);
+                return [200, gallery];
+            }
+            else{
+                return [400, ''];
+            }
+
+        });
+
         $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
         $httpBackend.whenGET('app/museum/tab-museum/museum-events.html').passThrough();
         $httpBackend.whenGET('app/museum/tab-museum/segmented-control-museum.html').passThrough();

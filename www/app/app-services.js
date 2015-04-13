@@ -34,7 +34,8 @@ angular.module('app-services', ['ngCordova'])
                     "noConnectionContent": "Internet access is required to use this app",
                     "httpErrorLabel": "The server can't be reached at this time.",
                     "loading": "Loading...",
-                    "noSearchResultsFound": "No Search Results Found"
+                    "noSearchResultsFound": "No Search Results Found",
+                    "backButtonLabel": "Back"
                 },
                 /* Museum Tab navigation Lang */
                 "museum":
@@ -886,6 +887,8 @@ angular.module('app-services', ['ngCordova'])
 
 
             /* Media */
+            ARCHIVE_ROUTE: VERSION + "/artifact/text/",
+            AUDIO_ROUTE: VERSION + "/artifact/audio/",
             VIDEO_ROUTE: VERSION + "/artifact/videos/",
             IMAGE_ROUTE: VERSION + "/artifact/image/"
 

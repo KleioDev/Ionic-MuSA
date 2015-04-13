@@ -141,7 +141,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Audio, Video)
+    .controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Audio, Video, Archive, Gallery)
     {
         /* Maintains the stack of modals */
         var modals = new Array();
@@ -172,11 +172,6 @@ angular.module('collection-controllers', [])
             });
         };
 
-        /* Close the modal */
-        $scope.closePage = function()
-        {
-            modals.pop().hide();
-        };
 
 
         /* Close the modal */
@@ -226,14 +221,29 @@ angular.module('collection-controllers', [])
                 return row;
             }
 
-            $scope.images = chunk($scope.museumObject.images, 3);
+            Gallery.getImages($scope.museumObject.id)
+                .then(function(response)
+                {
+                        if(response.status == 200)
+                        {
+                            $scope.museumObject.images = response.data;
+                            $scope.images = chunk($scope.museumObject.images, 3);
+                            $scope.openModal('image-grid.html');
 
-            $scope.openModal('image-grid.html');
+
+                        }
+                });
+
+
         };
 
+
+        //TODO: If there's time left we should add a loading spinner for images while they are loading!
         /* Displays an image preview */
         $scope.displayImage = function(image)
         {
+            /* Should get the list of images */
+
             $scope.image = image;
 
             $scope.openModal('image-preview.html');
@@ -278,6 +288,12 @@ angular.module('collection-controllers', [])
                 });
         };
 
+        /* Display the object image */
+        $scope.showImage = function()
+        {
+            $scope.openModal('image-modal.html');
+        };
+
         /* Play the audio stream */
         $scope.playStream = function()
         {
@@ -314,18 +330,21 @@ angular.module('collection-controllers', [])
 
         };
 
+
         /* Displays a text archives */
         $scope.displayArchive = function(archiveId)
         {
             /* Archive Text */
-            var archive = Media.get(archiveId);
-
-            /* Display Archive */
-            $scope.text = {};
-            $scope.text.title = archive.title;
-            $scope.text.content = archive.content;
-            $scope.openModal('text-view.html');
-
+            Archive.getArchive(archiveId)
+                .then(function(response)
+                {
+                    if(response.status == 200)
+                    {
+                        Archive.setActiveArchive(response.data);
+                        $scope.text = Archive.getActiveArchive();
+                        $scope.openModal('text-view.html');
+                    }
+                });
         };
 
         /* List of audio files */
