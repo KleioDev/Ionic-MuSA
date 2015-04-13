@@ -479,9 +479,19 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
                     }
 
                 }
-            }
+            })
 
-        )
+            /* Single Object View from Match Hunt*/
+            .state('tab.scanner-object',{
+                url: '/scanner/:objectId',
+                views:
+                {
+                    'tab-qrcode':{
+                        templateUrl: 'app/collection/tab-collection/collection-single-object.html',
+                        controller: 'ObjectViewCtrl'
+                    }
+                }
+            })
             /* Map View State */
             .state('tab.tab-maps',{
 

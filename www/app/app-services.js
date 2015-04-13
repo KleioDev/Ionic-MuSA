@@ -135,7 +135,9 @@ angular.module('app-services', ['ngCordova'])
                 {
                     "scanObjectsLabel": "Scan Object QR Code",
                     "matchHuntLabel": "Match Hunt",
-                    "takeAGuessLabel": "Take A Guess"
+                    "takeAGuessLabel": "Take A Guess",
+
+                    "invalidQRCodeLabel": "Invalid QR Code!"
 
 
                 },

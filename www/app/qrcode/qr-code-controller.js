@@ -3,7 +3,7 @@
 angular.module('qr-code-controllers', [])
 
     /* QrCode View Controller */
-    .controller('QRCodeViewCtrl', function($scope,$state, Facebook, MatchHunt, $location, $ionicPopup, AppNavigationTitles)
+    .controller('QRCodeViewCtrl', function($scope,$state, Facebook, MuseumObjects, MatchHunt, $location, $ionicPopup, AppNavigationTitles)
     {
         /* Match hunt isn't available for everyone */
         $scope.matchHuntAvailable = false;
@@ -18,23 +18,16 @@ angular.module('qr-code-controllers', [])
             /* If is logged in OPen Match Hunt */
             if($scope.user.loginStatus)
             {
-
                 $scope.matchHuntAvailable = true;
-
                 /* Show Loading */
                 MatchHunt.getMatchHunt();
                 $state.go('tab.tab-match-hunt');
-
 
             }
             /* Show a popup if the user isn't logged in to facebook */
             else
             {
-
-
             }
-
-
         };
 
     /* Open the scanner when the user wants to scan a qr code */
@@ -42,43 +35,43 @@ angular.module('qr-code-controllers', [])
     {
 
         var scanner = cordova.require("cordova/plugin/BarcodeScanner");
-        var notFound = false;
+
         scanner.scan( function (result) {
             console.log(result);
 
-
-            var notFound = false;
             /* Query the server if it works */
             if(result.text.indexOf("MuSA") < 0)
             {
-                notFound = true;
+
+                        $ionicPopup.alert({
+                            title: $scope.navigationTitles.scanner.invalidQRCodeLabel
+                        });
+
             }
             else {
 
                 //console.log(result.text.split(':')[1]);
+                /* Preload the Object */
+                var objectId = result.text.split(':')[1]
 
-                $state.go('tab.collection-single-object', {
-                    'objectId': result.text.split(':')[1]
+                /* Load Object */
 
-                });
-
-
-
+                    MuseumObjects.getById(objectId)
+                        .then(function(response)
+                        {
+                            if(response.status == 200)
+                            {
+                                MuseumObjects.setActiveObject(response.data);
+                                //Change state
+                                $state.go('tab.scanner-object');
+                            }
+                        });
             }
 
         }, function (error) {
 
         } );
 
-        if(notFound) {
-            $scope.showAlert = function () {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Invalid QR Code!'
-                });
-                alertPopup.then(function (res) {
-                });
-            };
-        }
     };
 
     $scope.$on('$stateChangeSuccess', function()
