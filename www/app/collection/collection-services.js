@@ -75,58 +75,15 @@ angular.module('exhibition-services', [])
             return exhibitions.activeObject;
         };
 
+        exhibitions.findByBeacons = function(beacons)
+        {
+            return $http.get(Routes.COLLECTION_NEAR_ME,
+                {params: {
+                    beacons: beacons
+                }});
+        };
 
 
         return exhibitions;
-        //{
-        //
-        //    all: function()
-        //    {
-        //        return exhibitions;
-        //    },
-        //
-        //    /* HTTP Request to get more information about a particular exhibition */
-        //    get: function(exhibitionId)
-        //    {
-        //        /* Http get request */
-        //        //TODO: Object HTTP Request
-        //        for (var i = 0; i < exhibitions.length; i++) {
-        //            if (exhibitions[i].id === parseInt(exhibitionId)) {
-        //                return exhibitions[i];
-        //            }
-        //        }
-        //    },
-        //
-        //    getPage: function(pageNumber, searchTerm) {
-        //        //TODO: HTTP Requests
-        //        if (pageNumber == 0) {
-        //            exhibitions.length = 0;
-        //        }
-        //        var results = dummyExhibitions.getSearchResults(searchTerm, $filter, pageNumber);
-        //
-        //        for (var i = 0; i < results.objects.length; i++) {
-        //            exhibitions.push(results.objects[i]);
-        //        }
-        //
-        //        return results.morePages;
-        //    },
-        //
-        //    findByBeacons: function(beacons)
-        //    {
-        //        //TODO: HTTP Request for exhibitions linked with iBeacons
-        //
-        //        var beaconIdArray = [];
-        //
-        //        for(var i = 0; i < beacons.length ;i++)
-        //        {
-        //            var beaconID = beacons[i].proximityUUID + beacons[i].major + beacons[i].minor;
-        //
-        //            beaconIdArray.push(beaconID);
-        //
-        //        }
-        //
-        //        var exhibitions = dummyExhibitions.getByBeaconId(beaconIdArray);
-        //        return exhibitions;
-        //    }
-        //}
+
     });

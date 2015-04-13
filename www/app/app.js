@@ -223,6 +223,42 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
         });
 
+        $httpBackend.whenGET(new RegExp(Routes.COLLECTION_NEAR_ME+'\\?beacons=(.*)')).respond(function(method,url,params)
+        {
+            console.log("GETTING BEACONS");
+            console.log(url);
+
+
+            function getJsonFromUrl(url) {
+                var query = url.substr(url.indexOf('?')+1);
+                var result = {};
+                query.split("&").forEach(function(part) {
+                    var item = part.split("=");
+                    result[item[0]] = JSON.parse(decodeURIComponent(item[1]).replace('+', ' '));
+                });
+                return result;
+            }
+
+            var beaconIds = getJsonFromUrl(url);
+            console.log(beaconIds);
+            //return [200, ''];
+            //var re = /.*\/exhibitions\/near\/(\w+)/;
+            //var exhibitionId = parseInt(url.replace(re, '$1'), 10);
+            //
+            var exhibitions = dummyExhibitions.getByBeaconId(beaconIds.beacons);
+            if(typeof exhibitions != 'undefined')
+            {
+                return [200, exhibitions];
+            }
+            else{
+                return [400, ''];
+            }
+
+
+        });
+
+
+
         $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
         $httpBackend.whenGET('app/museum/tab-museum/museum-events.html').passThrough();
         $httpBackend.whenGET('app/museum/tab-museum/segmented-control-museum.html').passThrough();

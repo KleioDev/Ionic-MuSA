@@ -358,7 +358,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Near me controller */
-    .controller('NearMeCtrl', function($scope, iBeacons, Exhibitions, AppNavigationTitles){
+    .controller('NearMeCtrl', function($scope, $state, iBeacons, Exhibitions, AppNavigationTitles){
 
         /* Get the application titles */
         $scope.navigationTitles = AppNavigationTitles.get();
@@ -368,40 +368,67 @@ angular.module('collection-controllers', [])
         /* Exhibitions stored */
         $scope.exhibitions = [];
 
-
         /* Find exhibitions using the beacons */
         $scope.loadExhibitions = function()
         {
-            console.log("Loading Exhibitions");
 
             var beacons = iBeacons.get();
-            console.log(beacons);
             /* Start loading view */
             $scope.loading.status = true;
 
-            /* Find the exhibitions related to iBeacons */
-            var exhibitions = Exhibitions.findByBeacons(beacons);
 
-            /* NO exhibitions near */
-            if(exhibitions.length == 0)
+            if(beacons.length == 0)
             {
-                console.log("No Exhibitions Near You");
-                /* No Exhibitions Near you */
-            }
-            else{
-                console.log("Exhibitions Near You!");
-
-                $scope.exhibitions = exhibitions;
-                $scope.loading.status = false;
-
+                $scope.loading.status = true;
 
             }
+            /* More beacons Found */
+            else {
+                /* Parse iBeacons */
+                var beaconIdArray = [];
 
-            /* Apply changes to UI */
-            $scope.$apply();
+                for (var i = 0; i < beacons.length; i++) {
+                    var beaconID = beacons[i].proximityUUID + beacons[i].major + beacons[i].minor;
+                    beaconIdArray.push(beaconID);
 
+                }
 
+                /* Find the exhibitions related to iBeacons */
 
+                Exhibitions.findByBeacons(JSON.stringify(beaconIdArray))
+                    .then(function (response) {
+                        if (response.status == 200) {
+
+                            if (response.data.length == 0) {
+                                /* Maybe ask user if he wants to retry */
+                            }
+
+                            else {
+                                $scope.exhibitions = response.data;
+                                $scope.loading.status = false;
+                            }
+                            /* Apply changes to UI */
+                            $scope.$apply();
+
+                        }
+                    });
+            }
+
+        };
+
+        /* Load an exhibition */
+        $scope.preLoadExhibition = function(id)
+        {
+            Exhibitions.getById(id)
+                .then(function(response)
+                {
+                    if(response.status == 200)
+                    {
+
+                        Exhibitions.setActiveExhibition(response.data);
+                        $state.go('tab.collection-exhibition-view');
+                    }
+                })
         };
 
         /* When beacons change state load up the exhibitions */
@@ -416,7 +443,6 @@ angular.module('collection-controllers', [])
         $scope.$on('preferences:updated', function(event, data){
             $scope.navigationTitles = AppNavigationTitles.get();
         });
-
 
         /* try and load exhibitions on the first try */
         $scope.loadExhibitions();
@@ -504,7 +530,6 @@ angular.module('collection-controllers', [])
 
 
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
-            console.log("CHANGED");
             $scope.loading = true;
             $scope.exhibitions = [];
             $scope.pageNumber = 0;
@@ -545,9 +570,5 @@ angular.module('collection-controllers', [])
                 });
 
         };
-
-
-
-
 
     });

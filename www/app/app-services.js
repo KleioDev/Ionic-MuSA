@@ -876,6 +876,7 @@ angular.module('app-services', ['ngCordova'])
             COLLECTION_SINGLE_OBJECT: VERSION + "/objects/",
             COLLECTION_MUSEUM_EXHIBITIONS: VERSION + "/exhibitions",
             COLLECTION_SINGLE_EXHIBITION: VERSION + "/exhibitions/",
+            COLLECTION_NEAR_ME: VERSION + "/exhibition/near",
 
             /* QR Code */
 

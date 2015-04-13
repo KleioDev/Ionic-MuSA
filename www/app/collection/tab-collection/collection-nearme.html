@@ -11,7 +11,7 @@
             <ion-list class="list">
 
                 <!--| filter:searchTerm-->
-                <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" href="#/tab/collection/exhibitions/{{exhibition.id}}">
+                <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" ng-click="preLoadExhibition(exhibition.id)">
                     <img ng-src="{{exhibition.img_href}}"/>
                     <h2>{{exhibition.title}}</h2>
                     <p>{{exhibition.museumObjects.length}}</p>
