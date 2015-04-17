@@ -75,7 +75,6 @@ angular.module('collection-controllers', [])
 
                         if(page.objects.length > 0)
                         {
-                            console.log("1 more page");
                             $scope.museumObjects =  $scope.museumObjects.concat(page.objects);
 
                             $scope.morePages = true;

@@ -23,7 +23,7 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Controller that manages the Museum General View */
-    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, Museum)
+    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, Museum, $window)
     {
         //TODO: Links and Maps
         $scope.generalState = $scope.$parent.generalState;
@@ -51,6 +51,13 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.$on('preferences:updated', function(){
             $scope.navigationTitles = AppNavigationTitles.get().museum;
         });
+
+        /* Open Social Network */
+
+        $scope.openWindow = function(socialLink)
+        {
+            $window.open(socialLink, '_system');
+        }
     })
 
     /* Events list controller */
@@ -75,6 +82,7 @@ angular.module('museum-controllers', ['ngCordova'])
 
                     if(response.status == 200)
                     {
+                        response.data.datetime = moment(new Date(response.data.eventDate));
                         Events.setEvent(response.data);
                         $state.go('tab.museum-events-single', {eventId: eventId});
                     }

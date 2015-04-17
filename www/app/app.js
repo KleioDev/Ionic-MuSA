@@ -3,7 +3,7 @@
 angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-services', 'app-services',
 
 
-    'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic','ngMockE2E'])
+    'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic'])//,'ngMockE2E'])
 
     .run(function($ionicPlatform, AppNavigationTitles,$filter,  $rootScope, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
@@ -25,276 +25,261 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
             });
 
         });
-       $httpBackend.whenGET(Routes.MUSEUM_GENERAL_ROUTE).respond(200,
-
-       {
-                "description": "",
-                "hoursOfOperation": '<p> The museum is usually open on weekdays. </p> <table cellpadding="1" cellspacing="1" style="width:100%"> <tbody> <tr> <td><strong>Monday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Tuesday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Wednesday</strong></td> <td>8:30 AM - 7:30 PM</td> </tr> <tr> <td><strong>Thursday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Friday</strong></td> <td>8:30 AM - 6:30 PM</td> </tr> </tbody> </table> <p>&nbsp;</p>',
-                "museumTitle": "",
-                "address": "<p><strong>Address</strong> </p> <p>259 Blvd. Alfonso Valdez Cabian</p> <p>Mayagüez, PR, 00680 </p>",
-                "coordinates": "",
-                "socialMediaLinks": {"facebook": "https://www.facebook.com/pages/Museo-de-Arte-RUM-MUSA/385132481629639?fref=ts"}
-
-       }
-       );
-
-        $httpBackend.whenGET(Routes.MUSEUM_EVENTS_ROUTE).respond({
-
-                "events": museumServer.events}
-
-            );
-
-        $httpBackend.whenGET(new RegExp(Routes.MUSEUM_SINGLE_EVENT_ROUTE+'[0-9]*')).respond(function(method,url,params)
-        {
-
-            var re = /.*\/museum\/events\/(\w+)/;
-            var eventId = parseInt(url.replace(re, '$1'), 10);
-
-            var event = museumServer.getEventById(eventId);
-            console.log("SERVER: ");
-            console.log(event);
-            if(typeof event != 'undefined')
-            {
-                return [200, event];
-            }
-            else{
-                return [400, ''];
-            }
-
-        });
-
-        $httpBackend.whenGET(Routes.MUSEUM_NEWS_ROUTE).respond(200,museumServer.news);
-        $httpBackend.whenGET(new RegExp(Routes.MUSEUM_SINGLE_NEWS_ROUTE+'[0-9]*')).respond(function(method,url,params)
-        {
-
-            var re = /.*\/museum\/news\/(\w+)/;
-            var newsId = parseInt(url.replace(re, '$1'), 10);
-
-            var news = museumServer.getNewsById(newsId);
-
-            if(typeof news != 'undefined')
-            {
-                return [200, news];
-            }
-            else{
-                return [400, ''];
-            }
-
-
-
-        });
-
-        $httpBackend.when('GET', new RegExp(Routes.COLLECTION_OBJECTS+'\\?pageNumber=[0-9]*&searchTerm=.*'))
-            .respond(function(method, url)
-            {
-                console.log(url);
-                function getJsonFromUrl(url) {
-                    var query = url.substr(url.indexOf('?')+1);
-                    var result = {};
-                    query.split("&").forEach(function(part) {
-                        var item = part.split("=");
-                        result[item[0]] = decodeURIComponent(item[1]).replace('+', ' ');
-                    });
-                    return result;
-                }
-                var params = getJsonFromUrl(url);
-                console.log("PARAMS");
-                console.log(params);
-                var objects = dummyMuseumObjects.getSearchResults(params.searchTerm, $filter, params.pageNumber);
-                //console.log(objects);
-                return [200, objects]
-            });
-
-
-        $httpBackend.whenGET(new RegExp(Routes.COLLECTION_SINGLE_OBJECT+'[0-9]*')).respond(function(method,url,params)
-        {
-            console.log("GETTING OBJECT");
-            console.log(url);
-            var re = /.*\/objects\/(\w+)/;
-            var objectId = parseInt(url.replace(re, '$1'), 10);
-
-            var object = dummyMuseumObjects.get(parseInt(objectId));
-
-            if(typeof object != 'undefined')
-            {
-                return [200, object];
-            }
-            else{
-                return [400, ''];
-            }
-
-        });
-
-        $httpBackend.whenGET(new RegExp(Routes.VIDEO_ROUTE+'[0-9]*')).respond(function(method, url, params)
-        {
-            var re = /.*\/artifact\/videos\/(\w+)/;
-            var mediaId = parseInt(url.replace(re, '$1'), 10);
-
-            console.log("MEDIA ID: " + mediaId);
-            var video = mediaServer.getMediaById(parseInt(mediaId));
-
-            if(typeof video != 'undefined')
-            {
-                console.log(video);
-                return [200, video];
-            }
-            else{
-                return [400, ''];
-            }
-        });
-
-        $httpBackend.whenGET(new RegExp(Routes.ARCHIVE_ROUTE + '[0-9]*')).respond(function(method, url)
-        {
-            var re = /.*\/artifact\/text\/(\w+)/;
-            var archiveId = parseInt(url.replace(re, '$1'), 10);
-
-            console.log("Archive ID: " + archiveId);
-
-            var archive = mediaServer.getMediaById(parseInt(archiveId));
-
-            if(typeof archive != 'undefined')
-            {
-                console.log(archive);
-                return [200, archive];
-            }
-            else{
-                return [400, ''];
-            }
-
-        });
-
-        $httpBackend.whenGET(new RegExp(Routes.IMAGE_ROUTE + '[0-9]*')).respond(function(method, url)
-        {
-            var re = /.*\/artifact\/image\/(\w+)/;
-            var galleryId = parseInt(url.replace(re, '$1'), 10);
-
-            console.log("Gallery ID: " + galleryId);
-
-            var gallery = dummyMuseumObjects.getImagesFromObject(parseInt(galleryId));
-
-            if(typeof gallery != 'undefined')
-            {
-                console.log(gallery);
-                return [200, gallery];
-            }
-            else{
-                return [400, ''];
-            }
-
-        });
-
-        $httpBackend.when('GET', new RegExp(Routes.COLLECTION_MUSEUM_EXHIBITIONS+'\\?pageNumber=[0-9]*&searchTerm=.*'))
-            .respond(function(method, url)
-            {
-                console.log(url);
-                function getJsonFromUrl(url) {
-                    var query = url.substr(url.indexOf('?')+1);
-                    var result = {};
-                    query.split("&").forEach(function(part) {
-                        var item = part.split("=");
-                        result[item[0]] = decodeURIComponent(item[1]).replace('+', ' ');
-                    });
-                    return result;
-                }
-                var params = getJsonFromUrl(url);
-                console.log("PARAMS");
-                console.log(params);
-                var exhibitions = dummyExhibitions.getSearchResults(params.searchTerm, $filter, params.pageNumber);
-                //console.log(objects);
-                return [200, exhibitions]
-            });
-
-        $httpBackend.whenGET(new RegExp(Routes.COLLECTION_SINGLE_EXHIBITION+'[0-9]*')).respond(function(method,url,params)
-        {
-            console.log("GETTING OBJECT");
-            console.log(url);
-            var re = /.*\/exhibitions\/(\w+)/;
-            var exhibitionId = parseInt(url.replace(re, '$1'), 10);
-
-            var exhibition = dummyExhibitions.get(parseInt(exhibitionId));
-
-            if(typeof exhibition != 'undefined')
-            {
-                return [200, exhibition];
-            }
-            else{
-                return [400, ''];
-            }
-
-        });
-
-        $httpBackend.whenGET(new RegExp(Routes.COLLECTION_NEAR_ME+'\\?beacons=(.*)')).respond(function(method,url,params)
-        {
-            console.log("GETTING BEACONS");
-            console.log(url);
-
-
-            function getJsonFromUrl(url) {
-                var query = url.substr(url.indexOf('?')+1);
-                var result = {};
-                query.split("&").forEach(function(part) {
-                    var item = part.split("=");
-                    result[item[0]] = JSON.parse(decodeURIComponent(item[1]).replace('+', ' '));
-                });
-                return result;
-            }
-
-            var beaconIds = getJsonFromUrl(url);
-            console.log(beaconIds);
-            //return [200, ''];
-            //var re = /.*\/exhibitions\/near\/(\w+)/;
-            //var exhibitionId = parseInt(url.replace(re, '$1'), 10);
-            //
-            var exhibitions = dummyExhibitions.getByBeaconId(beaconIds.beacons);
-            if(typeof exhibitions != 'undefined')
-            {
-                return [200, exhibitions];
-            }
-            else{
-                return [400, ''];
-            }
-
-
-        });
-
-
-
-        $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
-        $httpBackend.whenGET('app/museum/tab-museum/museum-events.html').passThrough();
-        $httpBackend.whenGET('app/museum/tab-museum/segmented-control-museum.html').passThrough();
-        $httpBackend.whenGET('app/museum/tab-museum/museum-news.html').passThrough();
-        $httpBackend.whenGET('app/museum/tab-museum/museum-single-news-article.html').passThrough();
-        $httpBackend.whenGET('app/museum/tab-museum/museum-general.html').passThrough();
-
-        $httpBackend.whenGET('app/collection/tab-collection/collection.html').passThrough();
-        $httpBackend.whenGET('app/collection/tab-collection/collection-nearme.html').passThrough();
-        $httpBackend.whenGET('app/collection/tab-collection/collection-objects.html').passThrough();
-        $httpBackend.whenGET('app/collection/tab-collection/collection-exhibitions.html').passThrough();
-        $httpBackend.whenGET('app/collection/tab-collection/collection-exhibition-view.html').passThrough();
-        $httpBackend.whenGET('app/collection/tab-collection/collection-single-object.html').passThrough();
-        $httpBackend.whenGET('app/collection/tab-collection/video-view.html').passThrough();
-
-
-        $httpBackend.whenGET('app/maps/tab-map/maps.html').passThrough();
-        $httpBackend.whenGET('app/qrcode/tab-qrcode/match-hunt.html').passThrough();
-        $httpBackend.whenGET('app/qrcode/tab-qrcode/qrcode-scanner.html').passThrough();
-        $httpBackend.whenGET('app/user/tab-user/preferences.html').passThrough();
-        $httpBackend.whenGET('app/user/tab-user/send-feedback.html').passThrough();
-        $httpBackend.whenGET('app/user/tab-user/text-view.html').passThrough();
-        $httpBackend.whenGET('app/tabs.html').passThrough();
-
-
-
-
-
-
-
-
-
-
-
-
-        $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
+       //$httpBackend.whenGET(Routes.MUSEUM_GENERAL_ROUTE).respond(200,
+       //
+       //{
+       //         "description": "",
+       //         "hoursOfOperation": '<p> The museum is usually open on weekdays. </p> <table cellpadding="1" cellspacing="1" style="width:100%"> <tbody> <tr> <td><strong>Monday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Tuesday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Wednesday</strong></td> <td>8:30 AM - 7:30 PM</td> </tr> <tr> <td><strong>Thursday</strong></td> <td>8:30 AM - 5:30 PM</td> </tr> <tr> <td><strong>Friday</strong></td> <td>8:30 AM - 6:30 PM</td> </tr> </tbody> </table> <p>&nbsp;</p>',
+       //         "museumTitle": "",
+       //         "address": "<p><strong>Address</strong> </p> <p>259 Blvd. Alfonso Valdez Cabian</p> <p>Mayagüez, PR, 00680 </p>",
+       //         "coordinates": "",
+       //         "socialMediaLinks": {"facebook": "https://www.facebook.com/pages/Museo-de-Arte-RUM-MUSA/385132481629639?fref=ts"}
+       //
+       //}
+       //);
+       //
+       // $httpBackend.whenGET(Routes.MUSEUM_EVENTS_ROUTE).respond({
+       //
+       //         "events": museumServer.events}
+       //
+       //     );
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.MUSEUM_SINGLE_EVENT_ROUTE+'[0-9]*')).respond(function(method,url,params)
+       // {
+       //
+       //     var re = /.*\/museum\/events\/(\w+)/;
+       //     var eventId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //     var event = museumServer.getEventById(eventId);
+       //
+       //     if(typeof event != 'undefined')
+       //     {
+       //         return [200, event];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       // });
+       //
+       // $httpBackend.whenGET(Routes.MUSEUM_NEWS_ROUTE).respond(200,museumServer.news);
+       // $httpBackend.whenGET(new RegExp(Routes.MUSEUM_SINGLE_NEWS_ROUTE+'[0-9]*')).respond(function(method,url,params)
+       // {
+       //
+       //     var re = /.*\/museum\/news\/(\w+)/;
+       //     var newsId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //     var news = museumServer.getNewsById(newsId);
+       //
+       //     if(typeof news != 'undefined')
+       //     {
+       //         return [200, news];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       //
+       //
+       // });
+       //
+       // $httpBackend.when('GET', new RegExp(Routes.COLLECTION_OBJECTS+'\\?pageNumber=[0-9]*&searchTerm=.*'))
+       //     .respond(function(method, url)
+       //     {
+       //         function getJsonFromUrl(url) {
+       //             var query = url.substr(url.indexOf('?')+1);
+       //             var result = {};
+       //             query.split("&").forEach(function(part) {
+       //                 var item = part.split("=");
+       //                 result[item[0]] = decodeURIComponent(item[1]).replace('+', ' ');
+       //             });
+       //             return result;
+       //         }
+       //         var params = getJsonFromUrl(url);
+       //
+       //         var objects = dummyMuseumObjects.getSearchResults(params.searchTerm, $filter, params.pageNumber);
+       //         //console.log(objects);
+       //         return [200, objects]
+       //     });
+       //
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.COLLECTION_SINGLE_OBJECT+'[0-9]*')).respond(function(method,url,params)
+       // {
+       //
+       //     var re = /.*\/objects\/(\w+)/;
+       //     var objectId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //     var object = dummyMuseumObjects.get(parseInt(objectId));
+       //
+       //     if(typeof object != 'undefined')
+       //     {
+       //         return [200, object];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       // });
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.VIDEO_ROUTE+'[0-9]*')).respond(function(method, url, params)
+       // {
+       //     var re = /.*\/artifact\/videos\/(\w+)/;
+       //     var mediaId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //     var video = mediaServer.getMediaById(parseInt(mediaId));
+       //
+       //     if(typeof video != 'undefined')
+       //     {
+       //         return [200, video];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       // });
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.ARCHIVE_ROUTE + '[0-9]*')).respond(function(method, url)
+       // {
+       //     var re = /.*\/artifact\/text\/(\w+)/;
+       //     var archiveId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //
+       //     var archive = mediaServer.getMediaById(parseInt(archiveId));
+       //
+       //     if(typeof archive != 'undefined')
+       //     {
+       //         return [200, archive];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       // });
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.IMAGE_ROUTE + '[0-9]*')).respond(function(method, url)
+       // {
+       //     var re = /.*\/artifact\/image\/(\w+)/;
+       //     var galleryId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //
+       //     var gallery = dummyMuseumObjects.getImagesFromObject(parseInt(galleryId));
+       //
+       //     if(typeof gallery != 'undefined')
+       //     {
+       //         return [200, gallery];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       // });
+       //
+       // $httpBackend.when('GET', new RegExp(Routes.COLLECTION_MUSEUM_EXHIBITIONS+'\\?pageNumber=[0-9]*&searchTerm=.*'))
+       //     .respond(function(method, url)
+       //     {
+       //         function getJsonFromUrl(url) {
+       //             var query = url.substr(url.indexOf('?')+1);
+       //             var result = {};
+       //             query.split("&").forEach(function(part) {
+       //                 var item = part.split("=");
+       //                 result[item[0]] = decodeURIComponent(item[1]).replace('+', ' ');
+       //             });
+       //             return result;
+       //         }
+       //         var params = getJsonFromUrl(url);
+       //
+       //         var exhibitions = dummyExhibitions.getSearchResults(params.searchTerm, $filter, params.pageNumber);
+       //         //console.log(objects);
+       //         return [200, exhibitions]
+       //     });
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.COLLECTION_SINGLE_EXHIBITION+'[0-9]*')).respond(function(method,url,params)
+       // {
+       //
+       //     var re = /.*\/exhibitions\/(\w+)/;
+       //     var exhibitionId = parseInt(url.replace(re, '$1'), 10);
+       //
+       //     var exhibition = dummyExhibitions.get(parseInt(exhibitionId));
+       //
+       //     if(typeof exhibition != 'undefined')
+       //     {
+       //         return [200, exhibition];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       // });
+       //
+       // $httpBackend.whenGET(new RegExp(Routes.COLLECTION_NEAR_ME+'\\?beacons=(.*)')).respond(function(method,url,params)
+       // {
+       //
+       //
+       //
+       //     function getJsonFromUrl(url) {
+       //         var query = url.substr(url.indexOf('?')+1);
+       //         var result = {};
+       //         query.split("&").forEach(function(part) {
+       //             var item = part.split("=");
+       //             result[item[0]] = JSON.parse(decodeURIComponent(item[1]).replace('+', ' '));
+       //         });
+       //         return result;
+       //     }
+       //
+       //     var beaconIds = getJsonFromUrl(url);
+       //     //return [200, ''];
+       //     //var re = /.*\/exhibitions\/near\/(\w+)/;
+       //     //var exhibitionId = parseInt(url.replace(re, '$1'), 10);
+       //     //
+       //     var exhibitions = dummyExhibitions.getByBeaconId(beaconIds.beacons);
+       //     if(typeof exhibitions != 'undefined')
+       //     {
+       //         return [200, exhibitions];
+       //     }
+       //     else{
+       //         return [400, ''];
+       //     }
+       //
+       //
+       // });
+       //
+       //
+       //
+       // $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
+       // $httpBackend.whenGET('app/museum/tab-museum/museum-events.html').passThrough();
+       // $httpBackend.whenGET('app/museum/tab-museum/segmented-control-museum.html').passThrough();
+       // $httpBackend.whenGET('app/museum/tab-museum/museum-news.html').passThrough();
+       // $httpBackend.whenGET('app/museum/tab-museum/museum-single-news-article.html').passThrough();
+       // $httpBackend.whenGET('app/museum/tab-museum/museum-general.html').passThrough();
+       //
+       // $httpBackend.whenGET('app/collection/tab-collection/collection.html').passThrough();
+       // $httpBackend.whenGET('app/collection/tab-collection/collection-nearme.html').passThrough();
+       // $httpBackend.whenGET('app/collection/tab-collection/collection-objects.html').passThrough();
+       // $httpBackend.whenGET('app/collection/tab-collection/collection-exhibitions.html').passThrough();
+       // $httpBackend.whenGET('app/collection/tab-collection/collection-exhibition-view.html').passThrough();
+       // $httpBackend.whenGET('app/collection/tab-collection/collection-single-object.html').passThrough();
+       // $httpBackend.whenGET('app/collection/tab-collection/video-view.html').passThrough();
+       //
+       //
+       // $httpBackend.whenGET('app/maps/tab-map/maps.html').passThrough();
+       // $httpBackend.whenGET('app/qrcode/tab-qrcode/match-hunt.html').passThrough();
+       // $httpBackend.whenGET('app/qrcode/tab-qrcode/qrcode-scanner.html').passThrough();
+       // $httpBackend.whenGET('app/user/tab-user/preferences.html').passThrough();
+       // $httpBackend.whenGET('app/user/tab-user/send-feedback.html').passThrough();
+       // $httpBackend.whenGET('app/user/tab-user/text-view.html').passThrough();
+       // $httpBackend.whenGET('app/tabs.html').passThrough();
+       //
+       //
+       //
+       //
+       //
+       //
+       //
+       //
+       //
+       //
+       //
+       //
+       // $httpBackend.whenGET('app/museum/tab-museum/museum-single-event.html').passThrough();
 
 
 
@@ -337,6 +322,11 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
 
 
+        //if (ionicPlatform.cordova.platform == "browser") {
+        //    facebookConnectPlugin.browserInit(appID, version);
+        //    // version is optional. It refers to the version of API you may want to use.
+        //}
+        //
 
 
         $ionicPlatform.ready(function() {
@@ -344,7 +334,6 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
             var deviceInformation = ionic.Platform.device();
 
             console.log(deviceInformation);
-
             var isIOS = ionic.Platform.isIOS();
 
             $rootScope.isIOS = isIOS;
@@ -359,6 +348,8 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
+
+       // or leave blank and default is v2.0
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.

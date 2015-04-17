@@ -18,10 +18,23 @@ angular.module('qr-code-controllers', [])
             /* If is logged in OPen Match Hunt */
             if($scope.user.loginStatus)
             {
+
                 $scope.matchHuntAvailable = true;
                 /* Show Loading */
-                MatchHunt.getMatchHunt();
-                $state.go('tab.tab-match-hunt');
+
+                /* Preload Match Hunt Game */
+                //MatchHunt.getMatchHunt()
+                //    .then(function(response)
+                //    {
+                //        //TODO: If the user has played all the games there should be a way of handling it
+                //        if(response.status == 200)
+                //        {
+                //            MatchHunt.setActiveGame(response.data);
+                //            $state.go('tab.tab-match-hunt');
+                //
+                //
+                //        }
+                //    });
 
             }
             /* Show a popup if the user isn't logged in to facebook */
@@ -88,7 +101,7 @@ angular.module('qr-code-controllers', [])
         $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Calls the Match Hunt service for a match hunt game */
-        $scope.matchHunt = MatchHunt.get();
+        $scope.matchHunt = MatchHunt.getActiveGame();
 
         $scope.$on('$stateChangeSuccess', function()
         {
@@ -115,6 +128,8 @@ angular.module('qr-code-controllers', [])
 
             scanner.scan( function (result) {
 
+
+
             }, function (error) {
                 console.log("Scanning failed: ", error);
             } );
@@ -124,5 +139,62 @@ angular.module('qr-code-controllers', [])
         $scope.points = 0;
 
         $scope.hearts = 3;
+
+    })
+
+    /* Match Hunt game */
+    .factory('MatchHunt', function(Routes, $http)
+    {
+        var matchHunt = {};
+
+        matchHunt.getMatchHunt = function()
+        {
+            //var id = $window.localStorage.getItem('activeMatchHunt');
+            //
+            ///* if it is null or undefined it means it was never set */
+            //if(id == null && typeof id == 'undefined')
+            //{
+            //    /* Set id to 0 */
+            //    id = 0;
+            //}
+
+
+            return $http.get(Routes.MATCH_HUNT + id);
+
+        };
+
+        //matchHunt.guess = function(objectId)
+        //{
+        //
+        //    //return $http.post(Routes.GUESS,
+        //    //    { data:{
+        //    //
+        //    //
+        //    //    }}
+        //    //)
+        //};
+
+        matchHunt.setActiveGame = function(_matchHunt)
+        {
+            matchHunt.activeGame = _matchHunt;
+
+            /* Save the current Id */
+            matchHunt.saveId(_matchHunt.id);
+        };
+
+        matchHunt.getActiveGame = function()
+        {
+            return matchHunt.activeGame;
+        };
+
+        matchHunt.saveId = function(id)
+        {
+            $window.localStorage.setItem('activeMatchHunt', id);
+        };
+
+
+
+        return matchHunt;
+
 
     });

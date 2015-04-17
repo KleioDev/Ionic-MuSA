@@ -41,11 +41,19 @@ angular.module('museum-services', [])
             .then(function(response)
             {
                 var data = response.data;
+
                 console.log(data);
+
+                for(var i = 0; i < data.events.length ; i++)
+                {
+                    data.events[i].datetime = moment(new Date(data.events[i].eventDate));
+                }
+
 
                 /* Save today's events */
                 events.eventsToday = [];
-                var currentDate = moment(new Date("2015", "05", "2"));
+                var currentDate = moment(new Date());
+
 
                 for (var i = 0; i < data.events.length; i++)
                 {
@@ -107,8 +115,13 @@ angular.module('museum-services', [])
                     var _news = response.data;
                     console.log(_news);
 
+                    for(var j = 0; j < _news.news.length; j++)
+                    {
+                        //_news.news[j].datetime = moment(_news.news[i].)
+                    }
+
                     /* Current Date */
-                    var currentDate = moment(new Date("2015", "05", "23", "10", "3"));
+                    var currentDate = moment(new Date());
 
                     /* This weeks current News */
                     news.currentNews = [];

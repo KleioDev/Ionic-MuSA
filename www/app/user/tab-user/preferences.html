@@ -9,18 +9,18 @@
             <div ng-if="user.loginStatus" class="list">
                 <ion-item class="item-icon-left">
                     <i class="icon ion-ios-person"></i>
-                    {{user.userInfo.name}}
+                    {{user.name}}
                 </ion-item>
                 <ion-item class="item-icon-left">
                     <i class="icon ion-ios-email-outline"></i>
-                    {{user.userInfo.email}}
+                    {{user.email}}
                 </ion-item>
 
                 <ion-item class="item-icon-left">
                     <i class="icon ion-ribbon-b"></i>
                     {{navigationTitles.user.pointsLabel}}
                     <span class="item-note">
-                        {{user.userInfo.points}}
+                        {{user.points}}
                     </span>
                 </ion-item>
 

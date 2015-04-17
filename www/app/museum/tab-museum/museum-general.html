@@ -1,7 +1,7 @@
     <div ng-controller="MuseumGeneralCtrl">
 
         <div class="padding" >
-            <h2 class="paheader-dark">Museo de Arte Mayaguez</h2>
+            <h2 class="paheader-dark">{{museum.name}}</h2>
             <hr>
 
         </div>
@@ -24,43 +24,99 @@
                 <!--<i class="icon ion-ios-clock-outline"></i>-->
                 <!--{{navigationTitles.general.hoursOfOperation}}-->
             <!--</ion-item>-->
-            <h4 class="dark">{{navigationTitles.general.hoursOfOperation}}</h4>
-            <hr>
 
+                <div class="list card">
 
-            <div ng-bind-html ='museum.hoursOfOperation' class="text-wrapping padding">
+                    <div class="item item-icon-left">
+                        <i class="icon ion-ios-clock-outline"></i>
+                        <h2><strong>{{navigationTitles.general.hoursOfOperation}}</strong></h2>
+                    </div>
 
+                    <div class="item item-body" ng-bind-html ='museum.hoursOfOperation'>
+
+                    </div>
 
                 </div>
 
+                <div class="list card">
 
-            <!--<ion-item class="item item-icon-left ion-accordion" >-->
-                <!--<i class="icon ion-ios-location-outline"></i>-->
-                <!--{{navigationTitles.general.directions}}-->
-            <!--</ion-item>-->
-            <h4 class="dark">{{navigationTitles.general.directions}}</h4>
-            <hr>
+                    <div class="item item-icon-left">
+                        <i class="icon ion-ios-paper-outline"></i>
+                        <h2><strong>{{navigationTitles.general.descriptionLabel}}</strong></h2>
+                    </div>
 
-            <div  class="padding">
+                    <div class="item item-body" ng-bind-html ='museum.description'>
 
-               <div ng-bind-html="museum.address"></div>
+                    </div>
 
-                <div class="row">
-                    <div class="col col-33 col-offset-33">
-                        <button ng-click="openMap()"  data-rel="external" class="button  icon-left">{{navigationTitles.general.directionsButtonLabel}}</button>
+                </div>
+
+                <div class="list card">
+
+                    <div class="item item-icon-left">
+                        <i class="icon ion-ios-location-outline"></i>
+
+                        <h2><strong>{{navigationTitles.general.directions}}</strong></h2>
+                    </div>
+
+                    <div class="item item-body" >
+                        <div ng-bind-html="museum.location"></div>
+                        <div class="row">
+                            <div class="col col-33 col-offset-33">
+                                <button ng-click="openMap()"  data-rel="external" class="button  icon-left">{{navigationTitles.general.directionsButtonLabel}}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="list card">
+
+                    <div class="item item-icon-left">
+                        <i class="icon ion-ios-information-outline"></i>
+                        <h2><strong>{{navigationTitles.general.contactLabel}}</strong></h2>
+                    </div>
+
+                    <div class="item item-body" style="text-align: center;">
+                        <p>{{museum.phone}}</p>
+                        <p>{{museum.email}}</p>
                     </div>
                 </div>
+
+
+                <div class="list card">
+
+                    <div class="item ">
+                        <h2><strong>{{navigationTitles.general.links}}</strong></h2>
+                    </div>
+
+                    <div class="item tabs tabs-secondary tabs-icon-left">
+                        <a class="tab-item" href="#" ng-click="openWindow('https://www.facebook.com/pages/Museo-de-Arte-RUM-MUSA/385132481629639?sk=timeline')">
+                            <i class="icon ion-social-facebook" style="color:#3b5998;"></i>
+                            Facebook
+                        </a>
+                        <!--<a class="tab-item" href="#">-->
+                            <!--<i class="icon ion-chatbox"></i>-->
+                            <!--Comment-->
+                        <!--</a>-->
+                        <!--<a class="tab-item" href="#">-->
+                            <!--<i class="icon ion-share"></i>-->
+                            <!--Share-->
+                        <!--</a>-->
+                    </div>
+
+                </div>
+
+
+
             </div>
 
 
-            <!--<ion-item class="item item-icon-left  ion-accordion" ng-click="toggle('links')"  >-->
+
+                <!--<ion-item class="item item-icon-left  ion-accordion" ng-click="toggle('links')"  >-->
                 <!--<i class="icon ion-ios-browsers-outline"></i>-->
                 <!--{{navigationTitles.general.links}}-->
             <!--</ion-item>-->
 
-            <h4 class="dark"> {{navigationTitles.general.links}}</h4>
-            <hr class=style="border: 1px dashed;" />
-            <div  class="padding">
 
 
             </div>
