@@ -70,12 +70,13 @@ angular.module('collection-controllers', [])
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
                 .then(function(page)
                 {
+                    console.log(page);
                     if(typeof page == 'object')
                     {
 
-                        if(page.objects.length > 0)
+                        if(page.length > 0)
                         {
-                            $scope.museumObjects =  $scope.museumObjects.concat(page.objects);
+                            $scope.museumObjects =  $scope.museumObjects.concat(page);
 
                             $scope.morePages = true;
                             $scope.pageNumber++;
