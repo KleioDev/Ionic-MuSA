@@ -17,7 +17,7 @@
             </div>
 
             <label class="item item-input">
-                <input type="text" ng-model="feedback.messageTitle" placeholder="{{navigationTitles.user.feedbackForm.titlePlaceholder}}">
+                <input type="text" ng-model="feedback.title" placeholder="{{navigationTitles.user.feedbackForm.titlePlaceholder}}">
             </label>
 
 
@@ -28,9 +28,9 @@
 
 
 
-            <ion-radio ng-model="feedback.problem" ng-value="'general'">{{navigationTitles.user.feedbackForm.generalFeedbackLabel}}</ion-radio>
-            <ion-radio ng-model="feedback.problem" ng-value="'bug'">{{navigationTitles.user.feedbackForm.applicationBugLabel}}</ion-radio>
-            <ion-radio ng-model="feedback.problem" ng-value="'content'">{{navigationTitles.user.feedbackForm.exhibitionContentLabel}}</ion-radio>
+            <ion-radio ng-model="feedback.type" ng-value="'general'">{{navigationTitles.user.feedbackForm.generalFeedbackLabel}}</ion-radio>
+            <ion-radio ng-model="feedback.type" ng-value="'bug'">{{navigationTitles.user.feedbackForm.applicationBugLabel}}</ion-radio>
+            <ion-radio ng-model="feedback.type" ng-value="'content_problem'">{{navigationTitles.user.feedbackForm.exhibitionContentLabel}}</ion-radio>
 
             <br>
 
@@ -42,7 +42,7 @@
             </div>
         <label class="item item-input">
 
-            <textarea class="msd-elastic: \n;" ng-model="feedback.messageContent" ></textarea>
+            <textarea class="msd-elastic: \n;" ng-model="feedback.message" ></textarea>
         </label>
 
 

@@ -135,20 +135,22 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 })
 
-    .controller('FeedbackFormCtrl', function($scope, AppNavigationTitles,$ionicPopup, $ionicLoading)
+    .controller('FeedbackFormCtrl', function($scope, $http, AppNavigationTitles,$ionicPopup, $ionicLoading)
     {
         console.log("Feedback");
         $scope.navigationTitles = AppNavigationTitles.get();
 
         $scope.feedback = {};
-        $scope.feedback.messageTitle = '';
-        $scope.feedback.problem = 'general';
-        $scope.feedback.messageContent = '';
+        $scope.feedback.title = '';
+        $scope.feedback.type = 'general';
+        $scope.feedback.message = '';
 
         $scope.sendFeedback = function()
         {
             console.log($scope.feedback.messageTitle);
 
+
+            /* Ask user to please fill out the info */
             if( $scope.feedback.messageTitle == '' || $scope.feedback.messageContent == '')
             {
                 var alertPopup = $ionicPopup.alert({
@@ -160,15 +162,50 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 });
             }
 
+            /* Try to send the feedback */
             else {
 
-                var alertPopup = $ionicPopup.alert({
-                    title: $scope.navigationTitles.user.feedbackForm.popUpTitleSuccessLabel,
-                    template: $scope.navigationTitles.user.feedbackForm.popUpMessageSuccessLabel
-                });
-                alertPopup.then(function (res) {
-                    console.log('Done');
-                });
+                console.log("Feedback Message: " );
+                console.log($scope.feedback);
+                //
+                var request = {
+
+                    url: Routes.FEEDBACK_ROUTE,
+                    method: 'POST',
+                    data: $scope.feedback
+
+
+                };
+                //
+                $http(request).then(feedbackSuccess, feedbackFailure);
+
+                function feedbackSuccess(response)
+                {
+                    console.log("SUCCESS");
+                    /* Feedback accepted */
+                    if(response.status == 200)
+                    {
+                        $ionicPopup.alert({
+                            title: $scope.navigationTitles.user.feedbackForm.popUpTitleSuccessLabel,
+                            template: $scope.navigationTitles.user.feedbackForm.popUpMessageSuccessLabel
+                        });
+
+                    }
+
+                }
+
+                function feedbackFailure(err)
+                {
+                    console.log("FAILURE");
+
+                    $ionicPopup.alert({
+                        title: $scope.navigationTitles.user.feedbackForm.popUpTitleFailureLabel,
+                        template: $scope.navigationTitles.user.feedbackForm.popUpMessageFailureLabel
+                    });
+                }
+
+
+
             }
         }
 
@@ -302,6 +339,9 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             {
                 /* Before getting the info from FB we need to check if the user has a token from our server */
                 var serverToken = $window.localStorage.getItem('userAuthenticationToken');
+
+                console.log("TOKEN");
+                console.log(serverToken);
                 /* If token is not defined */
                 if(serverToken == null)
                 {
@@ -362,6 +402,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 /* Parse out the correct Info */
                 user.name = success.name;
                 user.email = success.email;
+                user.userID = success.id;
                 user.loginStatus = success.verified;
 
                 user.points  = 20;

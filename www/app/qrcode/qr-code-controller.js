@@ -14,8 +14,52 @@ angular.module('qr-code-controllers', [])
         /* Play match hunt button */
         $scope.playMatchHunt = function()
         {
-            $scope.user = Facebook.getUser();
             /* If is logged in OPen Match Hunt */
+
+            Facebook.isLoggedIn()
+                .then(function(user)
+                {
+                    console.log("MATCHING");
+                    console.log(user);
+                    if(user.loginStatus)
+                    {
+
+
+                        MatchHunt.getMatchHunt(user)
+                            .then(function(response)
+                            {
+                                console.log("MATCH HUNT");
+                                console.log(response);
+
+                                /* Now store the ID */
+                                if(response.status == 200) {
+
+
+                                    var matchHuntID = response.data.id;
+
+                                    MatchHunt.saveId(matchHuntID);
+
+                                    MatchHunt.setActiveGame(response.data);
+
+                                    //Now Change the state
+                                    $state.go('tab.tab-match-hunt');
+
+
+                                }
+
+                            },
+
+                            function(err)
+                            {
+                                console.log("MATCH HUNT ERR");
+                                console.log(err);
+                            }
+                        );
+                    }
+                    else{
+                        //TODO: Show a popup asking the user to login
+                    }
+                });
             if($scope.user.loginStatus)
             {
 
@@ -40,6 +84,7 @@ angular.module('qr-code-controllers', [])
             /* Show a popup if the user isn't logged in to facebook */
             else
             {
+
             }
         };
 
@@ -105,7 +150,7 @@ angular.module('qr-code-controllers', [])
 
         $scope.$on('$stateChangeSuccess', function()
         {
-            $scope.matchHunt = MatchHunt.get();
+            $scope.matchHunt = MatchHunt.getActiveGame();
 
         });
 
@@ -143,36 +188,68 @@ angular.module('qr-code-controllers', [])
     })
 
     /* Match Hunt game */
-    .factory('MatchHunt', function(Routes, $http)
+    .factory('MatchHunt', function(Routes, $http, $window)
     {
         var matchHunt = {};
 
-        matchHunt.getMatchHunt = function()
+        matchHunt.getMatchHunt = function(user)
         {
-            //var id = $window.localStorage.getItem('activeMatchHunt');
-            //
+            //var  = $window.localStorage.getItem('activeMatchHunt');
+
             ///* if it is null or undefined it means it was never set */
             //if(id == null && typeof id == 'undefined')
             //{
             //    /* Set id to 0 */
             //    id = 0;
             //}
+            console.log("GETTING AUTH");
+
+            var authToken = $window.localStorage.getItem('userAuthenticationToken');
+            var id = matchHunt.getId();
+
+            /* If it is undefined  set to 0 */
+            if(id == null || typeof id == 'undefined')
+            {
+                id = 0;
+            }
+
+            var request = {
+
+                url: Routes.MATCH_HUNT + id,
+                method: 'GET',
+                headers:
+                {
+                    'Authorization': 'Bearer ' + authToken
+                },
+                data: {
+                    userID: user.userID
+                }
+
+            };
 
 
-            return $http.get(Routes.MATCH_HUNT + id);
+
+            return $http(request);
 
         };
 
-        //matchHunt.guess = function(objectId)
-        //{
-        //
-        //    //return $http.post(Routes.GUESS,
-        //    //    { data:{
-        //    //
-        //    //
-        //    //    }}
-        //    //)
-        //};
+        matchHunt.guess = function(user)
+        {
+
+
+            //var request = {
+            //
+            //    url : Routes.GUESS,
+            //    method : 'POST',
+            //    data:
+            //}
+            //return $http.post(Routes.GUESS,
+            //    { data:{
+            //
+            //
+            //    }}
+            //)
+        };
 
         matchHunt.setActiveGame = function(_matchHunt)
         {
@@ -190,6 +267,11 @@ angular.module('qr-code-controllers', [])
         matchHunt.saveId = function(id)
         {
             $window.localStorage.setItem('activeMatchHunt', id);
+        };
+
+        matchHunt.getId = function()
+        {
+            return $window.localStorage.getItem('activeMatchHunt');
         };
 
 

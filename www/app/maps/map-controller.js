@@ -17,7 +17,6 @@ angular.module('map-controllers', [])
     /* Get the current map displayed */
     $scope.map =  Map.getMap();
 
-
     /* Change the level */
     $scope.changeLevel = function(level)
     {
