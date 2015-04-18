@@ -203,7 +203,7 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;
 
         $scope.news = News.getNewsArticle();
-
+        $scope.news.datetime = moment(new Date($scope.news.createdAt));
         /* Update preferences */
         $scope.$on('preferences:updated', function(){
             $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;

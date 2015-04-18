@@ -484,9 +484,9 @@ angular.module('collection-controllers', [])
 
                     /* if it is actually an object */
                     if(typeof page == 'object') {
-                        if (page.objects.length > 0) {
+                        if (page.length > 0) {
 
-                            $scope.exhibitions = $scope.exhibitions.concat(page.objects);
+                            $scope.exhibitions = $scope.exhibitions.concat(page);
                             $scope.morePages = true;
                             $scope.pageNumber++;
                             $scope.$broadcast('scroll.infiniteScrollComplete');

@@ -55,7 +55,7 @@ angular.module('exhibition-services', [])
                 }})
                 .then(function(response)
                 {
-                    return response.data;
+                    return response.data.exhibitions;
                 });
         };
 

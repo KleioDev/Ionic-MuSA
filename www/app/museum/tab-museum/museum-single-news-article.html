@@ -7,7 +7,8 @@
         <!--<div class="list card" type="item-text-wrap" >-->
 
         <div class="padding-horizontal">
-        <p><strong>{{news.author}}</strong> | {{news.datetime.format('ll')}}</p>
+        <p><strong>{{news.author}}</strong>  </p>
+            <p>{{news.datetime.format('ll')}}</p>
         </div>
         <hr>
 
@@ -15,12 +16,12 @@
         <div class="row">
             <div class="col col-10"></div>
             <div class="col col-80">
-        <img  class="padding"  src="{{news.img_href}}" width="100%" />
+        <img  class="padding"  src="{{news.image}}" width="100%" />
                 </div>
             </div>
 <br>
         <hr>
-    <div class="padding" ng-bind-html="news.content"></div>
+    <div class="padding" ng-bind-html="news.description"></div>
             <!--</div>-->
             <!--<div class="col col-10"></div>-->
             <!--&lt;!&ndash;ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">&ndash;&gt;-->

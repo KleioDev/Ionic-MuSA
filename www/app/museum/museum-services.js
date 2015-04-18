@@ -112,12 +112,12 @@ angular.module('museum-services', [])
                     console.log("RES:");
                     console.log(response);
 
-                    var _news = response.data;
+                    var _news = response.data.news;
                     console.log(_news);
 
-                    for(var j = 0; j < _news.news.length; j++)
+                    for(var j = 0; j < _news.length; j++)
                     {
-                        //_news.news[j].datetime = moment(_news.news[i].)
+                        _news[j].datetime = moment(new Date(_news[j].createdAt));
                     }
 
                     /* Current Date */

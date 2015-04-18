@@ -1,5 +1,6 @@
 <div ng-controller="MuseumNewsCtrl" >
 
+    <div ng-if="news.currentNews.length > 0">
     <div class="item item-divider">
         {{navigationTitles.news.recentNewsLabel}}
     </div>
@@ -7,14 +8,17 @@
     <div class="list" >
 
         <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.currentNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
-            <img ng-src="{{_news.img_href}}">
+            <img ng-src="{{_news.image}}">
             <h2>{{_news.title}}</h2>
             <p>{{_news.author}}</p>
             <p>{{_news.datetime.format('lll')}}</p>
             <i class="icon ion-ios-arrow-right"></i>
         </a>
+</div>
+    </div>
 
 
+    <div ng-if="news.pastWeekNews.length > 0">
     <div class="item item-divider">
         {{navigationTitles.news.lastNewsLabel}}
     </div>
@@ -23,7 +27,7 @@
 
 
     <a  class="item item-thumbnail-left  item-icon-right" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
-        <img ng-src="{{_news.img_href}}">
+        <img ng-src="{{_news.image}}">
         <h2>{{_news.title}}</h2>
         <p>{{_news.author}}</p>
         <p>{{_news.datetime.format('lll')}}</p>
@@ -34,3 +38,4 @@
 
 
     </div>
+</div>
