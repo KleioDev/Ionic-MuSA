@@ -4,7 +4,7 @@
 
 angular.module('user-preferences-controllers', ['ngCordova'])
 
-.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Facebook, UserPreferences, $ionicModal)
+.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Facebook, Museum, UserPreferences, $ionicModal)
 {
     $scope.navigationTitles = AppNavigationTitles.get();
     $scope.preferences = UserPreferences.get();
@@ -13,6 +13,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     //$scope.user = Facebook.isLoggedIn();
     console.log("OPENING");
     $scope.user = {};
+    $scope.text = {};
     //$scope.user.loginStatus = false;
 
 
@@ -50,15 +51,37 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.loadAboutPage = function()
     {
-        $scope.text = UserPreferences.getAbout();
+        Museum.getGeneralMuseumInfo()
+            .then(function(response)
+            {
+                console.log("MUSEUM INFO");
+                console.log(response);
+                $scope.text.title = $scope.navigationTitles.user.aboutLabel;
+                $scope.text.content = response.about;
+                console.log($scope.text);
+                $scope.openModal('text-view.html');
+
+            });
+        //$scope.text = UserPreferences.getAbout();
         //console.log($scope.text);
-        $scope.openModal('text-view.html');
+        //$scope.openModal('text-view.html');
     };
 
     $scope.loadTermsPage = function(){
 
-        $scope.text = UserPreferences.getTerms();
-        $scope.openModal('text-view.html');
+
+        Museum.getGeneralMuseumInfo()
+            .then(function(response)
+            {
+                console.log("MUSEUM INFO");
+                console.log(response);
+                $scope.text.title = $scope.navigationTitles.user.termsOfServiceLabel;
+                $scope.text.content = response.terms;
+                $scope.openModal('text-view.html');
+
+            });
+        //$scope.text = UserPreferences.getTerms();
+        //$scope.openModal('text-view.html');
     };
 
     $scope.closePage = function()
@@ -92,14 +115,16 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         /* Check if Logged in */
 
         console.log("CHECKING");
-        //console.log(toState);
+        console.log(toState);
+
+        //TODO: Check if the state is changed to User */
+
         Facebook.isLoggedIn()
             .then(function(response)
             {
                 console.log("LOGGED IN?");
                 console.log(response);
                 $scope.user = response;
-
 
 
             }, function(err){ console.log(err);});
@@ -284,12 +309,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                     return user.getToken(response);
                 }
 
-                /* Token probably defined so: */
+                /* Token probably defined so just get the user info*/
                 else
                 {
                     return user.getUserInfo().then(user.getUserInfo, getUserInfoFailure);
                 }
             }
+
             /* Let them know he's not logged in */
             else{
                 console.log("NOT LOGGED IN");
