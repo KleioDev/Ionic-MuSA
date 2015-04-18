@@ -1,5 +1,19 @@
 /* Empty. Add your own CSS if you like */
 
+.user-font-pref{
+
+    font-size:100%; !important;
+}
+
+.user-font-pref-medium{
+
+    font-size:110%;
+}
+.user-font-pref-large{
+
+    font-size:120%;
+}
+
 .segmented-control
 {
     color:white;

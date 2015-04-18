@@ -5,10 +5,14 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic'])//,'ngMockE2E'])
 
-    .run(function($ionicPlatform, AppNavigationTitles,$filter,  $rootScope, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function($ionicPlatform, AppNavigationTitles,$filter,  $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
 
-        $rootScope.$on('loading:show', function() {
+        $rootScope.app = {};
+
+        $rootScope.app.fontSize = UserPreferences.getFontSize();
+        $rootScope.$on('' +
+        'loading:show', function() {
             $ionicLoading.show();
         });
 
@@ -295,6 +299,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
         /* Update preferences */
         $rootScope.$on('preferences:updated', function(){
             $rootScope.navigationTitles = AppNavigationTitles.get();
+            $rootScope.app.fontSize = UserPreferences.getFontSize();
         });
         $rootScope.$on('$stateChangeStart',   function(event, toState, toParams, fromState, fromParams){
 

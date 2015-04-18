@@ -14,6 +14,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     console.log("OPENING");
     $scope.user = {};
     $scope.text = {};
+    $scope.font = {size: 0};
     //$scope.user.loginStatus = false;
 
 
@@ -66,6 +67,14 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         //console.log($scope.text);
         //$scope.openModal('text-view.html');
     };
+
+    $scope.$watch('font.size', function()
+    {
+        console.log("FONT SIZE: " + $scope.font.size);
+        UserPreferences.setFontSize($scope.font.size);
+
+    });
+
 
     $scope.loadTermsPage = function(){
 

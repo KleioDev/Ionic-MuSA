@@ -2,17 +2,17 @@
 
     <ion-content>
 <br>
-            <div ng-if="user.loginStatus" class="list">
-                <ion-item class="item-icon-left">
+            <div ng-if="user.loginStatus" class="list" >
+                <ion-item class="item-icon-left " ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-ios-person"></i>
                     {{user.name}}
                 </ion-item>
-                <ion-item class="item-icon-left">
+                <ion-item class="item-icon-left  " ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-ios-email-outline"></i>
                     {{user.email}}
                 </ion-item>
 
-                <ion-item class="item-icon-left">
+                <ion-item class="item-icon-left " ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-ribbon-b"></i>
                     {{navigationTitles.user.pointsLabel}}
                     <span class="item-note">
@@ -20,7 +20,7 @@
                     </span>
                 </ion-item>
 
-                <a class="item item-icon-left item-icon-right" ng-click="loadLeaderboard()">
+                <a class="item item-icon-left item-icon-right " ng-style="{'font-size': app.fontSize};" ng-click="loadLeaderboard()">
                     <i class="icon ion-trophy"></i>
                     {{navigationTitles.user.leaderboardLabel}}
                     <i class="icon ion-ios-arrow-right"></i>
@@ -29,7 +29,7 @@
 
                 <br>
 
-                <ion-item class="item-icon-left" ng-click="logout()">
+                <ion-item class="item-icon-left " ng-click="logout()" ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-ios-close" style="color: red;"></i>
                     {{navigationTitles.user.unlinkFacebookAccountLabel}}
                 </ion-item>
@@ -37,7 +37,7 @@
             </div>
 
             <div ng-if="!user.loginStatus">
-                <a class="item item-icon-left" ng-click="login()">
+                <a class="item item-icon-left" ng-click="login()" ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-social-facebook"  style="color:#3b5998;"></i>
                     {{navigationTitles.user.linkFacebookAccountLabel}}
                 </a>
@@ -46,11 +46,11 @@
 
 
         <div class="list">
-            <div class="item item-divider">
+            <div class="item item-divider " ng-style="{'font-size': app.fontSize};">
                 {{navigationTitles.user.preferencesLabel}}
 
             </div>
-            <li class="item item-icon-left item-toggle">
+            <li class="item item-icon-left item-toggle " ng-style="{'font-size': app.fontSize};">
                 <!--HTML5-->
                 <i class="icon ion-ios-bell"></i>
 
@@ -64,18 +64,18 @@
                 </label>
             </li>
 
-            <li class="item item-icon-left range">
+            <li class="item item-icon-left range " ng-style="{'font-size': app.fontSize};">
                 <!--HTML5-->
                 {{navigationTitles.user.fontSizeLabel}}
 
 
-                    <input type="range" name="volume" min="0" max="100" value="33">
+                    <input type="range" ng-model="font.size" name="font" min="0" max="3" value="0">
                     <!--<i class="icon ion-ios7-sunny"></i>-->
 
 
             </li>
 
-            <a class="item item-icon-left item-icon-right" ng-click="showLanguages()">
+            <a class="item item-icon-left item-icon-right " ng-click="showLanguages()" ng-style="{'font-size': app.fontSize};">
                 <!--HTML5-->
                 <i class="icon ion-edit"></i>
                 {{navigationTitles.user.languageLabel}}
@@ -91,7 +91,7 @@
             </a>
 
 
-            <a class="item item-icon-left item-icon-right" href="#/tab/tab-user/feedback_form">
+            <a class="item item-icon-left item-icon-right " href="#/tab/tab-user/feedback_form" ng-style="{'font-size': app.fontSize};">
                 <!--HTML5-->
                 <i class="icon ion-compose"></i>
 
@@ -120,7 +120,7 @@
         </div>
 
         <div class="list">
-            <a  class="item item-icon-left item-icon-right" ng-click="loadAboutPage()">
+            <a  class="item item-icon-left item-icon-right " ng-click="loadAboutPage()" ng-style="{'font-size': app.fontSize};">
                 <i class="icon ion-ios-information-outline"></i>
 
                 {{navigationTitles.user.aboutLabel}}
@@ -128,7 +128,7 @@
 
             </a>
 
-            <a  class="item item-icon-left item-icon-right" ng-click="loadTermsPage()">
+            <a  class="item item-icon-left item-icon-right " ng-click="loadTermsPage()" ng-style="{'font-size': app.fontSize};">
                 <i class="icon ion-document"></i>
 
                <span ng-bind="navigationTitles.user.termsOfServiceLabel"></span>

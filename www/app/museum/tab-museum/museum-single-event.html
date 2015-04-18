@@ -1,7 +1,7 @@
 <ion-view view-title="{{navigationTitles.titleLabel}}">
 
 
-    <ion-content class="padding">
+    <ion-content class="padding ">
 
 
 
@@ -10,24 +10,24 @@
         <ion-list class="padding">
 
 
-            <ion-item >
+            <ion-item class="">
                 {{navigationTitles.eventDateLabel}}
     <span class="item-note">
 {{event.datetime.format('ll')}}    </span>
             </ion-item>
 
-            <ion-item>
+            <ion-item class="">
                 {{navigationTitles.eventTimeLabel}}    <span class="item-note">
 {{event.datetime.format('h:mm A')}}    </span>
             </ion-item>
 
-            <ion-item>
+            <ion-item class="">
                 {{navigationTitles.eventLocationLabel}}    <span class="item-note">
 {{event.location}}  </span>
             </ion-item>
         </ion-list>
 
-        <div class="list card" type="item-text-wrap" >
+        <div class="list card " type="item-text-wrap" >
 
 
             <!--ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">-->
@@ -41,7 +41,7 @@
 
 
 
-            <div class="item item-body">
+            <div class="item item-body ">
                 <p>
                    {{event.description}}
                 </p>
