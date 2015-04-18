@@ -4,7 +4,7 @@
 
 angular.module('user-preferences-controllers', ['ngCordova'])
 
-.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Facebook, Museum, UserPreferences, $ionicModal)
+.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Facebook, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
 {
     $scope.navigationTitles = AppNavigationTitles.get();
     $scope.preferences = UserPreferences.get();
@@ -82,6 +82,53 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             });
         //$scope.text = UserPreferences.getTerms();
         //$scope.openModal('text-view.html');
+    };
+
+
+    $scope.loadLeaderboard = function()
+    {
+        console.log("GETTING LEADERBOARD");
+        Facebook.isLoggedIn()
+            .then(function(user)
+            {
+                console.log(user);
+                if(user.loginStatus)
+                {
+
+                    var authToken = $window.localStorage.getItem('userAuthenticationToken');
+
+                    console.log("SENDING REQ");
+
+                    var request = {
+                        url: Routes.LEADERBOARD,
+                        method: 'GET',
+                        headers:
+                        {
+                            'Authorization': 'Bearer ' + authToken
+                        },
+                        data: {
+                            userID: user.userID
+                        }
+                    };
+
+
+                    return $http(request).then(function(response)
+                    {
+                        if(response.status == 200)
+                        {
+                            /* Set leaderboard */
+                            $scope.leaderboard = response.data.leaderboard;
+
+                            /* Open the list */
+                            $scope.openModal('leaderboard-view.html');
+
+
+                        }
+                    })
+                }
+
+            });
+        //$http.then('')
     };
 
     $scope.closePage = function()
