@@ -5,24 +5,24 @@
 
 
 
-        <h2 class="text-wrap"> {{event.title}} </h2>
+        <h2 class="text-wrap" > {{event.title}} </h2>
 
         <ion-list class="padding">
 
 
-            <ion-item class="">
+            <ion-item class="" ng-style="{'font-size': app.fontSize};">
                 {{navigationTitles.eventDateLabel}}
-    <span class="item-note">
+    <span class="item-note" ng-style="{'font-size': app.fontSize};">
 {{event.datetime.format('ll')}}    </span>
             </ion-item>
 
-            <ion-item class="">
-                {{navigationTitles.eventTimeLabel}}    <span class="item-note">
+            <ion-item class="" ng-style="{'font-size': app.fontSize};">
+                {{navigationTitles.eventTimeLabel}}    <span class="item-note" ng-style="{'font-size': app.fontSize};">
 {{event.datetime.format('h:mm A')}}    </span>
             </ion-item>
 
-            <ion-item class="">
-                {{navigationTitles.eventLocationLabel}}    <span class="item-note">
+            <ion-item class="" ng-style="{'font-size': app.fontSize};">
+                {{navigationTitles.eventLocationLabel}}    <span class="item-note" ng-style="{'font-size': app.fontSize};">
 {{event.location}}  </span>
             </ion-item>
         </ion-list>
@@ -33,7 +33,7 @@
             <!--ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">-->
 
             <div class="item item-header item-icon-right">
-                <h2> {{navigationTitles.descriptionLabel}} </h2>
+                <h2 ng-style="{'font-size': app.fontSize};"> {{navigationTitles.descriptionLabel}} </h2>
                 <!--<i class="icon ion-ios-arrow-right"></i>-->
 
             </div>
@@ -42,7 +42,7 @@
 
 
             <div class="item item-body ">
-                <p>
+                <p ng-style="{'font-size': app.fontSize};">
                    {{event.description}}
                 </p>
             </div>
@@ -52,7 +52,7 @@
 
         <div class="row">
             <div class="col col-80 col-offset-10">
-                <button  style="width: 100%;" ng-click="addToCalendar()" class="button icon-left   icon ion-ios-plus-outline button-balanced">
+                <button  style="width: 100%;" ng-click="addToCalendar()" ng-style="{'font-size': app.fontSize};" class="button icon-left   icon ion-ios-plus-outline button-balanced">
                     {{navigationTitles.addToCalendarLabel}}</button>
             </div>
         </div>

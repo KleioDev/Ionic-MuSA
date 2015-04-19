@@ -6,9 +6,9 @@
         <h2 class="text-wrap padding " >{{news.title}} </h2>
         <!--<div class="list card" type="item-text-wrap" >-->
 
-        <div class="padding-horizontal user-font-pref">
-        <p><strong>{{news.author}}</strong>  </p>
-            <p>{{news.datetime.format('ll')}}</p>
+        <div class="padding-horizontal ">
+        <p ng-style="{'font-size': app.fontSize};"><strong>{{news.author}}</strong>  </p>
+            <p ng-style="{'font-size': app.fontSize};">{{news.datetime.format('ll')}}</p>
         </div>
         <hr>
 
@@ -21,7 +21,7 @@
             </div>
 <br>
         <hr>
-    <div class="padding user-font-pref" ng-bind-html="news.description"></div>
+    <div class="padding " ng-style="{'font-size': app.fontSize};" ng-bind-html="news.description"></div>
             <!--</div>-->
             <!--<div class="col col-10"></div>-->
             <!--&lt;!&ndash;ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">&ndash;&gt;-->

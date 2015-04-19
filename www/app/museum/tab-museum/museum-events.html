@@ -1,23 +1,23 @@
 <div  ng-controller="MuseumEventsCtrl">
 
     <div ng-if="events.eventsToday.length > 0">
-    <div class="item item-divider user-font-pref">
+    <div class="item item-divider " ng-style="{'font-size': app.fontSize};">
         {{navigationTitles.events.navHappeningToday}}
     </div>
 
-    <div class="list card event-card user-font-pref" ng-repeat="event in events.eventsToday" type="item-text-wrap" ng-click="openEvent(event.id)">
+    <div class="list card event-card " ng-repeat="event in events.eventsToday" type="item-text-wrap" ng-click="openEvent(event.id)">
         <div class="item item-header item-icon-right">
-            <h2> {{event.title}}</h2>
+            <h2 ng-style="{'font-size': app.fontSize};"> {{event.title}}</h2>
             <i class="icon ion-ios-arrow-right"></i>
 
         </div>
 
 
-        <div class="item tabs tabs-secondary user-font-pref">
-            <a class="tab-item">
+        <div class="item tabs tabs-secondary ">
+            <a class="tab-item" ng-style="{'font-size': app.fontSize};">
                 {{event.datetime.format('ll')}}
             </a>
-            <a class="tab-item" href="#">
+            <a class="tab-item" href="#" ng-style="{'font-size': app.fontSize};">
                 {{event.datetime.format('h:mm A')}}
             </a>
 
@@ -26,24 +26,24 @@
     </div></div>
 
 <div ng-if="events.upcomingEvents.length > 0">
-    <div class="item item-divider user-font-pref">
+    <div class="item item-divider " ng-style="{'font-size': app.fontSize};">
         {{ navigationTitles.events.navUpcomingToday}}
     </div>
 
 
-    <div class="list card user-font-pref"  ng-repeat="event in events.upcomingEvents" type="item-text-wrap" ng-click="openEvent(event.id)">
+    <div class="list card "  ng-repeat="event in events.upcomingEvents" type="item-text-wrap" ng-click="openEvent(event.id)">
 
-        <div class="item item-header item-icon-right user-font-pref">
-            <h2> {{event.title}}</h2>
+        <div class="item item-header item-icon-right ">
+            <h2 ng-style="{'font-size': app.fontSize};"> {{event.title}}</h2>
             <i class="icon ion-ios-arrow-right"></i>
 
         </div>
 
 
-        <div class="item tabs tabs-secondary user-font-pref">
-            <a class="tab-item">
+        <div class="item tabs tabs-secondary ">
+            <a class="tab-item" ng-style="{'font-size': app.fontSize};">
                 {{event.datetime.format('ll')}}                 </a>
-            <a class="tab-item" href="#">
+            <a class="tab-item" href="#" ng-style="{'font-size': app.fontSize};">
                 {{event.datetime.format('h:mm A')}}
             </a>
 
