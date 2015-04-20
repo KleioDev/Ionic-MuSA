@@ -8,7 +8,7 @@
     <ion-content>
         <div class="padding">
             <h2>{{museumObject.title}}</h2>
-            <p>{{museumObject.author}}</p>
+            <p>{{museumObject.Artist.name}}</p>
 
 
             <!--<div class="row">-->
@@ -61,7 +61,7 @@
 
         <ion-item ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.typeLabel}}
-            <span class="item-note">{{museumObject.painting}}    </span>
+            <span class="item-note">{{museumObject.type}}    </span>
         </ion-item>
 
         <ion-item ng-style="{'font-size': app.fontSize};">
@@ -399,7 +399,7 @@
 
 
                 <ion-content>
-                    <div class="padding" ng-style="{'font-size': app.fontSize};" ng-bind-html="text.description"></div>
+                    <div class="padding text-wrap" ng-style="{'font-size': app.fontSize};" ng-bind-html="text.description"></div>
 
                 </ion-content>
             </ion-modal-view>

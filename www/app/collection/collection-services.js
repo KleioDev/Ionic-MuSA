@@ -7,17 +7,18 @@ angular.module('exhibition-services', [])
 
     var museumObjects = {};
 
+    var PER_PAGE = 10;
+
     museumObjects.getPage = function(pageNumber,searchTerm)
     {
         return $http.get(Routes.COLLECTION_OBJECTS, {
             params: {
-                pageNumber: pageNumber,
-                searchTerm: searchTerm
-            }})
-            .then(function(response)
-            {
-                return response.data.artifacts;
-            });
+                page: pageNumber,
+                title: searchTerm,
+                per_page: PER_PAGE,
+                artist: searchTerm
+
+            }});
     };
 
     museumObjects.getById = function(id)
@@ -45,13 +46,15 @@ angular.module('exhibition-services', [])
     {
 
         var exhibitions = {};
+        var PER_PAGE = 4;
 
         exhibitions.getPage = function(pageNumber, searchTerm)
         {
             return $http.get(Routes.COLLECTION_MUSEUM_EXHIBITIONS,{
                 params: {
-                    pageNumber: pageNumber,
-                    searchTerm: searchTerm
+                    page: pageNumber,
+                    title: searchTerm,
+                    per_page: PER_PAGE
                 }})
                 .then(function(response)
                 {

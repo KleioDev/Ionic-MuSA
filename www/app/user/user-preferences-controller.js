@@ -15,6 +15,11 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     $scope.user = {};
     $scope.text = {};
     $scope.font = {size: 0};
+    $scope.loadingUser = false;
+    $scope.loading = {
+        user : false,
+        points: false
+    };
     //$scope.user.loginStatus = false;
 
 
@@ -173,20 +178,40 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         console.log("CHECKING");
         console.log(toState);
 
-        //TODO: Check if the state is changed to User */
+        if(toState == 'tab.tab-user') {
 
-        Facebook.isLoggedIn()
-            .then(function(response)
-            {
-                console.log("LOGGED IN?");
-                console.log(response);
-                $scope.user = response;
+            //TODO: Check if the state is changed to User */
+
+            Facebook.isLoggedIn()
+                .then(function (response) {
+                    console.log("LOGGED IN?");
+                    console.log(response);
+                    $scope.user = response;
+
+                    /* Show loading for Points */
+
+                    Facebook.getPoints()
+                        .then(function (response) {
+                            console.log(response);
+                            if (response.status == 200) {
+                                $scope.user.points = response.data.points;
+                            }
+                            else {
+                                $scope.user.points = "N/A";
+                            }
+
+                            $scope.loading.points = true;
+
+                        }, function (err) {
+                        })
 
 
-            }, function(err){ console.log(err);});
+                }, function (err) {
+                    console.log(err);
+                });
 
 
-
+        }
     })
 
 })
@@ -321,12 +346,15 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Server responded successfully */
             /* now we get the user info */
             if (response.status == 200) {
-                $window.localStorage.setItem('userAuthenticationToken', response.data);
+                console.log("Storing Token=");
+                console.log(response);
+                $window.localStorage.setItem('userAuthenticationToken', response.data.token);
+
+                $window.localStorage.setItem('userIDAPI', response.data.userId);
 
                 console.log(response);
+
                 /* Make an API Call to Facebook */
-
-
                 return user.getUserInfo();
 
             }
@@ -527,6 +555,31 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             loginPopup.close();
         }, 10000)
 
+    };
+
+
+    user.getPoints = function()
+    {
+
+
+        var authToken = $window.localStorage.getItem('userAuthenticationToken');
+        var userID = $window.localStorage.getItem('userIDAPI');
+        console.log("SENDING REQ");
+        console.log(userID);
+        console.log(authToken);
+
+        var request = {
+            url: Routes.USER + userID,
+            method: 'GET',
+            headers:
+            {
+                'Authorization': 'Bearer ' + authToken
+            }
+        };
+
+        console.log(request);
+
+        return $http(request);
     };
 
 

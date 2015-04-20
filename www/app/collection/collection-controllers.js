@@ -73,38 +73,42 @@ angular.module('collection-controllers', [])
 
             console.log("GEtting da page");
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
-                .then(function(page)
+                .then(function(response)
                 {
-                    console.log(page);
-                    if(typeof page == 'object')
-                    {
 
-                        if(page.length > 0)
-                        {
-                            $scope.museumObjects =  $scope.museumObjects.concat(page);
-                            $scope.morePages = true;
-                            $scope.pageNumber++;
-                            $scope.$broadcast('scroll.infiniteScrollComplete');
+                    if(response.status == 200) {
+
+                        var page = response.data.artifacts;
+                        if (typeof page == 'object') {
+
+                            if (page.length > 0) {
+                                $scope.museumObjects = $scope.museumObjects.concat(page);
+                                $scope.morePages = true;
+                                $scope.pageNumber++;
+                                $scope.$broadcast('scroll.infiniteScrollComplete');
+
+                            }
+                            else {
+                                $scope.morePages = false;
+                            }
 
                         }
-                        else
-                        {
-                            $scope.morePages = false;
+
+                        else if ($scope.pageNumber == 0 && $scope.museumObjects.length == 0) {
+                            console.log("No Objects Found");
                         }
 
+                        else {
+                            console.log("Mistake Happened");
+                        }
+
+                        $scope.loading = false;
                     }
 
-                    else if($scope.pageNumber == 0 && $scope.museumObjects.length == 0)
+                    else if(response.status == 404)
                     {
-                        console.log("No Objects Found");
+                        $scope.morePages = false;
                     }
-
-                    else
-                    {
-                        console.log("Mistake Happened");
-                    }
-
-                    $scope.loading = false;
                 });
 
         };

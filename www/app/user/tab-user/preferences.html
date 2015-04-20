@@ -12,12 +12,25 @@
                     {{user.email}}
                 </ion-item>
 
-                <ion-item class="item-icon-left " ng-style="{'font-size': app.fontSize};">
+                <ion-item ng-if="loading.points" class="item-icon-left" ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-ribbon-b"></i>
                     {{navigationTitles.user.pointsLabel}}
+
+
                     <span class="item-note">
                         {{user.points}}
                     </span>
+
+                </ion-item>
+
+                <ion-item ng-if="!loading.points" class="item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};">
+                    <i class="icon ion-ribbon-b"></i>
+                    {{navigationTitles.user.pointsLabel}}
+
+
+
+
+                    <i ng-if="loading.points" class="icon ion-load-c"></i>
                 </ion-item>
 
                 <a class="item item-icon-left item-icon-right " ng-style="{'font-size': app.fontSize};" ng-click="loadLeaderboard()">

@@ -20,7 +20,7 @@
         <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" ng-click="loadExhibition(exhibition.id)">
             <img ng-src="{{exhibition.img_href}}"/>
             <h2>{{exhibition.title}}</h2>
-            <p ng-style="{'font-size': app.fontSize};">{{exhibition.museumObjects.length}}</p>
+            <p ng-style="{'font-size': app.fontSize};">{{exhibition.Artifacts.length}}</p>
             <i class="icon ion-ios-arrow-right"></i>
 
         </ion-item>

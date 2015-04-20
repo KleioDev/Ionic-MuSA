@@ -330,6 +330,7 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/tab/museum-segmented-control');
 
+        $httpProvider.defaults.useXDomain = true;
 
         var interceptor = ['$rootScope', '$q', function (scope, $q) {
 
@@ -339,6 +340,8 @@ angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-s
 
             function error(response) {
                 var status = response.status;
+
+
                 console.log("ERROR@");
                 //if (status == 401) {
                 //    window.location = "./index.html";
