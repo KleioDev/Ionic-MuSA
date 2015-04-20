@@ -53,23 +53,23 @@
                 <img src="{{museumObject.image}}" alt="Image" />
         </div>
 
-        <ion-item >
-            Medium
+        <ion-item ng-style="{'font-size': app.fontSize};">
+            {{navigationTitles.collection.singleObject.mediumLabel}}
         <span class="item-note">
                {{museumObject.medium}}    </span>
         </ion-item>
 
-        <ion-item>
-            Type
+        <ion-item ng-style="{'font-size': app.fontSize};">
+            {{navigationTitles.collection.singleObject.typeLabel}}
             <span class="item-note">{{museumObject.painting}}    </span>
         </ion-item>
 
-        <ion-item>
-            Culture
+        <ion-item ng-style="{'font-size': app.fontSize};">
+            {{navigationTitles.collection.singleObject.cultureLabel}}
             <span class="item-note">{{museumObject.culture}}  </span>
         </ion-item>
-        <ion-item>
-            Dimensions
+        <ion-item ng-style="{'font-size': app.fontSize};">
+            {{navigationTitles.collection.singleObject.dimensionsLabel}}
             <span class="item-note">{{museumObject.dimensions}}  </span>
         </ion-item>
         </ion-list>
@@ -96,7 +96,7 @@
         <div class="padding text-wrapping">
             <h4>{{navigationTitles.collection.singleObject.descriptionLabel}}</h4>
 
-            <p>{{museumObject.description | limitTo:200}} ...</p>
+            <p ng-style="{'font-size': app.fontSize};">{{museumObject.description | limitTo:200}} ...</p>
 
 
             <div class="row">
@@ -123,12 +123,12 @@
 
 
             <!-- Archives Switch -->
-            <div ng-switch="visible(museumObject.archives.length)">
-                <div ng-switch-when="SINGLE"  ng-click="displayArchive(museumObject.archives[0].id)">
+            <div ng-switch="visible(museumObject.Texts.length)">
+                <div ng-switch-when="SINGLE"  ng-click="displayArchive(museumObject.Texts[0].id)">
                     <!-- Only 1 text file -->
                     <a class="item item-icon-left item-icon-right" href="#">
                         <i class="icon ion-document-text"></i>
-                        {{museumObject.archives[0].title}}
+                        {{museumObject.Texts[0].title}}
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -143,7 +143,7 @@
 
                         {{navigationTitles.collection.singleObject.archivesLabel}}
                         <span class="item-note">
-                                {{museumObject.archives.length}}
+                                {{museumObject.Texts.length}}
                         </span>
                         <i class="icon ion-ios-arrow-right"></i>
 
@@ -156,12 +156,12 @@
             </div>
 
             <!-- Audio Switch -->
-            <div ng-switch="visible(museumObject.audio.length)">
+            <div ng-switch="visible(museumObject.Audibles.length)">
                 <div ng-switch-when="SINGLE" >
                     <!-- Only 1 audio file -->
                     <a class="item item-icon-left item-icon-right" ng-click="playAudio(2)">
                         <i class="icon ion-headphone"></i>
-                        {{museumObject.audio[0].title}}
+                        {{museumObject.Audibles[0].title}}
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -175,7 +175,7 @@
 
                         {{navigationTitles.collection.singleObject.audioLabel}}
                         <span class="item-note">
-                            {{museumObject.audio.length}}
+                            {{museumObject.Audibles.length}}
                         </span>
                         <i class="icon ion-ios-arrow-right"></i>
 
@@ -192,12 +192,12 @@
 
             <!-- Videos NG-Switch -->
 
-            <div ng-switch="visible(museumObject.videos.length)">
-                <div ng-switch-when="SINGLE" ng-click="playVideo(museumObject.videos[0].id)" >
+            <div ng-switch="visible(museumObject.Videos.length)">
+                <div ng-switch-when="SINGLE" ng-click="playVideo(museumObject.Videos[0].id)" >
                     <!-- Only 1 text file -->
                     <a class="item item-icon-left item-icon-right" >
                         <i class="icon ion-social-youtube"></i>
-                        {{museumObject.videos[0].title}}
+                        {{museumObject.Videos[0].title}}
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -211,7 +211,7 @@
 
                         {{navigationTitles.collection.singleObject.videosLabel}}
                         <span class="item-note">
-                            {{museumObject.videos.length}}
+                            {{museumObject.Videos.length}}
                         </span>
                         <i class="icon ion-ios-arrow-right"></i>
 
@@ -226,13 +226,13 @@
 
             <!-- Images switch -->
 
-            <div ng-switch="visible(museumObject.images.length)">
-                <div ng-switch-when="SINGLE" ng-click="displayImage(museumObject.image[0])">
+            <div ng-switch="visible(museumObject.Images.length)">
+                <div ng-switch-when="SINGLE" ng-click="displayImage(museumObject.Images[0])">
                     <!-- Only 1 image -->
                     <!-- Only 1 text file -->
                     <a class="item item-icon-left item-icon-right" href="#">
                         <i class="icon ion-image"></i>
-                        {{museumObject.image[0].title}}
+                        {{museumObject.Images[0].title}}
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -247,7 +247,7 @@
 
                         {{navigationTitles.collection.singleObject.imagesLabel}}
                         <span class="item-note">
-                            {{museumObject.images.length}}
+                            {{museumObject.Images.length}}
                         </span>
                         <i class="icon ion-ios-arrow-right"></i>
 
@@ -292,7 +292,7 @@
                         {{navigationTitles.collection.singleObject.archivesLabel}}
                     </div>
                     <ion-list class="transparent">
-                        <ion-item class="item item-icon-right padding"  ng-click="displayArchive(archive.id)" ng-repeat="archive in museumObject.archives" type="item-text-wrap" ng-click="doSomething()">
+                        <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-click="displayArchive(archive.id)" ng-repeat="archive in museumObject.Texts" type="item-text-wrap" ng-click="doSomething()">
                             {{archive.title}}
 
                             <i class="icon ion-ios-arrow-right"></i>
@@ -310,7 +310,7 @@
 
             <ion-modal-view>
                 <ion-header-bar  class="bar-positive">
-                    <button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
+                    <button class="button button-clear" ng-style="{'font-size': app.fontSize};" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                     <h1 class="title">MuSA</h1>
                 </ion-header-bar>
@@ -322,7 +322,7 @@
                     {{navigationTitles.collection.singleObject.videosLabel}}
                 </div>
                     <ion-list class="transparent">
-                        <ion-item class="item item-icon-right padding" ng-click="playVideo(video.id)" ng-repeat="video in museumObject.videos" type="item-text-wrap" ng-click="doSomething()">
+                        <ion-item class="item item-icon-right padding" ng-click="playVideo(video.id)" ng-repeat="video in museumObject.Videos" type="item-text-wrap" ng-click="doSomething()">
                             {{video.title}}
 
                             <i class="icon ion-ios-arrow-right"></i>
@@ -349,7 +349,7 @@
                         {{navigationTitles.collection.singleObject.audioLabel}}
                     </div>
                     <ion-list class="transparent">
-                        <ion-item class="item item-icon-right padding" ng-repeat="audio in museumObject.audio" type="item-text-wrap" ng-click="doSomething()">
+                        <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-repeat="audio in museumObject.Audibles" type="item-text-wrap" ng-click="doSomething()">
                             {{audio.title}}
 
                             <i class="icon ion-ios-arrow-right"></i>
@@ -399,7 +399,7 @@
 
 
                 <ion-content>
-                    <div class="padding" ng-bind-html="text.content"></div>
+                    <div class="padding" ng-style="{'font-size': app.fontSize};" ng-bind-html="text.description"></div>
 
                 </ion-content>
             </ion-modal-view>
@@ -410,7 +410,7 @@
         <ion-modal-view>
 
             <ion-header-bar class="bar-positive">
-                <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
+                <button class="button button-icon ion-ios-arrow-left" ng-style="{'font-size': app.fontSize};" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
                 <h1 class="title">Video</h1>
             </ion-header-bar>
@@ -516,7 +516,7 @@
                 <br>
                 <div class="row" ng-repeat="rows in images">
                 <div class="col col-33" ng-repeat="image in rows" ng-click="displayImage(image)">
-                    <img width="100px" height="100px" src="{{image.img_href}}"/>
+                    <img width="100px" height="100px" src="{{image.link}}"/>
 
 
                 </div>
@@ -529,7 +529,7 @@
         <script id="image-preview.html" type="text/ng-template">
             <div class="modal image-modal transparent" ng-click="closeModal()">
                 <ion-pane class="transparent">
-                    <img ng-src="{{image.img_href}}" class="fullscreen-image"/>
+                    <img ng-src="{{image.link}}" class="fullscreen-image"/>
                 </ion-pane>
             </div>
         </script>

@@ -1,5 +1,5 @@
 <ion-view view-title="{{title}}">
-<ion-content  >
+<ion-content scroll="false" >
 
     <div class="button-bar padding" >
 
@@ -9,12 +9,12 @@
 
     </div>
 
-    <!--  Museum General Template -->
 
-    <div ng-switch="museumTabState.state">
+    <!--  Museum General Template -->
+    <div ng-switch="museumTabState.state" style="border-bottom: 25vh">
 
     <!-- Museum Events Template -->
-    <div ng-switch-when="events" museum-events-dir>
+    <div ng-switch-when="events"  museum-events-dir>
 
     </div>
 

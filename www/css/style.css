@@ -1,5 +1,12 @@
 /* Empty. Add your own CSS if you like */
+ion-scroll[direction=y] {
+    height: 100vh;
+}
 
+.facebook-bg{
+
+    background-color: #3b5998
+}
 .user-font-pref{
 
     font-size:100%; !important;

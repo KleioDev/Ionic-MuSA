@@ -271,7 +271,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
 /* Service handles Facebook calls */
-.factory('Facebook', function($cordovaFacebook, $q, $window, Routes, $http, $rootScope, $ionicLoading)
+.factory('Facebook', function($cordovaFacebook, $timeout, $q, AppNavigationTitles, $window, Routes, $http, $ionicPopup, $rootScope, $ionicLoading)
 {
 
     /* User info */
@@ -312,6 +312,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         function failureAccess(error) {
             console.log("FAILED TO GET DA TOKEN FROM MUSA SERVER");
             /* Don't proceed with the login, show an error message */
+            loading.hide();
             $rootScope.$broadcast('http:error', {});
         };
 
@@ -329,6 +330,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 return user.getUserInfo();
 
             }
+
+            loading.hide();
 
 
         }
@@ -364,6 +367,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
             $cordovaFacebook.logout()
                 .then(function(success) {
+                    loading.hide();
+
                     var user = {loginStatus: false};
                     return user;
                 }, function (error) {
@@ -415,6 +420,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Let them know he's not logged in */
             else{
                 console.log("NOT LOGGED IN");
+                loading.hide();
+
                 var _user = {};
                 _user.loginStatus = false;
                 return _user;
@@ -475,6 +482,50 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
                 // error
             });
+
+    };
+
+
+    user.showLoginPopup = function()
+    {
+        loading.hide();
+
+        var labels = AppNavigationTitles.get();
+        var loginButton = {
+            text: labels.app.facebookLoginLabel,
+            type: 'button-royal',
+            onTap: function()
+            {
+                user.login();
+            }
+
+        };
+
+        var cancelButton = {
+            text: labels.app.cancelFacebookLoginPopup,
+            type: 'button-light'
+        };
+
+        var loginPopup = $ionicPopup.show(
+        {
+            title: labels.app.facebookRequiredLabel,
+            subTitle: labels.app.playMatchHuntFacebookAccountRequiredLabel,
+            buttons:[
+
+                cancelButton,
+                loginButton
+            ]
+        });
+
+        loginPopup.then(function(res){
+
+            console.log(res);
+        });
+
+        $timeout(function()
+        {
+            loginPopup.close();
+        }, 10000)
 
     };
 

@@ -57,35 +57,13 @@ angular.module('qr-code-controllers', [])
                         );
                     }
                     else{
+
                         //TODO: Show a popup asking the user to login
+
+                        Facebook.showLoginPopup();
                     }
                 });
-            if($scope.user.loginStatus)
-            {
 
-                $scope.matchHuntAvailable = true;
-                /* Show Loading */
-
-                /* Preload Match Hunt Game */
-                //MatchHunt.getMatchHunt()
-                //    .then(function(response)
-                //    {
-                //        //TODO: If the user has played all the games there should be a way of handling it
-                //        if(response.status == 200)
-                //        {
-                //            MatchHunt.setActiveGame(response.data);
-                //            $state.go('tab.tab-match-hunt');
-                //
-                //
-                //        }
-                //    });
-
-            }
-            /* Show a popup if the user isn't logged in to facebook */
-            else
-            {
-
-            }
         };
 
     /* Open the scanner when the user wants to scan a qr code */

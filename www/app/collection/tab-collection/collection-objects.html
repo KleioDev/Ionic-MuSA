@@ -4,7 +4,7 @@
     <ion-list class="list-inset">
         <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
-            <input ng-model="searchTerm" type="text" placeholder="{{navigationTitles.collection.objectSearchBar}}">
+            <input ng-model="searchTerm"  type="text" placeholder="{{navigationTitles.collection.objectSearchBar}}">
         </label>
 
     </ion-list>
@@ -18,7 +18,7 @@
         <ion-item ng-click="loadObject(object.id)" class="item item-thumbnail-left item-icon-right" ng-repeat="object in museumObjects " type="item-text-wrap">
             <img ng-src="{{object.image}}"/>
             <h2>{{object.title}}</h2>
-            <p>{{object.author}}</p>
+            <p ng-style="{'font-size': app.fontSize};">{{object.author}}</p>
             <i class="icon ion-ios-arrow-right"></i>
 
         </ion-item>
@@ -27,7 +27,9 @@
     <ion-infinite-scroll
             ng-if=morePages
             on-infinite="getPage()"
-            distance="1%">
+            distance="5%",
+            immediate-check="false"
+            >
     </ion-infinite-scroll>
 
             <div ng-if="museumObjects.length == 0">

@@ -55,10 +55,14 @@ angular.module('collection-controllers', [])
         $scope.searchTerm = "";
 
         /* When page loads, load the first page*/
-        $scope.$on('$stateChangeSuccess', function() {
-            $scope.museumObjects = [];
-            $scope.pageNumber = 0;
-            $scope.getPage();
+        $scope.$on('$stateChangeSuccess', function(toState) {
+
+            console.log(toState);
+            if(toState == 'tab.collection') {
+                $scope.museumObjects = [];
+                $scope.pageNumber = 0;
+                $scope.getPage();
+            }
         });
 
         $scope.loading = false;
@@ -67,6 +71,7 @@ angular.module('collection-controllers', [])
         $scope.getPage = function()
         {
 
+            console.log("GEtting da page");
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
                 .then(function(page)
                 {
@@ -77,7 +82,6 @@ angular.module('collection-controllers', [])
                         if(page.length > 0)
                         {
                             $scope.museumObjects =  $scope.museumObjects.concat(page);
-
                             $scope.morePages = true;
                             $scope.pageNumber++;
                             $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -130,12 +134,20 @@ angular.module('collection-controllers', [])
 
         /* When search term changes, do a query */
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
-            $scope.loading= true;
-            $scope.museumObjects = [];
-            $scope.pageNumber = 0;
-            $scope.getPage();
+
+            var flag = (newvalue == '') && (oldvalue == '');
+            if(!flag) {
+                $scope.loading = true;
+                $scope.museumObjects = [];
+                $scope.pageNumber = 0;
+                $scope.getPage();
+            }
 
         });
+
+
+        $scope.getPage();
+
 
 
     })
@@ -218,8 +230,8 @@ angular.module('collection-controllers', [])
                 {
                         if(response.status == 200)
                         {
-                            $scope.museumObject.images = response.data;
-                            $scope.images = chunk($scope.museumObject.images, 3);
+                            $scope.museumObject.Images = response.data;
+                            $scope.images = chunk($scope.museumObject.Images, 3);
                             $scope.openModal('image-grid.html');
                         }
                 });
@@ -267,7 +279,7 @@ angular.module('collection-controllers', [])
                     {
 
                         Video.setVideo(response.data);
-                        if ($scope.museumObject.videos.length > 1){
+                        if ($scope.museumObject.Videos.length > 1){
                             $scope.closeModal();
                         }
                         $state.go('tab.video-view');
@@ -325,6 +337,7 @@ angular.module('collection-controllers', [])
             Archive.getArchive(archiveId)
                 .then(function(response)
                 {
+                    console.log(response);
                     if(response.status == 200)
                     {
                         Archive.setActiveArchive(response.data);
@@ -350,10 +363,23 @@ angular.module('collection-controllers', [])
         /* Get active video */
         $scope.video = Video.getActiveVideo();
 
+
+        /* Parse out video ID */
+        $scope.parseVideo = function() {
+            var link = $scope.video.link;
+            var youtubeRegex = /(?:(?:https|http):\/\/|)(?:www\.|)(?:youtube\.com|youtu\.be)\/(?:(?:watch\?v=|embed\/)| )/; //Youtube /watch? regex
+            var _videoId = link.replace(youtubeRegex, "").replace(/&.*/, '');
+
+            $scope.video.src = "https://www.youtube.com/embed/" + _videoId;
+
+        };
+
         $scope.trustSrc = function(src)
         {
+
             return $sce.trustAsResourceUrl(src);
         }
+        $scope.parseVideo();
 
     })
 

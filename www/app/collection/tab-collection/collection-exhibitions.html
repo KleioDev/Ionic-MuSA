@@ -3,8 +3,8 @@
 
     <ion-list class="list-inset">
         <label class="item item-input">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input ng-model="searchTerm" type="text" placeholder="{{navigationTitles.collection.exhibitionSearchBar}}">
+            <i ng-style="{'font-size': app.fontSize};" class="icon ion-search placeholder-icon"></i>
+            <input ng-model="searchTerm" type="text" ng-style="{'font-size': app.fontSize};" placeholder="{{navigationTitles.collection.exhibitionSearchBar}}">
         </label>
 
 
@@ -20,7 +20,7 @@
         <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" ng-click="loadExhibition(exhibition.id)">
             <img ng-src="{{exhibition.img_href}}"/>
             <h2>{{exhibition.title}}</h2>
-            <p>{{exhibition.museumObjects.length}}</p>
+            <p ng-style="{'font-size': app.fontSize};">{{exhibition.museumObjects.length}}</p>
             <i class="icon ion-ios-arrow-right"></i>
 
         </ion-item>

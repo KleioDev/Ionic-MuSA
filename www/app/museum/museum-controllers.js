@@ -25,6 +25,7 @@ angular.module('museum-controllers', ['ngCordova'])
     /* Controller that manages the Museum General View */
     .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, Museum, $window)
     {
+        //TODO: Spanish version of hours
         //TODO: Links and Maps
         $scope.generalState = $scope.$parent.generalState;
 
