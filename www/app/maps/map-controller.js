@@ -27,11 +27,11 @@ angular.module('map-controllers', [])
     };
 
     /* When page loads */
-    $scope.$on('$stateChangeSuccess', function() {
-
-        $scope.map = Map.getMap();
-
-    });
+    //$scope.$on('$stateChangeSuccess', function() {
+    //
+    //    $scope.map = Map.getMap();
+    //
+    //});
 
     /* Listen for when the user changes room with iBeacons */
     $scope.$on('beacons:changed', function(beacons)

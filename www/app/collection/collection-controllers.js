@@ -55,15 +55,13 @@ angular.module('collection-controllers', [])
         $scope.searchTerm = "";
 
         /* When page loads, load the first page*/
-        $scope.$on('$stateChangeSuccess', function(toState) {
+        $scope.onLoad = function() {
 
-            console.log(toState);
-            if(toState == 'tab.collection') {
                 $scope.museumObjects = [];
                 $scope.pageNumber = 0;
                 $scope.getPage();
-            }
-        });
+
+        };
 
         $scope.loading = false;
 
@@ -148,9 +146,9 @@ angular.module('collection-controllers', [])
             }
 
         });
+        $scope.onLoad();
 
-
-        $scope.getPage();
+        //$scope.getPage();
 
 
 
@@ -198,7 +196,7 @@ angular.module('collection-controllers', [])
         {
             $scope.text = {};
             $scope.text.title = $scope.navigationTitles.collection.singleObject.descriptionLabel;
-            $scope.text.content = $scope.museumObject.description;
+            $scope.text.description = $scope.museumObject.description;
             console.log($scope.text);
             $scope.openModal('text-view.html');
 
@@ -497,11 +495,11 @@ angular.module('collection-controllers', [])
         $scope.searchTerm = "";
 
         /* When page loads */
-        $scope.$on('$stateChangeSuccess', function() {
+        $scope.onLoad= function() {
             $scope.pageNumber = 0;
             $scope.exhibitions = [];
             $scope.getPage();
-        });
+        };
 
 
         /* Get an exhibition page */
@@ -567,6 +565,7 @@ angular.module('collection-controllers', [])
 
         });
 
+        $scope.onLoad();
 
     })
 

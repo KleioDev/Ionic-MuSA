@@ -11,7 +11,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
     //$scope.user = Facebook.isLoggedIn();
-    console.log("OPENING");
     $scope.user = {};
     $scope.text = {};
     $scope.font = {size: 0};
@@ -60,11 +59,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo()
             .then(function(response)
             {
-                console.log("MUSEUM INFO");
-                console.log(response);
                 $scope.text.title = $scope.navigationTitles.user.aboutLabel;
                 $scope.text.content = response.about;
-                console.log($scope.text);
                 $scope.openModal('text-view.html');
 
             });
@@ -75,7 +71,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.$watch('font.size', function()
     {
-        console.log("FONT SIZE: " + $scope.font.size);
         UserPreferences.setFontSize($scope.font.size);
 
     });
@@ -87,8 +82,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo()
             .then(function(response)
             {
-                console.log("MUSEUM INFO");
-                console.log(response);
+
                 $scope.text.title = $scope.navigationTitles.user.termsOfServiceLabel;
                 $scope.text.content = response.terms;
                 $scope.openModal('text-view.html');
@@ -101,17 +95,17 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.loadLeaderboard = function()
     {
-        console.log("GETTING LEADERBOARD");
+        //console.log("GETTING LEADERBOARD");
         Facebook.isLoggedIn()
             .then(function(user)
             {
-                console.log(user);
+                //console.log(user);
                 if(user.loginStatus)
                 {
 
                     var authToken = $window.localStorage.getItem('userAuthenticationToken');
 
-                    console.log("SENDING REQ");
+                    //console.log("SENDING REQ");
 
                     var request = {
                         url: Routes.LEADERBOARD,
@@ -152,7 +146,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.login = function()
     {
-        console.log("LOGIN");
+        //console.log("LOGIN");
         Facebook.login()
             .then(function(user)
             {
@@ -165,34 +159,30 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.logout = function()
     {
-        console.log('log out');
+        //console.log('log out');
        $scope.user =  Facebook.logout();
     };
 
 
 
-    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams)
+    $scope.onLoad = function()
     {
         /* Check if Logged in */
 
-        console.log("CHECKING");
-        console.log(toState);
-
-        if(toState == 'tab.tab-user') {
 
             //TODO: Check if the state is changed to User */
 
             Facebook.isLoggedIn()
                 .then(function (response) {
-                    console.log("LOGGED IN?");
-                    console.log(response);
+                    //console.log("LOGGED IN?");
+                    //console.log(response);
                     $scope.user = response;
 
                     /* Show loading for Points */
 
                     Facebook.getPoints()
                         .then(function (response) {
-                            console.log(response);
+                            //console.log(response);
                             if (response.status == 200) {
                                 $scope.user.points = response.data.points;
                             }
@@ -211,14 +201,16 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 });
 
 
-        }
-    })
+
+    };
+
+    $scope.onLoad();
 
 })
 
     .controller('FeedbackFormCtrl', function($scope, $http, AppNavigationTitles,$ionicPopup, $ionicLoading)
     {
-        console.log("Feedback");
+        //console.log("Feedback");
         $scope.navigationTitles = AppNavigationTitles.get();
 
         $scope.feedback = {};
@@ -228,7 +220,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         $scope.sendFeedback = function()
         {
-            console.log($scope.feedback.messageTitle);
+            //console.log($scope.feedback.messageTitle);
 
 
             /* Ask user to please fill out the info */
@@ -246,8 +238,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Try to send the feedback */
             else {
 
-                console.log("Feedback Message: " );
-                console.log($scope.feedback);
+                //console.log("Feedback Message: " );
+                //console.log($scope.feedback);
                 //
                 var request = {
 
@@ -277,7 +269,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
                 function feedbackFailure(err)
                 {
-                    console.log("FAILURE");
+                    //console.log("FAILURE");
 
                     $ionicPopup.alert({
                         title: $scope.navigationTitles.user.feedbackForm.popUpTitleFailureLabel,
@@ -346,13 +338,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Server responded successfully */
             /* now we get the user info */
             if (response.status == 200) {
-                console.log("Storing Token=");
-                console.log(response);
+             ///   console.log("Storing Token=");
+                //console.log(response);
                 $window.localStorage.setItem('userAuthenticationToken', response.data.token);
 
                 $window.localStorage.setItem('userIDAPI', response.data.userId);
 
-                console.log(response);
+                //console.log(response);
 
                 /* Make an API Call to Facebook */
                 return user.getUserInfo();
@@ -380,8 +372,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         /* Fails to Login */
         function failureLogin(error) {
             loading.hide();
-            console.log("FACEBOOK ERR:");
-            console.log(error);
+           // console.log("FACEBOOK ERR:");
+            //console.log(error);
             /* DOn't proceed with the login, show an error message */
             $rootScope.$broadcast('http:error', {});
         };
@@ -421,16 +413,16 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         function successLoginStatus(response)
         {
-            console.log("LOGIN STATUS: ");
-            console.log(response);
+            //console.log("LOGIN STATUS: ");
+            //console.log(response);
             /* If he is logged in, get the user's info from Facebook's API */
             if(response.status == 'connected')
             {
                 /* Before getting the info from FB we need to check if the user has a token from our server */
                 var serverToken = $window.localStorage.getItem('userAuthenticationToken');
 
-                console.log("TOKEN");
-                console.log(serverToken);
+                //console.log("TOKEN");
+                //console.log(serverToken);
                 /* If token is not defined */
                 if(serverToken == null)
                 {
@@ -460,7 +452,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         function failureLoginStatus(error)
         {
             console.log("FAILED TO GET LOGIN STATUS");
-            console.log(error);
+            //console.log(error);
             loading.hide();
             return error;
 
@@ -488,7 +480,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
                 var user = {};
                 console.log("GOT INFO");
-                console.log(success);
+                //console.log(success);
 
                 /* Parse out the correct Info */
                 user.name = success.name;
@@ -547,7 +539,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         loginPopup.then(function(res){
 
-            console.log(res);
+            //console.log(res);
         });
 
         $timeout(function()
@@ -564,9 +556,9 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         var authToken = $window.localStorage.getItem('userAuthenticationToken');
         var userID = $window.localStorage.getItem('userIDAPI');
-        console.log("SENDING REQ");
-        console.log(userID);
-        console.log(authToken);
+        //console.log("SENDING REQ");
+        //console.log(userID);
+        //console.log(authToken);
 
         var request = {
             url: Routes.USER + userID,
@@ -577,7 +569,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             }
         };
 
-        console.log(request);
+        //console.log(request);
 
         return $http(request);
     };

@@ -110,11 +110,7 @@ angular.module('qr-code-controllers', [])
 
     };
 
-    $scope.$on('$stateChangeSuccess', function()
-    {
 
-
-    })
 })
 
 /* Open the math hunt game */
@@ -126,11 +122,6 @@ angular.module('qr-code-controllers', [])
         /* Calls the Match Hunt service for a match hunt game */
         $scope.matchHunt = MatchHunt.getActiveGame();
 
-        $scope.$on('$stateChangeSuccess', function()
-        {
-            $scope.matchHunt = MatchHunt.getActiveGame();
-
-        });
 
         /* Preferences changed */
         $scope.$on('preferences:updated', function(event, data){
