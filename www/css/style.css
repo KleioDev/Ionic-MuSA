@@ -3,6 +3,14 @@ ion-scroll[direction=y] {
     height: 100vh;
 }
 
+.segmented-control-header{
+    position:absolute;
+    top:44px;
+    width:100%;
+    z-index:9999;
+    background-color: #eaeaff;
+}
+
 .facebook-bg{
 
     background-color: #3b5998

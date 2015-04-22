@@ -1,7 +1,8 @@
 <ion-view view-title="{{title}}">
-<ion-content scroll="false" >
 
-    <div class="button-bar padding" >
+    <ion-header-bar class="bar-subheader">
+
+    <div class="button-bar">
 
         <a class="button button-small segmented-control user-font-pref" ng-click="changeState('general')" ng-class="{'active' : museumTabState.state == 'general'}">{{navigationTitles.buttonBar.generalButton}}</a>
         <a class="button button-small segmented-control user-font-pref" ng-click="changeState('events')" ng-class="{'active' : museumTabState.state == 'events'}">{{navigationTitles.buttonBar.eventsButton}}</a>
@@ -9,9 +10,12 @@
 
     </div>
 
+    </ion-header-bar>
+
+    <ion-content>
 
     <!--  Museum General Template -->
-    <div ng-switch="museumTabState.state" style="border-bottom: 25vh">
+    <div ng-switch="museumTabState.state" >
 
     <!-- Museum Events Template -->
     <div ng-switch-when="events"  museum-events-dir>

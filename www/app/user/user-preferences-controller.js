@@ -308,6 +308,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     user.getToken = function(response)
     {
 
+        $window.localStorage.setItem('userID', response.authResponse.userID);
+
         var postData =
         {
             accessToken: response.authResponse.accessToken,
@@ -338,13 +340,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Server responded successfully */
             /* now we get the user info */
             if (response.status == 200) {
-             ///   console.log("Storing Token=");
+                console.log("Storing Token=");
                 //console.log(response);
                 $window.localStorage.setItem('userAuthenticationToken', response.data.token);
 
                 $window.localStorage.setItem('userIDAPI', response.data.userId);
 
-                //console.log(response);
+                console.log(response);
 
                 /* Make an API Call to Facebook */
                 return user.getUserInfo();
@@ -398,6 +400,44 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     };
 
+    user.isLoggedInOnly = function()
+    {
+            return $cordovaFacebook.getLoginStatus()
+                .then(successResponse, failureResponse);
+
+
+        function successResponse(response)
+        {
+            console.log("SUCCESS GOT LOGIN STATUS");
+            console.log(response);
+            var _user = {};
+            if(response.status == 'connected')
+            {
+                _user.loggedIn = true;
+                _user.userID  = response.authResponse.userID;
+
+            }
+
+            else
+            {
+                _user.loggedIn = false;
+                _user.userID = null;
+            }
+
+            return _user;
+
+        }
+        function failureResponse(err)
+        {
+            console.log("FAILED TO GET LOGIN STATUS");
+            var _user = {
+                loggedIn : false
+            }
+
+            return _user;
+        }
+    };
+
 
     user.isLoggedIn = function()
     {
@@ -418,9 +458,12 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* If he is logged in, get the user's info from Facebook's API */
             if(response.status == 'connected')
             {
+                console.log(response);
                 /* Before getting the info from FB we need to check if the user has a token from our server */
                 var serverToken = $window.localStorage.getItem('userAuthenticationToken');
 
+                /* Store userID */
+                $window.localStorage.setItem('userID', response.authResponse.userID);
                 //console.log("TOKEN");
                 //console.log(serverToken);
                 /* If token is not defined */
@@ -439,6 +482,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
             /* Let them know he's not logged in */
             else{
+                $window.localStorage.setItem('userID', null);
+
                 console.log("NOT LOGGED IN");
                 loading.hide();
 
@@ -464,6 +509,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             console.log("FAILED TO GET USER INFO");
 
             /* Log out to avoid inconsistencies*/
+            $window.localStorage.setItem('userID', null);
+
             user.logout();
 
             //TODO: SEND OUT ERROR
