@@ -42,7 +42,7 @@ angular.module('museum-services', [])
             {
                 var data = response.data;
 
-                console.log(data);
+                //console.log(data);
 
                 for(var i = 0; i < data.events.length ; i++)
                 {
@@ -72,7 +72,7 @@ angular.module('museum-services', [])
                     }
                 }
 
-                console.log(events);
+               // console.log(events);
                 return events;
 
             });
@@ -109,11 +109,11 @@ angular.module('museum-services', [])
             return  $http.get(Routes.MUSEUM_NEWS_ROUTE)
                 .then(function(response)
                 {
-                    console.log("RES:");
-                    console.log(response);
+                    //console.log("RES:");
+                    //console.log(response);
 
                     var _news = response.data.news;
-                    console.log(_news);
+                    //console.log(_news);
 
                     for(var j = 0; j < _news.length; j++)
                     {
@@ -127,7 +127,7 @@ angular.module('museum-services', [])
                     news.currentNews = [];
                     for (var i = 0; i < _news.length; i++) {
 
-                        console.log(_news[i]);
+                        //console.log(_news[i]);
                         if (currentDate.diff(_news[i].datetime, 'days') <= 7)
                         {
                             news.currentNews.push(_news[i]);
@@ -144,7 +144,7 @@ angular.module('museum-services', [])
                             news.pastWeekNews.push(_news[i]);
                         }
                     }
-                    console.log(news);
+                    //console.log(news);
                     return news;
 
                 });

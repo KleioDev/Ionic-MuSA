@@ -137,6 +137,7 @@ angular.module('qr-code-controllers', [])
 
         /* Calls the Match Hunt service for a match hunt game */
         $scope.matchHunt = MatchHunt.getActiveGame();
+        console.log($scope.matchHunt);
 
         /* Preferences changed */
         $scope.$on('preferences:updated', function(event, data){
@@ -165,7 +166,8 @@ angular.module('qr-code-controllers', [])
                     .then(function(response)
                     {
                         //TODO: Here I handle the game response
-
+                        console.log("HANDLING RESPONSE");
+                        console.log(response);
                         var game = response.data;
 
                         if(game.status == 'won')
@@ -368,11 +370,13 @@ angular.module('qr-code-controllers', [])
                         'Authorization': 'Bearer ' + authToken
                     },
                     data: {
-                        userID: _user.userID,
-                        qrcode: _qrCodeData,
+                        userId: _user.userID,
+                        qrcode: _qrCodeData.text,
                         clueId: matchHuntId
                     }
                 };
+
+            console.log(request);
                 return $http(request);
         };
 

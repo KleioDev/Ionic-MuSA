@@ -80,10 +80,15 @@ angular.module('exhibition-services', [])
 
         exhibitions.findByBeacons = function(beacons)
         {
+
+            var _params = {};
+            for(var i = 0; i < beacons.length; i++)
+            {
+                _params["beacon"+(i+1)] = beacons[i];
+            }
+
             return $http.get(Routes.COLLECTION_NEAR_ME,
-                {params: {
-                    beacons: beacons
-                }});
+                {params: _params});
         };
 
 

@@ -1,116 +1,81 @@
 <ion-view title="{{navigationTitles.scanner.matchHuntLabel}}">
 
 
-    <ion-content>
-
-            <!--<ion-item>-->
-
-                <!--<div class="row padding">-->
-
-                    <!--<div class="col">-->
-
-            <!--<div ng-switch="matchHunt.hearts" style="color: red;">-->
 
 
-                <!--<div ng-switch-when=0>-->
-                    <!--<i class="icon ion-ios-heart-outline"></i>-->
-                    <!--<i class="icon ion-ios-heart-outline"></i>-->
+        <ion-header-bar class="bar-subheader">
+            <!--<div class="row">-->
+                <!--<div class="col"></div>-->
+                <!--<div class="col col-90">-->
 
-                    <!--<i class="icon ion-ios-heart-outline"></i>-->
-                <!--</div>-->
-                <!--<div ng-switch-when=1>-->
-                <!--<i class="icon ion-ios-heart"></i>-->
-                <!--<i class="icon ion-ios-heart-outline"></i>-->
+                    <div class="row">
 
-                <!--<i class="icon ion-ios-heart-outline"></i>-->
-                <!--</div>-->
+                        <div class="col">
 
-                <!--<div ng-switch-when=2>-->
-                    <!--<i class="icon ion-ios-heart"></i>-->
-                    <!--<i class="icon ion-ios-heart"></i>-->
-
-                    <!--<i class="icon ion-ios-heart-outline"></i>-->
-                <!--</div>-->
+                            <div ng-switch="matchHunt.hearts" style="color: red; font-size: 150%">
 
 
-                <!--<div ng-switch-default=3>-->
-                    <!--<i class="icon ion-ios-heart"></i>-->
-                    <!--<i class="icon ion-ios-heart"></i>-->
+                                <div ng-switch-when=0>
+                                    <i class="icon ion-ios-heart-outline"></i>
+                                    <i class="icon ion-ios-heart-outline"></i>
 
-                    <!--<i class="icon ion-ios-heart"></i>-->
-                <!--</div>-->
+                                    <i class="icon ion-ios-heart-outline"></i>
+                                </div>
+                                <div ng-switch-when=1>
+                                    <i class="icon ion-ios-heart"></i>
+                                    <i class="icon ion-ios-heart-outline"></i>
 
+                                    <i class="icon ion-ios-heart-outline"></i>
+                                </div>
 
-            <!--</div>-->
+                                <div ng-switch-when=2>
+                                    <i class="icon ion-ios-heart"></i>
+                                    <i class="icon ion-ios-heart"></i>
 
-                        <!--</div>-->
-
-                    <!--<div class="col" style="text-align: right">-->
-                        <!--<h3><strong>{{matchHunt.points}}</strong></h3>-->
-                   <!--</div>-->
-                    <!--</div>-->
-
-
-            <!--</ion-item>-->
-
-
-        <div class="row">
-            <div class="col"></div>
-            <div class="col col-90 portrait-box">
+                                    <i class="icon ion-ios-heart-outline"></i>
+                                </div>
 
 
-                <div class="row padding">
+                                <div ng-switch-default=3>
+                                    <i class="icon ion-ios-heart"></i>
+                                    <i class="icon ion-ios-heart"></i>
 
-                    <div class="col">
+                                    <i class="icon ion-ios-heart"></i>
+                                </div>
 
-                        <div ng-switch="matchHunt.hearts" style="color: red; font-size: 150%">
-
-
-                            <div ng-switch-when=0>
-                                <i class="icon ion-ios-heart-outline"></i>
-                                <i class="icon ion-ios-heart-outline"></i>
-
-                                <i class="icon ion-ios-heart-outline"></i>
                             </div>
-                            <div ng-switch-when=1>
-                                <i class="icon ion-ios-heart"></i>
-                                <i class="icon ion-ios-heart-outline"></i>
-
-                                <i class="icon ion-ios-heart-outline"></i>
-                            </div>
-
-                            <div ng-switch-when=2>
-                                <i class="icon ion-ios-heart"></i>
-                                <i class="icon ion-ios-heart"></i>
-
-                                <i class="icon ion-ios-heart-outline"></i>
-                            </div>
-
-
-                            <div ng-switch-default=3>
-                                <i class="icon ion-ios-heart"></i>
-                                <i class="icon ion-ios-heart"></i>
-
-                                <i class="icon ion-ios-heart"></i>
-                            </div>
-
 
                         </div>
 
-                    </div>
+                        <div class="col" style="text-align: right">
+                            <h3><strong>{{matchHunt.pointsValue}}</strong></h3>
+                        </div>
 
-                    <div class="col" style="text-align: right">
-                        <h3><strong>{{matchHunt.points}}</strong></h3>
                     </div>
+                <!--</div>-->
+
+                <!--<div class="col"></div>-->
+
+            <!--</div>-->
+
+            </ion-header-bar>
+
+            <ion-content>
+
+            <div class="row">
+
+                <div class="col"></div>
+
+                <div class="col col-90 portrait-box">
+
+
+                    <img  class="match-hunt"  ng-src="{{matchHunt.image}}">
+                    <br><br>
+                    <button  style="width: 100%; color: white;" class="button icon-left ion-qr-scanner padding" ng-click="takeAGuess()">{{navigationTitles.scanner.takeAGuessLabel}}</button>
+
                 </div>
-
-                <img  class="match-hunt" ng-click="showImage()" src="{{matchHunt.img_href}}">
-<br><br>
-                <button  style="width: 100%; color: white;" class="button icon-left ion-qr-scanner padding" ng-click="takeAGuess()">{{navigationTitles.scanner.takeAGuessLabel}}</button>
-
-            </div>
             <div class="col"></div>
-        </div>
+            </div>
 
 
 

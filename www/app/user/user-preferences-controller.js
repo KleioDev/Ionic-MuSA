@@ -602,13 +602,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
         var authToken = $window.localStorage.getItem('userAuthenticationToken');
-        var userID = $window.localStorage.getItem('userIDAPI');
+        var _userID = $window.localStorage.getItem('userIDAPI');
         //console.log("SENDING REQ");
         //console.log(userID);
         //console.log(authToken);
 
         var request = {
-            url: Routes.USER + userID,
+            url: Routes.USER + _userID,
             method: 'GET',
             headers:
             {
@@ -616,7 +616,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             }
         };
 
-        //console.log(request);
+        console.log(request);
 
         return $http(request);
     };

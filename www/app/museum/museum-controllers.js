@@ -1,13 +1,20 @@
 
 /* Author: Jose F. Martinez Rivera */
-/* Museum Controller Module */
+/* Museum Controllers Module */
 angular.module('museum-controllers', ['ngCordova'])
 
-    /* Controller that manages the segmented control for the museum view */
-    .controller('MuseumSegmentedControl', function( $scope, AppNavigationTitles, SegmentedControl)
+
+/**
+ * Museum Tab - Segmented View Controller that handles the views that are displayed
+ * @param $scope {Object} The scope of the controller
+ * @param SegmentedControl {Object} Service for handling the button bar sub-header states
+ */
+    .controller('MuseumSegmentedControl', function( $scope, SegmentedControl)
     {
         /* Get the navigation titles */
-        $scope.navigationTitles = AppNavigationTitles.get().museum;
+        //$scope.navigationTitles = AppNavigationTitles.get().museum;
+
+        /* Create a segmented control for the museum page */
         $scope.museumTabState = SegmentedControl.create('museum', ['general', 'events', 'news'], 'general');
 
         /* Change the view state */
@@ -16,10 +23,6 @@ angular.module('museum-controllers', ['ngCordova'])
             $scope.museumTabState.set(state);
         };
 
-        /* Update the view on preferences update */
-        $scope.$on('preferences:updated', function(){
-            $scope.navigationTitles = AppNavigationTitles.get().museum;
-        });
     })
 
     /* Controller that manages the Museum General View */
@@ -34,6 +37,8 @@ angular.module('museum-controllers', ['ngCordova'])
 
         /* Get information from the museum */
         $scope.museum = {};
+
+        /* Get the information from the museum view the HTTP Service */
         Museum.getGeneralMuseumInfo().then(function(museumGeneralInfo)
         {
             $scope.museum = museumGeneralInfo;
@@ -54,11 +59,11 @@ angular.module('museum-controllers', ['ngCordova'])
         });
 
         /* Open Social Network */
-
         $scope.openWindow = function(socialLink)
         {
             $window.open(socialLink, '_system');
         }
+
     })
 
     /* Events list controller */

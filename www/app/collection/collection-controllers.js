@@ -420,11 +420,16 @@ angular.module('collection-controllers', [])
                     beaconIdArray.push(beaconID);
 
                 }
+                console.log("DA Beacons");
+
+                console.log(beaconIdArray);
 
                 /* Find the exhibitions related to iBeacons */
 
-                Exhibitions.findByBeacons(JSON.stringify(beaconIdArray))
+                Exhibitions.findByBeacons(beaconIdArray)
                     .then(function (response) {
+
+                        console.log(response);
                         if (response.status == 200) {
 
                             if (response.data.length == 0) {
@@ -432,13 +437,15 @@ angular.module('collection-controllers', [])
                             }
 
                             else {
-                                $scope.exhibitions = response.data;
+                                $scope.exhibitions = response.data.exhibitions;
                                 $scope.loading.status = false;
                             }
                             /* Apply changes to UI */
                             $scope.$apply();
 
                         }
+                    }, function(err){
+                        console.log(err);
                     });
             }
 
@@ -509,7 +516,6 @@ angular.module('collection-controllers', [])
             Exhibitions.getPage($scope.pageNumber, $scope.searchTerm)
                 .then(function(page)
                 {
-
                     /* if it is actually an object */
                     if(typeof page == 'object') {
                         if (page.length > 0) {
