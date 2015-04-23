@@ -4,14 +4,32 @@
 /* Museum Services to handle states and data */
 angular.module('museum-services', [])
 
-//=================== Museum Services ====================//
-    //TODO: Might need some initial data
+/**
+ * @ngdoc service
+ * @name Museum
+ * @description Stores and retrieves information from the Museum Route in the API. Used to handle requests made to the API related to the museum, such as:
+ *  + Museum Title
+ *  + Museum Image
+ *  + Hours of Operation
+ *  + Description
+ *  + Social Media Links
+ *  + Location
+ *  + Terms of Service
+ *  + More Info About the Museum
+ *  + Contact Information
+ *
+ * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
+ *  @requires Routes
+ */
     .factory('Museum', function(Routes, $http)
     {
-        var general = {};
 
-        /* Get general museum info */
-        general.getGeneralMuseumInfo = function()
+        /**
+         * Returns a response from the API
+         * @memberof Museum
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getGeneralMuseumInfo = function()
         {
             return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(function(response)
             {
@@ -19,27 +37,70 @@ angular.module('museum-services', [])
             })
         };
 
-        /* Get the location */
-        general.getLocation = function()
+        /**
+         * Returns the uri for forwarding the application to the locally installed Maps/Google Maps application
+         * @memberof Museum
+         * @returns {String} URI containing the forward link
+         */
+        var getLocation = function()
         {
             return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
         };
 
-        return general;
+        return {
+
+            getGeneralMuseumInfo: getGeneralMuseumInfo,
+            getLocation: getLocation
+        }
     })
 
-    //TODO: Events- Setup ajax HTTP Request functionality
 
-    /* Event service for getting the events from the server */
+/**
+ * @ngdoc service
+ * @name Events
+ * @description
+ **
+ * Stores and retrieves the events that are happening in the museum. An array containing JSON objects:
+ * + Event Title
+ * + ID
+ * + Description
+ * + Thumbnail Image
+ * + Location
+ * + Event Date & Time
+ *
+ * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
+ *
+ */
 .factory('Events', function(Routes,$http)
 {
     var events = {};
 
-    /* Get the events with a promise  */
-    events.getEvents = function(){
+    /**
+     * Returns an object containing the events happening on the current day as well as the events that are happening in the past weeks.
+     *
+     * @memberof Events
+     * @example
+     * //AngularJS Controller, inject the Events service
+     * .controller('ExampleController', function(Events){
+     *      Events.getNews().then(function(response){
+     *
+     *              //Get the events from the response body
+     *              $scope.events = response.data.events;
+     *              //$scope.events = {
+     *              //  upcomingEvents = [],
+     *              //  eventsToday = []
+     *              //}
+     *
+     *      }, function(err){ console.log("ERR Happened")});
+     * });
+     * @returns {Promise} Events object containing the upcoming events and events today
+     */
+    var getEvents = function(){
         return  $http.get(Routes.MUSEUM_EVENTS_ROUTE)
             .then(function(response)
             {
+
+
                 var data = response.data;
 
                 //console.log(data);
@@ -80,30 +141,86 @@ angular.module('museum-services', [])
 
     };
 
-    /* Get a single event */
-    events.getSingleEvent = function(id)
+    /**
+     * Returns a response containing a single event from the API
+     * @memberof Events
+     * @example
+     * //AngularJS Controller, inject the Events service
+     * .controller('ExampleController', function(Events){
+     *      var id = 2;
+     *      Events.getSingleEvent(id).then(function(response){
+     *
+     *      if(response.status == 200)
+     *      {
+     *          $scope.event = response.event;
+     *      }
+     *
+     *
+     *      }, function(err){ console.log("ERR Happened")});
+     * });
+     * @param {string} id of the event trying to request from the API
+     * @returns {Promise} Promise containing the response from the server
+     */
+    var getSingleEvent = function(id)
     {
        return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id);
     };
 
     /* Event */
-    events.setEvent = function(event)
+    var setEvent = function(event)
     {
         events.event = event;
     };
 
-    return events;
+    return {
+
+        getEvents: getEvents,
+        getSingleEvent: getSingleEvent,
+        setEvent: setEvent,
+        eventsToday: events.eventsToday,
+        upcomingEvents : events.upcomingEvents
+    }
 
 })
 
 
-/* News service for getting news articles fromt he server */
-.factory('News', function($http, Routes)
+/**
+ * @ngdoc service
+ * @name News
+ * @description
+ **
+ * Stores and retrieves the news articles. Provides an interfact for requests to the server
+ * + News Title
+ * + ID
+ * + Description
+ * + Thumbnail Image
+ * + Location
+ *
+ * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
+ *
+ */
+    .factory('News', function($http, Routes)
     {
         var news = {};
 
-        /* Get the news */
-        news.getNews = function()
+        /**
+         * Returns a response containing an array of JSON objects containing news articles from the API
+         * @example
+         * //AngularJS Controller, inject the News service
+         * .controller('ExampleController', function(News){
+         *      News.getNews().then(function(response){
+         *          //Handle the response from the API
+         *          if(response.status == 200)
+         *          {
+         *              //Get the news from the response body
+         *              $scope.news = response.data.news;
+         *          }
+         *      }, function(err){ console.log("ERR Happened")});
+         * });
+         * @memberof News
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getNews = function()
         {
 
             return  $http.get(Routes.MUSEUM_NEWS_ROUTE)
@@ -150,25 +267,48 @@ angular.module('museum-services', [])
                 });
         };
 
-        /* Get a news article by id */
-        news.getNewsById = function(id)
+        /**
+         * Returns a response containing a single news article as a JSON Object
+         * @example
+         * //AngularJS Controller, inject the News service
+         * .controller('ExampleController', function(News){
+         *
+         *      var id = 2;
+         *      News.getNewsById(id).then(function(response){
+         *          //Handle the response from the API
+         *          if(response.status == 200)
+         *          {
+         *              //Get the news from the response body
+         *              $scope.news = response.data;
+         *          }
+         *      }, function(err){ console.log("ERR Happened")});
+         * });
+         * @memberof News
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getNewsById = function(id)
         {
-            return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id)
+            return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id);
 
         };
 
         /* Set a news article for the next view */
-        news.setNewsArticle = function(newsArticle)
+        var setNewsArticle = function(newsArticle)
         {
             news.newsArticle = newsArticle;
         };
 
         /* Get the news Article */
-        news.getNewsArticle = function()
+        var getNewsArticle = function()
         {
             return news.newsArticle;
-        }
+        };
 
-        return news;
+        return {
+            getNews: getNews,
+            getNewsById: getNewsById,
+            setNewsArticle: setNewsArticle,
+            getNewsArticle: getNewsArticle
+        }
 
     });

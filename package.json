@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Ionic-MuSA: An Ionic project",
   "dependencies": {
+    "dgeni": "^0.4.1",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
@@ -11,8 +12,13 @@
     "moment": "^2.9.0"
   },
   "devDependencies": {
+    "angular-jsdoc": "^0.3.3",
     "bower": "^1.3.3",
+    "grunt": "^0.4.5",
+    "grunt-dgeni": "0.0.3",
+    "gulp-shell": "^0.4.1",
     "gulp-util": "^2.2.14",
+    "jsdoc": "^3.3.0-beta3",
     "karma-firefox-launcher": "^0.1.4",
     "karma-safari-launcher": "^0.1.1",
     "shelljs": "^0.3.0"

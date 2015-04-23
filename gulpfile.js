@@ -6,6 +6,8 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var shell = require('gulp-shell');
+
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -48,3 +50,16 @@ gulp.task('git-check', function(done) {
   }
   done();
 });
+
+gulp.task('docs', shell.task([
+    'node_modules/jsdoc/jsdoc.js '+
+    '-c node_modules/angular-jsdoc/conf.json '+   // config file
+    '-t node_modules/angular-jsdoc/template '+    // template file
+    '-d build/docs '+                             // output directory
+    './README.md ' +                              // to include README.md as index contents
+    '-r www/app/museum'                              // source code directory
+]));
+
+gulp.task('commit', shell.task([
+    'git add -u'
+]));

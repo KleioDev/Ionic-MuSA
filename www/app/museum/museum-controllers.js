@@ -1,23 +1,27 @@
-
-/* Author: Jose F. Martinez Rivera */
-/* Museum Controllers Module */
+/**
+ * @ngdoc modules
+ * @name Museum Tab Controllers
+ * @author Jose F. Martinez Rivera
+ * @description
+ *
+ * ## Museum Controller Module
+ * This module contains the controllers for the Museum tab of the application
+ */
 angular.module('museum-controllers', ['ngCordova'])
 
 
 /**
- * Museum Tab - Segmented View Controller that handles the views that are displayed
- * @param $scope {Object} The scope of the controller
- * @param SegmentedControl {Object} Service for handling the button bar sub-header states
+ *
+ * @ngdoc controller
+ * @name Museum Segmented Control
+ * @memberOf Museum Tab Controllers
  */
     .controller('MuseumSegmentedControl', function( $scope, SegmentedControl)
     {
-        /* Get the navigation titles */
-        //$scope.navigationTitles = AppNavigationTitles.get().museum;
 
-        /* Create a segmented control for the museum page */
         $scope.museumTabState = SegmentedControl.create('museum', ['general', 'events', 'news'], 'general');
 
-        /* Change the view state */
+
         $scope.changeState = function(state)
         {
             $scope.museumTabState.set(state);
@@ -25,15 +29,16 @@ angular.module('museum-controllers', ['ngCordova'])
 
     })
 
-    /* Controller that manages the Museum General View */
-    .controller('MuseumGeneralCtrl', function($scope, AppNavigationTitles, Museum, $window)
+/**
+ * @ngdoc controller
+ * @name Museum General View Controller
+ * @description dd
+ */
+    .controller('MuseumGeneralCtrl', function($scope, Museum, $window)
     {
         //TODO: Spanish version of hours
         //TODO: Links and Maps
         $scope.generalState = $scope.$parent.generalState;
-
-        /* App labels */
-        $scope.navigationTitles = AppNavigationTitles.get().museum;
 
         /* Get information from the museum */
         $scope.museum = {};

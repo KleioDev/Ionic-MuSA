@@ -1,6 +1,9 @@
 
-/* MuSA Application File */
-angular.module('starter', ['ngCordova', 'ionic', 'museum-controllers', 'museum-services', 'app-services',
+/**
+ * @namespace MuSA
+ */
+
+angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-services', 'app-services',
 
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic'])//,'ngMockE2E'])
