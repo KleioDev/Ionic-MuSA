@@ -164,7 +164,7 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
                     'tab-museum':{
 
                         templateUrl: 'app/museum/tab-museum/segmented-control-museum.html',
-                        controller: 'MuseumSegmentedControl'
+                        controller: 'MuseumSegmentController'
                     }
                 }
             })

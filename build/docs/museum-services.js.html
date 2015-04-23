@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: museum-services.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: museum-services.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+
+
+/* Museum Services to handle states and data */
+angular.module('museum-services', [])
+
+/**
+ * @ngdoc service
+ * @name Museum
+ * @description Stores and retrieves information from the Museum Route in the API. Used to handle requests made to the API related to the museum, such as:
+ *  + Museum Title
+ *  + Museum Image
+ *  + Hours of Operation
+ *  + Description
+ *  + Social Media Links
+ *  + Location
+ *  + Terms of Service
+ *  + More Info About the Museum
+ *  + Contact Information
+ *
+ * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
+ *  @requires Routes
+ */
+    .factory('Museum', function(Routes, $http)
+    {
+
+        /**
+         * Returns a response from the API
+         * @memberof Museum
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getGeneralMuseumInfo = function()
+        {
+            return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(function(response)
+            {
+                return response.data;
+            })
+        };
+
+        /**
+         * Returns the uri for forwarding the application to the locally installed Maps/Google Maps application
+         * @memberof Museum
+         * @returns {String} URI containing the forward link
+         */
+        var getLocation = function()
+        {
+            return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
+        };
+
+        return {
+
+            getGeneralMuseumInfo: getGeneralMuseumInfo,
+            getLocation: getLocation
+        }
+    })
+
+
+/**
+ * @ngdoc service
+ * @name Events
+ * @description
+ **
+ * Stores and retrieves the events that are happening in the museum. An array containing JSON objects:
+ * + Event Title
+ * + ID
+ * + Description
+ * + Thumbnail Image
+ * + Location
+ * + Event Date &amp; Time
+ *
+ * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
+ *
+ */
+.factory('Events', function(Routes,$http)
+{
+    var events = {};
+
+    /**
+     * Returns an object containing the events happening on the current day as well as the events that are happening in the past weeks.
+     *
+     * @memberof Events
+     * @example
+     * //AngularJS Controller, inject the Events service
+     * .controller('ExampleController', function(Events){
+     *      Events.getNews().then(function(response){
+     *
+     *              //Get the events from the response body
+     *              $scope.events = response.data.events;
+     *              //$scope.events = {
+     *              //  upcomingEvents = [],
+     *              //  eventsToday = []
+     *              //}
+     *
+     *      }, function(err){ console.log("ERR Happened")});
+     * });
+     * @returns {Promise} Events object containing the upcoming events and events today
+     */
+    var getEvents = function(){
+        return  $http.get(Routes.MUSEUM_EVENTS_ROUTE)
+            .then(function(response)
+            {
+
+
+                var data = response.data;
+
+                //console.log(data);
+
+                for(var i = 0; i &lt; data.events.length ; i++)
+                {
+                    data.events[i].datetime = moment(new Date(data.events[i].eventDate));
+                }
+
+
+                /* Save today's events */
+                events.eventsToday = [];
+                var currentDate = moment(new Date());
+
+
+                for (var i = 0; i &lt; data.events.length; i++)
+                {
+                    //console.log(events[i].datetime.diff(currentDate));
+                    if (data.events[i].datetime.diff(currentDate,'days') == 0)
+                    {
+                        events.eventsToday.push(data.events[i]);
+                    }
+                }
+
+                /* Store the upcoming events */
+                events.upcomingEvents = [];
+                for (var i = 0; i &lt; data.events.length; i++) {
+                    if (data.events[i].datetime.diff(currentDate, 'days') != 0 ){
+                        events.upcomingEvents.push(data.events[i]);
+                    }
+                }
+
+               // console.log(events);
+                return events;
+
+            });
+
+
+    };
+
+    /**
+     * Returns a response containing a single event from the API
+     * @memberof Events
+     * @example
+     * //AngularJS Controller, inject the Events service
+     * .controller('ExampleController', function(Events){
+     *      var id = 2;
+     *      Events.getSingleEvent(id).then(function(response){
+     *
+     *      if(response.status == 200)
+     *      {
+     *          $scope.event = response.event;
+     *      }
+     *
+     *
+     *      }, function(err){ console.log("ERR Happened")});
+     * });
+     * @param {string} id of the event trying to request from the API
+     * @returns {Promise} Promise containing the response from the server
+     */
+    var getSingleEvent = function(id)
+    {
+       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id);
+    };
+
+    /* Event */
+    var setEvent = function(event)
+    {
+        events.event = event;
+    };
+
+    return {
+
+        getEvents: getEvents,
+        getSingleEvent: getSingleEvent,
+        setEvent: setEvent,
+        eventsToday: events.eventsToday,
+        upcomingEvents : events.upcomingEvents
+    }
+
+})
+
+
+/**
+ * @ngdoc service
+ * @name News
+ * @description
+ **
+ * Stores and retrieves the news articles. Provides an interfact for requests to the server
+ * + News Title
+ * + ID
+ * + Description
+ * + Thumbnail Image
+ * + Location
+ *
+ * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
+ *
+ */
+    .factory('News', function($http, Routes)
+    {
+        var news = {};
+
+        /**
+         * Returns a response containing an array of JSON objects containing news articles from the API
+         * @example
+         * //AngularJS Controller, inject the News service
+         * .controller('ExampleController', function(News){
+         *      News.getNews().then(function(response){
+         *          //Handle the response from the API
+         *          if(response.status == 200)
+         *          {
+         *              //Get the news from the response body
+         *              $scope.news = response.data.news;
+         *          }
+         *      }, function(err){ console.log("ERR Happened")});
+         * });
+         * @memberof News
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getNews = function()
+        {
+
+            return  $http.get(Routes.MUSEUM_NEWS_ROUTE)
+                .then(function(response)
+                {
+                    //console.log("RES:");
+                    //console.log(response);
+
+                    var _news = response.data.news;
+                    //console.log(_news);
+
+                    for(var j = 0; j &lt; _news.length; j++)
+                    {
+                        _news[j].datetime = moment(new Date(_news[j].createdAt));
+                    }
+
+                    /* Current Date */
+                    var currentDate = moment(new Date());
+
+                    /* This weeks current News */
+                    news.currentNews = [];
+                    for (var i = 0; i &lt; _news.length; i++) {
+
+                        //console.log(_news[i]);
+                        if (currentDate.diff(_news[i].datetime, 'days') &lt;= 7)
+                        {
+                            news.currentNews.push(_news[i]);
+                        }
+                    }
+
+                    /* News past week */
+
+                    news.pastWeekNews = [];
+                    for (var i = 0; i &lt; _news.length; i++) {
+
+                        if (currentDate.diff(_news[i].datetime, 'days') > 7)
+                        {
+                            news.pastWeekNews.push(_news[i]);
+                        }
+                    }
+                    //console.log(news);
+                    return news;
+
+                });
+        };
+
+        /**
+         * Returns a response containing a single news article as a JSON Object
+         * @example
+         * //AngularJS Controller, inject the News service
+         * .controller('ExampleController', function(News){
+         *
+         *      var id = 2;
+         *      News.getNewsById(id).then(function(response){
+         *          //Handle the response from the API
+         *          if(response.status == 200)
+         *          {
+         *              //Get the news from the response body
+         *              $scope.news = response.data;
+         *          }
+         *      }, function(err){ console.log("ERR Happened")});
+         * });
+         * @memberof News
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getNewsById = function(id)
+        {
+            return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id);
+
+        };
+
+        /* Set a news article for the next view */
+        var setNewsArticle = function(newsArticle)
+        {
+            news.newsArticle = newsArticle;
+        };
+
+        /* Get the news Article */
+        var getNewsArticle = function()
+        {
+            return news.newsArticle;
+        };
+
+        return {
+            getNews: getNews,
+            getNewsById: getNewsById,
+            setNewsArticle: setNewsArticle,
+            getNewsArticle: getNewsArticle
+        }
+
+    });</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>service</h3><ul><li><a href="Events.html">Events</a></li><li><a href="Museum.html">Museum</a></li><li><a href="News.html">News</a></li></ul><h3>controller</h3><ul><li><a href="Museum%2520General%2520View%2520Controller.html">Museum General View Controller</a></li><li><a href="Museum%2520Tab%2520Controllers.Museum%2520Segment%2520Controller.html">Museum Segment Controller</a></li></ul><h3>modules</h3><ul><li><a href="Museum%2520Tab%2520Controllers.html">Museum Tab Controllers</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> 
+    using <a href="https://github.com/allenhwkim/angular-jsdoc">Angular-JSDoc template </a> 
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+<script>
+  // scroll to the current document navigation
+  var href=window.location.href.match(/\/([^\/]+$)/)[1];
+  if (currentNav = document.querySelector("nav a[href='"+href+"']"))
+    currentNav.scrollIntoView(true);
+  // scroll to the top of the document
+  if (window.location.hash == "")
+    document.querySelector("body").scrollIntoView(true);
+  // adjust the width of main section by navigation width
+  var navWidth = document.querySelector('nav').getBoundingClientRect().width;
+  var mainWidth = document.querySelector('#main').getBoundingClientRect().width;
+  document.querySelector('#main').style.width = (mainWidth - navWidth)+'px';
+</script>
+</body>
+</html>
