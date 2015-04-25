@@ -105,6 +105,9 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
 
         $ionicPlatform.ready(function() {
 
+            //var volumeSlider = window.plugins.volumeSlider;
+            //volumeSlider.createVolumeSlider(10,350,300,30); // origin x, origin y, width, height
+            //volumeSlider.showVolumeSlider();
 
             $cordovaPush.register(iosConfig).then(function(result) {
 

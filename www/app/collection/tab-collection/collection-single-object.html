@@ -377,27 +377,23 @@
                         <button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
                         <h1 class="title"> MuSA</h1>
                     </ion-header-bar>
-                    <ion-pane  >
+                    <ion-content  >
 
-                        <h2>Title</h2>
+                        <h2 class="padding-horizontal"> Title</h2>
 
-
-                        <h3>Description</h3>
-
-                        <p> Lorem Ipsum bla ble bla ble able bla</p>
 
 
                         <div class="audio-player-box">
-                        <div class="item range range-positive">
-                            {{audible.currentTimeStr()}}
-                            <input type="range" name="time" ng-model="stream.watchPlaybackTime" min="0" ng-click="seekToTime()" max="{{audible.duration()}}" value="stream.watchPlaybackTime">
-                            {{audible.durationStr()}}
-                        </div>
+                            <div class="item range range-positive">
+                                {{audible.currentTimeStr()}}
+                                <input type="range" name="time" ng-model="stream.watchPlaybackTime" min="0" ng-click="seekToTime()" max="{{audible.duration()}}" value="stream.watchPlaybackTime">
+                                {{audible.durationStr()}}
+                            </div>
                             <div class="row">
 
 
                                 <div class="col-25">
-                                    <a class="player-button button button-icon icon ion-skip-backward"></a>
+                                    <a class="player-button button button-icon icon ion-skip-backward" ng-click="reverse()"></a>
 
 
                                 </div>
@@ -415,13 +411,21 @@
 
                                 <div class="col-25 ">
 
-                                    <a class="button button-icon icon ion-skip-forward player-button" ></a>
+                                    <a class="button button-icon icon ion-skip-forward player-button"   ng-click="forward()"></a>
 
                                 </div>
 
                             </div>
                         </div>
-                    </ion-pane>
+                        <div id="desc" class="padding">
+                        <h3>Description</h3>
+
+                        <p> Lorem Ipsum bla ble bla ble able bla</p>
+                        </div>
+
+
+
+                    </ion-content>
 
 
                 </ion-modal-view>

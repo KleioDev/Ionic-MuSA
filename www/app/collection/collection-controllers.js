@@ -181,6 +181,8 @@ angular.module('collection-controllers', [])
 
         };
 
+        $scope.playbackInterval = null;
+
         /* If user clicks on the listen to an audio */
         $scope.playAudio = function(audio_id)
         {
@@ -198,13 +200,17 @@ angular.module('collection-controllers', [])
                         console.log($scope.audible);
                         console.log($scope.audible.duration);
 
-                        var playbackTimeRefresh =  $interval(function()
+                        $scope.playbackInterval =  $interval(function()
                         {
                             $scope.stream.watchPlaybackTime = Audio.currentTime();
 
                         },1000);
                         console.log("Opening Audio modal");
                         $scope.openModal('audio-player.html');
+
+
+
+
 
                     }
                     else
@@ -216,6 +222,7 @@ angular.module('collection-controllers', [])
                 //        var src = "http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuita.play();
 
         };
+
 
 
 
@@ -325,8 +332,22 @@ angular.module('collection-controllers', [])
             console.log("Clicked");
             Audio.seekTo($scope.stream.watchPlaybackTime);
         };
+
+        $scope.forward = function()
+        {
+            var _currentTime = Audio.currentTime() + 15;
+
+            console.log(_currentTime);
+            Audio.seekTo(_currentTime);
+        };
+
+        $scope.reverse = function()
+        {
+
+        };
         /* Check if the volume changes */
-        //$scope.$watch('stream.watchPlaybackTime', function(){
+        //$scope.$watch('stream.watchPlaybackTime', function(oldValue, newValue){
+        //
         //
         //    console.log($scope.stream.watchPlaybackTime);
         //    Audio.seekTo($scope.stream.watchPlaybackTime);

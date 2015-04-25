@@ -49,6 +49,7 @@ angular.module('content-services', [])
                     }
                     else
                     {
+                        console.log("AUDIO COULD NOT BE LOADED - 404");
 
                         return false;
                     }
@@ -66,12 +67,14 @@ angular.module('content-services', [])
             console.log(src);
             audible = new Audio(src);
 
-
-            audible.onloadeddata = function()
+            console.log("Loading stuff");
+            audible.addEventListener('loadedmetadata', function()
             {
+                console.log("Loaded Data");
                 console.log(audible.duration);
                 defer.resolve('passed');
-            };
+            });
+
 
             return defer.promise;
 
@@ -99,7 +102,7 @@ angular.module('content-services', [])
         var duration = function()
         {
             if(available())
-                return audible.duration
+                return audible.duration;
             else
             {
                 return 0;

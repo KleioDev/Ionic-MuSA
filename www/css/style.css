@@ -3,6 +3,10 @@ ion-scroll[direction=y] {
     height: 100vh;
 }
 
+.audio-player-box{
+
+    background-color: white;
+}
 .player-button{
 
     color: black !important;
