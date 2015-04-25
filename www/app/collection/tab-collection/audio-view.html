@@ -1,73 +1,39 @@
 <ion-view>
 
-    <ion-content    [scroll="false"] >
+    <ion-pane  >
 
-        <div>
-            <br>
+        <h2>Title</h2>
 
-            <br>
+
+        <h3>Description</h3>
+
+        <p> Lorem Ipsum bla ble bla ble able bla</p>
+
+
+
+
+        <div class="audio-player-box">
+
+
             <div class="row">
-                <div class="col"></div>
-
-                <div class="col col-90" style="     text-align:center;
-">
-                    <div class="thumb " style="background-image:url('http://1.bp.blogspot.com/-hNC-oT6f-fY/TeXxO26yjvI/AAAAAAAAAOY/qfkOqdKkBi8/s1600/platon-photographer-putin-man-of-the-year-portrait.jpg')">
-
-                    </div>
+                <div class="col col-25 player-button">
+                    <a class="button button-icon icon ion-skip-backward"></a>
 
 
                 </div>
+                <div class="col col-50 player-button">
 
-                <div class="col"></div>
+                    <a class="button button-icon icon ion-play"></a>
 
-
-            </div>
-
-
-            <br>
-
-            <div class="item item-body">
-
-                <div class=" range  range-positive">
-                    0:00
-                    <input type="range" name="volume" value="0" min="0" max=""/>
-                    {{audio.duration}}           </div>
-
-
-                <h2 class="title" style="text-align:center">La Rosa</h2>
-                <div class="row">
-                    <div class="col audio_view_col">
-
-                        <button  class="button button-icon" >
-                            <i class="icon ion-ios-rewind audio_view"></i>
-
-
-                        </button>
-                    </div>
-                    <div class="col audio_view_col">
-                        <button  class="button button-icon"  >
-                            <i class="icon ion-ios-play audio_view"></i>
-                        </button>
-
-                    </div>
-                    <div class="col audio_view_col">
-                        <button  class="button button-icon" >
-                            <i class="icon ion-ios-fastforward audio_view"></i>
-
-                        </button>
-
-                    </div>
                 </div>
-                <div class="range">
-                    <i class="icon ion-volume-low"></i>
-                    <input  ng-model="audio.volume" type="range" name="volume" value="90" min="0" max="100">
-                    <i class="icon ion-volume-high"></i>
+
+                <div class="col col-25 player-button">
+
+                    <a class="button button-icon icon ion-skip-forward"></a>
 
                 </div>
 
             </div>
-
         </div>
-
-        </ion-content>
-    </ion-view>
+    </ion-pane>
+</ion-view>

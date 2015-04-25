@@ -3,9 +3,8 @@
 angular.module('collection-controllers', [])
 
 /* Segmented Control for the Collection Tab */
-.controller('CollectionSegmentedCtrl', function($scope, AppNavigationTitles, SegmentedControl, Exhibitions, iBeacons)
+.controller('CollectionSegmentedCtrl', function($scope, SegmentedControl, Exhibitions, iBeacons)
 {
-    $scope.navigationTitles = AppNavigationTitles.get().collection;
 
     /* Segmented Control State */
     $scope.segmentedControl = SegmentedControl.create('collection', ['nearMe', 'objects', 'exhibitions'], 'objects');
@@ -15,14 +14,6 @@ angular.module('collection-controllers', [])
     {
         $scope.segmentedControl.set(state);
     };
-
-    /* Navigation Titles */
-    $scope.navigationTitles = AppNavigationTitles.get().collection;
-
-    /* When preferences are updated */
-    $scope.$on('preferences:updated', function(event, data){
-        $scope.navigationTitles = AppNavigationTitles.get().collection;
-    });
 
     /* Watch for the state changes to iBeacon Ranging */
     $scope.$watch('segmentedControl.state', function(oldValue, newValue)
@@ -39,8 +30,7 @@ angular.module('collection-controllers', [])
 })
 
     /* Collection Object List Controller */
-    .controller('CollectionObjectListCtrl', function($scope, $state, AppNavigationTitles, MuseumObjects){
-        $scope.navigationTitles = AppNavigationTitles.get();
+    .controller('CollectionObjectListCtrl', function($scope, $state, MuseumObjects){
 
         /* Set page number to 0 */
         $scope.pageNumber = 0;
@@ -62,6 +52,7 @@ angular.module('collection-controllers', [])
                 $scope.getPage();
 
         };
+
 
         $scope.loading = false;
 
@@ -128,12 +119,6 @@ angular.module('collection-controllers', [])
 
         };
 
-
-        /* When preferences are updated */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
-
         /* When search term changes, do a query */
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
 
@@ -148,29 +133,21 @@ angular.module('collection-controllers', [])
         });
         $scope.onLoad();
 
-        //$scope.getPage();
-
-
 
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state,  AppNavigationTitles, MuseumObjects, $stateParams,$ionicLoading, $ionicModal, Audio, Video, Archive, Gallery)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $stateParams, $interval, $ionicLoading, $ionicModal, Audio, Video, Archive, Gallery)
     {
         /* Maintains the stack of modals */
         var modals = new Array();
 
-        /* Set up app navigation titles */
-        $scope.navigationTitles = AppNavigationTitles.get();
-
         /* Get the active object */
         $scope.museumObject = MuseumObjects.getActiveObject();
 
-        /* When preferences are updated, update to the settings */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
-
+        $scope.stream = {
+            watchPlaybackTime : 0
+            };
         /* Opens a modal with a specific template, whether its to view images, videos or text */
         $scope.openModal = function(template) {
 
@@ -185,6 +162,8 @@ angular.module('collection-controllers', [])
             });
         };
 
+        //var audio = new Audio('http://www.tonycuffe.com/mp3/tailtoddle_lo.mp3');
+        //audio.controls = true;
         /* Close the modal */
         $scope.closeModal = function() {
             modals.pop().hide();
@@ -207,13 +186,38 @@ angular.module('collection-controllers', [])
         {
 
             /* Dummy Data */
-            var src = "http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuitar.mp3";
-            Audio.create(src, null, null);
-            $scope.audio = Audio.get();
-            Audio.play();
-            $scope.openModal('audio-view.html');
+
+
+            Audio.requestAudible(audio_id)
+                .then(function(available)
+                {
+                    if(available)
+                    {
+                        $scope.audible = Audio;
+
+                        console.log($scope.audible);
+                        console.log($scope.audible.duration);
+
+                        var playbackTimeRefresh =  $interval(function()
+                        {
+                            $scope.stream.watchPlaybackTime = Audio.currentTime();
+
+                        },1000);
+                        console.log("Opening Audio modal");
+                        $scope.openModal('audio-player.html');
+
+                    }
+                    else
+                    {
+                        console.log("No Audio Found");
+                    }
+
+                });
+                //        var src = "http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuita.play();
 
         };
+
+
 
         /* Displays the image grid */
         $scope.imageGrid = function()
@@ -227,16 +231,21 @@ angular.module('collection-controllers', [])
                 return row;
             }
 
-            Gallery.getImages($scope.museumObject.id)
-                .then(function(response)
-                {
-                        if(response.status == 200)
-                        {
-                            $scope.museumObject.Images = response.data;
-                            $scope.images = chunk($scope.museumObject.Images, 3);
-                            $scope.openModal('image-grid.html');
-                        }
-                });
+            $scope.images = chunk($scope.museumObject.Images,3);
+            console.log($scope.images);
+            $scope.openModal('image-grid.html');
+            //
+            //Gallery.getImages($scope.museumObject.id)
+            //    .then(function(response)
+            //    {
+            //        console.log(response);
+            //            if(response.status == 200)
+            //            {
+            //                $scope.museumObject.Images = response.data;
+            //                $scope.images = chunk($scope.museumObject.Images, 3);
+            //                $scope.openModal('image-grid.html');
+            //            }
+            //    });
         };
 
         //TODO: If there's time left we should add a loading spinner for images while they are loading!
@@ -300,6 +309,7 @@ angular.module('collection-controllers', [])
         $scope.playStream = function()
         {
             console.log("Playing Stream");
+
             Audio.play();
         };
 
@@ -310,18 +320,29 @@ angular.module('collection-controllers', [])
             Audio.pause();
         };
 
-        /* Check if the volume changes */
-        $scope.$watch('audio.stream.volume', function(oldvalue, newValue){
-            Audio.setVolume($scope.audio.stream.volume);
-
-        });
-
-        /* Seek to */
-        $scope.$watch('audio.stream.seekTo', function(oldValue, newValue)
+        $scope.seekToTime = function()
         {
-            console.log("Seek: " + $scope.audio.stream.seekTo);
-            Audio.seekTo($scope.audio.stream.seekTo + '');
-        });
+            console.log("Clicked");
+            Audio.seekTo($scope.stream.watchPlaybackTime);
+        };
+        /* Check if the volume changes */
+        //$scope.$watch('stream.watchPlaybackTime', function(){
+        //
+        //    console.log($scope.stream.watchPlaybackTime);
+        //    Audio.seekTo($scope.stream.watchPlaybackTime);
+        //});
+
+        $scope.isPlaying = function()
+        {
+            return Audio.available();
+        };
+
+        $scope.showPlaying = function()
+        {
+            $scope.openModal('audio-player.html');
+
+        };
+
 
         /* List of archives */
         $scope.showArchives = function()
@@ -386,7 +407,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Near me controller */
-    .controller('NearMeCtrl', function($scope, $state, iBeacons, Exhibitions, AppNavigationTitles){
+    .controller('NearMeCtrl', function($scope, $state, iBeacons, Exhibitions){
 
         /* Get the application titles */
         $scope.navigationTitles = AppNavigationTitles.get();

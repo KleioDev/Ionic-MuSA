@@ -3,6 +3,19 @@ ion-scroll[direction=y] {
     height: 100vh;
 }
 
+.player-button{
+
+    color: black !important;
+    text-align:center !important;
+    width: 100%;
+}
+
+.player-box{
+    text-align:center;
+    font-size: 200%;
+
+}
+
 .segmented-control-header{
     position:absolute;
     top:44px;
@@ -157,10 +170,10 @@ display:block !important;
 
 }
 
-.button{
+/*.button-general{*/
 
-    color: white;
-}
+    /*color: white;*/
+/*}*/
 /*.scroll-view1 {*/
     /*position: absolute;*/
     /*height: 100%;*/

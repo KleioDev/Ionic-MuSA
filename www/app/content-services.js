@@ -5,63 +5,184 @@ angular.module('content-services', [])
 
     /* Service for getting Media objects */
     /* Audio Service to store information about the current Audio playing */
-.factory('Audio', function()
+.factory('Audio', function(Routes, $http, $q)
     {
 
-    var audio = {};
+        var audible = null;
 
-        return {
+        var description = "";
+        var title = "";
 
-            create: function(src, success, error)
-            {
-                audio.stream = new AudioStream(src, null, null);
+        var requestAudible = function(id)
+        {
+            var request = {
 
-                audio.stream.seekTo = 0;
-            },
-            get: function()
-            {
-                return audio;
-            },
+                method: 'GET',
+                url: Routes.AUDIO_ROUTE + id
+            };
+            return $http(request)
+                .then(function(response)
+                {
 
-            getDuration: function()
-            {
-                return audio.stream._duration;
-            },
+                    if(response.status == 200)
+                    {
 
-            setVolume: function(volume)
-            {
-                var vol = volume/10.0
-                console.log(vol);
-                audio.stream.setVolume(vol+"")
-            },
+                        //TODO: CHECK IF URL IS VALID
 
-            seekTo: function(seekTime)
-            {
-                audio.stream.seekTo(seekTime)
-            },
+                        console.log(response.data);
+                        var _audioData =  response.data;
 
-            play: function()
-            {
-                audio.stream.play();
-                audio.stream.playing = true;
+                        description = _audioData.description;
+                        title = _audioData.title;
 
-            },
+                        /* Create an Audio*/
+                        return create('http://www.noiseaddicts.com/samples/2539.mp3')
+                            .then(function(data) {
+                                console.log(audible.duration);
+                                audible.play();
+                                return true;
+                            });
+                        //create(_audioData.link);
+                        //play();
+                        //return true;
 
-            pause: function()
-            {
-                audio.stream.pause();
-                audio.stream.playing = false;
+                    }
+                    else
+                    {
 
-            },
+                        return false;
+                    }
+                })
+        };
 
-            waitTillReady: function(){
-
-                while(!AudioStream.ready());
-
+        var create = function(src)
+        {
+            var defer = $q.defer();
+            if(available()) {
+                audible.pause();
+                audible = null;
             }
 
+            console.log(src);
+            audible = new Audio(src);
 
-        }
+
+            audible.onloadeddata = function()
+            {
+                console.log(audible.duration);
+                defer.resolve('passed');
+            };
+
+            return defer.promise;
+
+        };
+
+
+        var play = function()
+        {
+            /* Check if it available */
+            console.log("Playing");
+            if(available()) {
+                console.log("Playing");
+
+                audible.play();
+            }
+
+        };
+
+        var pause = function()
+        {
+            if(available())
+                audible.pause();
+        };
+
+        var duration = function()
+        {
+            if(available())
+                return audible.duration
+            else
+            {
+                return 0;
+            }
+
+        };
+
+        var durationStr = function()
+        {
+            if(available())
+                return formatTime(duration());
+            else
+                return "00:00";
+        };
+
+        var currentTimeStr = function()
+        {
+            if(available())
+                return formatTime(currentTime());
+            else
+                return "00:00";
+        };
+
+        var seekTo = function(_seekTime)
+        {
+            if(available())
+                return audible.currentTime = _seekTime;
+        };
+
+        var currentTime = function()
+        {
+            if(available())
+            {
+                return audible.currentTime;
+            }
+            else
+            {
+                return 0;
+            }
+        };
+
+        var available = function()
+        {
+            return !(audible == null || typeof audible == 'undefined')
+        };
+
+        var isPlaying = function()
+        {
+            if(available())
+                return !audible.paused;
+            else
+                return false;
+        };
+
+        var formatTime = function (seconds) {
+
+            var minutes = Math.floor(seconds / 60);
+            minutes = (minutes >= 10) ? minutes : "0" + minutes;
+
+
+            var seconds = Math.floor(seconds % 60);
+            seconds = (seconds >= 10) ? seconds : "0" + seconds;
+
+            return minutes + ":" + seconds;
+        };
+        return {
+            requestAudible: requestAudible,
+            audible: audible,
+            description: description,
+            title: title,
+            create: create,
+            play: play,
+            pause: pause,
+            available: available,
+            duration: duration,
+            seekTo: seekTo,
+            currentTime: currentTime,
+            isPlaying: isPlaying,
+            durationStr: durationStr,
+            currentTimeStr: currentTimeStr
+
+        };
+
     })
 
     /* Video service for handling videos and getting videos  */

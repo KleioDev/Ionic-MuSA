@@ -1,10 +1,17 @@
 <!-- This page will represent an object -->
 <ion-view view-title="MuSA">
 
-    <ion-nav-buttons side="left">
+    <ion-nav-buttons side="right">
         <!--<button class="button button-icon ion-ios-arrow-left" ng-click="$ionicGoBack($event)">Back</button>-->
+        <button class="button button-clear icon-right ion-ios-arrow-right header-item" ng-click="showPlaying()" ng-if="isPlaying()" >Playing</button>
+
 
     </ion-nav-buttons>
+    <!--<ion-header-bar class="bar-positive">-->
+    <!--<h1 class="title"> MuSA</h1>-->
+        <!--<button class="button button-icon ion-ios-arrow-right" ng-if="isPlaying()" >Now Playing</button>-->
+
+    <!--</ion-header-bar>-->
     <ion-content>
         <div class="padding">
             <h2>{{museumObject.title}}</h2>
@@ -53,6 +60,7 @@
                 <img src="{{museumObject.image}}" alt="Image" />
         </div>
 
+
         <ion-item ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.mediumLabel}}
         <span class="item-note">
@@ -73,6 +81,9 @@
             <span class="item-note">{{museumObject.dimensions}}  </span>
         </ion-item>
         </ion-list>
+
+        <!--<audio src="http://www.tonycuffe.com/mp3/tailtoddle_lo.mp3" controls="true"></audio>-->
+
 
         <!--<div class="landscape-box">-->
         <!--<img  class="padding"  src="https://fbcdn-sphotos-g-a.akamaihd.net/hphotos-ak-xfa1/v/t1.0-9/10155300_385132964962924_6251655960579980408_n.jpg?oh=8d05c0ea341a3930dda08721b6568a6b&oe=557F12D5&__gda__=1434123747_c9bb1dc774ccc4addb5e2d9f05d4e4f6" width="100%" />-->
@@ -159,7 +170,7 @@
             <div ng-switch="visible(museumObject.Audibles.length)">
                 <div ng-switch-when="SINGLE" >
                     <!-- Only 1 audio file -->
-                    <a class="item item-icon-left item-icon-right" ng-click="playAudio(2)">
+                    <a class="item item-icon-left item-icon-right" ng-click="playAudio(museumObject.Audibles[0].id)">
                         <i class="icon ion-headphone"></i>
                         {{museumObject.Audibles[0].title}}
                         <i class="icon ion-ios-arrow-right"></i>
@@ -360,6 +371,64 @@
             </ion-modal-view>
         </script>
 
+        <script id="audio-player.html" type="text/ng-template">
+                <ion-modal-view>
+                    <ion-header-bar class="bar-positive">
+                        <button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
+                        <h1 class="title"> MuSA</h1>
+                    </ion-header-bar>
+                    <ion-pane  >
+
+                        <h2>Title</h2>
+
+
+                        <h3>Description</h3>
+
+                        <p> Lorem Ipsum bla ble bla ble able bla</p>
+
+
+                        <div class="audio-player-box">
+                        <div class="item range range-positive">
+                            {{audible.currentTimeStr()}}
+                            <input type="range" name="time" ng-model="stream.watchPlaybackTime" min="0" ng-click="seekToTime()" max="{{audible.duration()}}" value="stream.watchPlaybackTime">
+                            {{audible.durationStr()}}
+                        </div>
+                            <div class="row">
+
+
+                                <div class="col-25">
+                                    <a class="player-button button button-icon icon ion-skip-backward"></a>
+
+
+                                </div>
+                                <div class="col-50" ng-if="!audible.isPlaying()">
+
+                                    <a class="player-button button button-icon icon ion-play "  style="width: 100%; text-align: center" ng-click="playStream()"></a>
+
+
+                                </div>
+
+                                <div class="col-50" ng-if="audible.isPlaying()">
+                                    <a class="player-button button button-icon icon ion-pause" style="width: 100%; text-align: center" ng-click="pauseStream()"></a>
+
+                                </div>
+
+                                <div class="col-25 ">
+
+                                    <a class="button button-icon icon ion-skip-forward player-button" ></a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </ion-pane>
+
+
+                </ion-modal-view>
+
+
+</script>
+
         <!--<script id="images-list-modal.html" type="text/ng-template">-->
 
             <!--<ion-modal-view>-->
@@ -438,68 +507,7 @@
         </ion-modal-view>
 </script>
 
-        <script id="audio-view.html" type="text/ng-template">
 
-            <ion-modal-view>
-                <ion-header-bar class="bar-positive">
-                    <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
-
-                    <h1 class="title">Audio</h1>
-                </ion-header-bar>
-
-                <ion-content>
-
-                    <div class="item item-body">
-
-                        <div class=" range  range-positive">
-                            0:00
-                            <input type="range" ng-model="audio.stream.seekTo" name="volume" value="0" min="0" max="{{audio.stream._duration}}"/>
-                            {{audio.stream._duration}}           </div>
-
-
-                        <h2 class="title" style="text-align:center">La Rosa</h2>
-                        <div class="row" style="color:black;">
-                            <div class="col audio_view_col">
-
-                                <button  class="button button-icon" >
-                                    <i class="icon ion-ios-rewind audio_view"></i>
-
-
-                                </button>
-                            </div>
-                            <div class="col audio_view_col">
-                                <button  class="button button-icon"  ng-click="playStream()">
-                                    <i class="icon ion-ios-play audio_view"></i>
-                                </button>
-
-                            </div>
-
-                            <div  class="col audio_view_col">
-                                <button  class="button button-icon"  ng-click="pauseStream()">
-                                    <i class="icon ion-ios-pause audio_view" ></i>
-                                </button>
-
-                            </div>
-                            <!--<div class="col audio_view_col">-->
-                                <!--<button  class="button button-icon" >-->
-                                    <!--<i class="icon ion-ios-fastforward audio_view"></i>-->
-
-                                <!--</button>-->
-
-                            <!--</div>-->
-                        </div>
-                        <div class="range">
-                            <i class="icon ion-volume-low"></i>
-                            <input  ng-model="audio.stream.volume" type="range" name="volume" value="9" min="0" max="10">
-                            <i class="icon ion-volume-high"></i>
-
-                        </div>
-
-                    </div>
-
-                </ion-content>
-            </ion-modal-view>
-</script>
 
         <script id="image-grid.html" type="text/ng-template">
 
@@ -515,8 +523,8 @@
             <ion-content>
                 <br>
                 <div class="row" ng-repeat="rows in images">
-                <div class="col col-33" ng-repeat="image in rows" ng-click="displayImage(image)">
-                    <img width="100px" height="100px" src="{{image.link}}"/>
+                <div class="col col-33" ng-repeat="img in rows" ng-click="displayImage(img)">
+                    <img width="100px" height="100px" src="{{img.link}}"/>
 
 
                 </div>

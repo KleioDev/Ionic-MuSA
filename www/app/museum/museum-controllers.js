@@ -34,7 +34,7 @@ angular.module('museum-controllers', ['ngCordova'])
 /**
  * @ngdoc controller
  * @name Museum General View Controller
- * @description dd
+ * @description
  */
     .controller('MuseumGeneralCtrl', function($scope, Museum, $window)
     {
@@ -59,11 +59,6 @@ angular.module('museum-controllers', ['ngCordova'])
             //Open the map application
             window.open(location, '_system');
         };
-
-        /* Update the view to the preferences */
-        $scope.$on('preferences:updated', function(){
-            $scope.navigationTitles = AppNavigationTitles.get().museum;
-        });
 
         /* Open Social Network */
         $scope.openWindow = function(socialLink)
@@ -142,12 +137,6 @@ angular.module('museum-controllers', ['ngCordova'])
 
         /* Pass the event to the view */
         $scope.event = Events.event;
-
-
-        /* Update the view labels */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
-        });
 
         /* Add the calendar */
         $scope.addToCalendar = function() {

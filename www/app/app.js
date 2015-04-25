@@ -11,6 +11,7 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
     .run(function($ionicPlatform, AppNavigationTitles,$filter,  $rootScope, $cordovaPush, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
 
+
         $rootScope.app = {};
 
         $rootScope.app.fontSize = UserPreferences.getFontSize();
@@ -104,11 +105,7 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
 
         $ionicPlatform.ready(function() {
 
-            var iosConfig = {
-                "badge": true,
-                "sound": true,
-                "alert": true
-            };
+
             $cordovaPush.register(iosConfig).then(function(result) {
 
                 // Success -- send deviceToken to server, and store for future use
@@ -220,7 +217,6 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
                     }
                 }
             })
-
 
             /* View View State */
             .state('tab.video-view',
