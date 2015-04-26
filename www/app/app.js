@@ -125,8 +125,14 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
 
             console.log(deviceInformation);
             var isIOS = ionic.Platform.isIOS();
+            var android = ionic.Platform.isAndroid();
 
-            $rootScope.isIOS = isIOS;
+            $rootScope.platform = {};
+            $rootScope.platform.isIOS = isIOS;
+            $rootScope.platform.isAndroid = android;
+
+            console.log(isIOS);
+            console.log(android);
 
 
             if (window.cordova && window.cordova.plugins.Keyboard) {

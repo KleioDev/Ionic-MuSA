@@ -3,7 +3,7 @@
 angular.module('collection-controllers', [])
 
 /* Segmented Control for the Collection Tab */
-.controller('CollectionSegmentedCtrl', function($scope, SegmentedControl, Exhibitions, iBeacons)
+.controller('CollectionSegmentedCtrl', function($scope, SegmentedControl, Exhibitions, iBeacons,$ionicScrollDelegate)
 {
 
     /* Segmented Control State */
@@ -13,6 +13,8 @@ angular.module('collection-controllers', [])
     $scope.changeSegmentedControlState = function(state)
     {
         $scope.segmentedControl.set(state);
+        $ionicScrollDelegate.scrollTop();
+
     };
 
     /* Watch for the state changes to iBeacon Ranging */
@@ -469,7 +471,11 @@ angular.module('collection-controllers', [])
             if(beacons.length == 0)
             {
                 $scope.loading.status = true;
-                $scope.$apply();
+                if(!$scope.$$phase) {
+                    //$digest or $apply
+                    $scope.$apply();
+
+                }
 
             }
             /* More beacons Found */
@@ -479,7 +485,8 @@ angular.module('collection-controllers', [])
 
                 for (var i = 0; i < beacons.length; i++) {
                     var beaconID = beacons[i].proximityUUID + beacons[i].major + beacons[i].minor;
-                    beaconIdArray.push(beaconID);
+                    console.log(beaconID);
+                    beaconIdArray.push(beaconID.toUpperCase());
 
                 }
 
@@ -501,7 +508,11 @@ angular.module('collection-controllers', [])
                                 $scope.loading.status = false;
                             }
                             /* Apply changes to UI */
-                            $scope.$apply();
+                            if(!$scope.$$phase) {
+                                //$digest or $apply
+                                $scope.$apply();
+
+                            }
 
                         }
                     }, function(err){

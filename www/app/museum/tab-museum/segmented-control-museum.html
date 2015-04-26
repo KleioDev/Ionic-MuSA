@@ -1,17 +1,21 @@
 <ion-view view-title="{{title}}">
 
-    <div class="bar bar-subheader" style="margin-top=49px">
 
-    <div class="button-bar">
 
-        <a class="button button-small segmented-control user-font-pref" ng-click="changeState('general')" ng-class="{'active' : museumTabState.state == 'general'}">{{navigationTitles.museum.buttonBar.generalButton}}</a>
-        <a class="button button-small segmented-control user-font-pref" ng-click="changeState('events')" ng-class="{'active' : museumTabState.state == 'events'}">{{navigationTitles.museum.buttonBar.eventsButton}}</a>
-        <a class="button button-small segmented-control user-font-pref" ng-click="changeState('news')" ng-class="{'active' : museumTabState.state == 'news'}">{{navigationTitles.museum.buttonBar.newsButton}}</a>
+    <ion-header-bar class="bar-subheader"  ng-class="platform.isAndroid == true ? 'android' : ''">
 
-    </div>
 
-    </div>
+        <div class="button-bar">
 
+            <a class="button button-small segmented-control user-font-pref" ng-click="changeState('general')" ng-class="{'active' : museumTabState.state == 'general'}">{{navigationTitles.museum.buttonBar.generalButton}}</a>
+            <a class="button button-small segmented-control user-font-pref" ng-click="changeState('events')" ng-class="{'active' : museumTabState.state == 'events'}">{{navigationTitles.museum.buttonBar.eventsButton}}</a>
+            <a class="button button-small segmented-control user-font-pref" ng-click="changeState('news')" ng-class="{'active' : museumTabState.state == 'news'}">{{navigationTitles.museum.buttonBar.newsButton}}</a>
+
+        </div>
+
+    </ion-header-bar>
+
+    <ion-content class="has-header has-subheader">
     <!--  Museum General Template -->
     <div ng-switch="museumTabState.state" >
 
@@ -32,4 +36,5 @@
     </div>
 
 
+    </ion-content>
 </ion-view>

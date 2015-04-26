@@ -14,7 +14,7 @@ angular.module('museum-controllers', ['ngCordova'])
  * @memberOf Museum Tab Controllers
  * @description Handles the state for the segmented control header bar in the museum tab
  */
-    .controller('MuseumSegmentController', function($scope, SegmentedControl)
+    .controller('MuseumSegmentController', function($scope, SegmentedControl, $ionicScrollDelegate)
     {
         $scope.museumTabState = SegmentedControl.create('museum', ['general', 'events', 'news'], 'general');
 
@@ -27,6 +27,7 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.changeState = function(state)
         {
             $scope.museumTabState.set(state);
+            $ionicScrollDelegate.scrollTop();
         };
 
     })

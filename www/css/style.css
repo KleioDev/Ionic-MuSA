@@ -3,6 +3,9 @@ ion-scroll[direction=y] {
     height: 100vh;
 }
 
+.android {
+    margin-top: 49px !important;
+}
 .audio-player-box{
 
     background-color: white;

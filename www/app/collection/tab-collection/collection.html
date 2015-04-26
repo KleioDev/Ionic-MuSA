@@ -1,6 +1,6 @@
 <ion-view view-title="Collection">
 
-    <ion-header-bar class="bar-subheader">
+    <ion-header-bar class="bar-subheader"  ng-class="platform.isAndroid == true ? 'android' : ''">
 
         <div class="button-bar" >
 
@@ -9,9 +9,9 @@
             <a class="button button-small segmented-control" ng-style="{'font-size': app.fontSize};" ng-click="changeSegmentedControlState('exhibitions')" ng-class="{'active' : segmentedControl.state == 'exhibitions'}">{{navigationTitles.collection.buttonBar.exhibitionsButton}}</a>
 
         </div>
-        </ion-header-bar>
+    </ion-header-bar>
 
-    <ion-content >
+    <ion-content class="has-header has-subheader">
 
         <div ng-switch ="segmentedControl.state">
         <!--  Near Me List Template -->

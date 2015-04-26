@@ -63,3 +63,41 @@ gulp.task('docs', shell.task([
 gulp.task('commit', shell.task([
     'git add -u'
 ]));
+
+gulp.task('android', function() {
+
+    return gulp.src('/')
+        .pipe(shell([
+                'ionic build android',
+                'ionic run android'
+            ],
+            {
+                templateData:
+                {
+                    f: function(s)
+                    {
+                        s.replace(/$/, '.bak')
+                    }
+                }
+            }
+        ))
+
+});
+
+gulp.task('ios', function()
+{
+
+    return gulp.src('/')
+        .pipe(shell([
+            'ionic build ios'
+        ],{
+
+                templateData: {
+                    f: function (s) {
+                        return s.replace(/$/, '.bak')
+                    }
+                }
+            }
+
+        ))
+});
