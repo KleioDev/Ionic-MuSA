@@ -622,6 +622,26 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     };
 
 
+    user.postToFacebook = function(title, img,  description)
+    {
+
+        var options = {
+            method: "feed",
+            picture: img,
+            link: 'https://www.facebook.com/pages/Museo-de-Arte-RUM-MUSA/385132481629639?fref=ts',
+            place: 'https://www.facebook.com/pages/Museo-de-Arte-RUM-MUSA/385132481629639?fref=ts',
+            caption: title,
+            description: description
+        };
+
+        $cordovaFacebook.showDialog(options)
+            .then(function(success) {
+                // success
+            }, function (error) {
+                // error
+            });
+
+    };
 
 
     return user;

@@ -137,7 +137,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $stateParams, $interval, $ionicLoading, $ionicModal, Audio, Video, Archive, Gallery)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $stateParams, $interval, $ionicLoading, $ionicModal, Audio, Video, Archive, Gallery, Facebook)
     {
         /* Maintains the stack of modals */
         var modals = new Array();
@@ -398,6 +398,28 @@ angular.module('collection-controllers', [])
             $scope.openModal('audio-list-modal.html');
 
         };
+
+        $scope.$on('$stateChangeStart',
+            function(event, toState, toParams, fromState, fromParams){
+
+
+                if(fromState.name ==  "tab.collection-single-object")
+                {
+                    Audio.destroy();
+                }
+            });
+
+        $scope.shareOnFacebook = function()
+        {
+
+
+            //var img_source = $scope.museumObject.image;
+            var img_source = 'http://i.imgur.com/dv78K3h.jpg';
+            var desc = $scope.museumObject.description;
+            var title = $scope.museumObject.title;
+
+            Facebook.postToFacebook(title, img_source, desc);
+        }
 
     })
 

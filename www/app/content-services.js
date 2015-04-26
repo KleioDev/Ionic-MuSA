@@ -168,6 +168,19 @@ angular.module('content-services', [])
 
             return minutes + ":" + seconds;
         };
+
+
+        var destroy = function()
+        {
+            if(available())
+            {
+                audible.pause();
+            }
+
+            audible = null;
+        };
+
+
         return {
             requestAudible: requestAudible,
             audible: audible,
@@ -182,7 +195,8 @@ angular.module('content-services', [])
             currentTime: currentTime,
             isPlaying: isPlaying,
             durationStr: durationStr,
-            currentTimeStr: currentTimeStr
+            currentTimeStr: currentTimeStr,
+            destroy: destroy
 
         };
 
