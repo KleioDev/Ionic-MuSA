@@ -452,8 +452,6 @@ angular.module('collection-controllers', [])
     /* Near me controller */
     .controller('NearMeCtrl', function($scope, $state, iBeacons, Exhibitions){
 
-        /* Get the application titles */
-        $scope.navigationTitles = AppNavigationTitles.get();
         /* Display that it is loading */
         $scope.loading = {status: true};
 
@@ -468,10 +466,10 @@ angular.module('collection-controllers', [])
             /* Start loading view */
             $scope.loading.status = true;
 
-
             if(beacons.length == 0)
             {
                 $scope.loading.status = true;
+                $scope.$apply();
 
             }
             /* More beacons Found */
@@ -484,9 +482,7 @@ angular.module('collection-controllers', [])
                     beaconIdArray.push(beaconID);
 
                 }
-                console.log("DA Beacons");
 
-                console.log(beaconIdArray);
 
                 /* Find the exhibitions related to iBeacons */
 
@@ -533,7 +529,7 @@ angular.module('collection-controllers', [])
         /* When beacons change state load up the exhibitions */
         $scope.$on('beacons:stateChange', function()
         {
-
+            console.log("State change - $scope");
             $scope.loadExhibitions();
 
         });
