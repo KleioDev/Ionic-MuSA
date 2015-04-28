@@ -26,9 +26,49 @@
                         <h2 class=""><strong>{{navigationTitles.museum.general.hoursOfOperation}}</strong></h2>
                     </div>
 
-                    <div class="item item-body " ng-style="{'font-size': app.fontSize};" ng-bind-html ='museum.hoursOfOperation'>
+                    <div class="item item-body padding " ng-style="{'font-size': app.fontSize};">
+                        <!--<div class="row">-->
 
-                    </div>
+                            <!--<div class="col col-80 col-offset-10">-->
+
+                                <!--<ANY ng-switch="expression">-->
+                                    <!--<ANY ng-switch-when="matchValue1">...</ANY>-->
+                                    <!--<ANY ng-switch-when="matchValue2">...</ANY>-->
+                                    <!--<ANY ng-switch-default>...</ANY>-->
+                                <!--</ANY>-->
+
+                                <table cellpadding="1" cellspacing="1" width="100%" ng-if="museum.hoursOfOperation">
+                                    <tbody>
+
+                                    <tr ng-switch="{{museum.hoursOfOperation[key].closed}}" ng-repeat="key in museum.days">
+
+                                        <th scope="row"><strong>{{navigationTitles.museum.general.hoursOfOperationTable[key]}}</strong></th>
+
+                                        <!--<td> {{key}} </td> <td> {{ value }} </td>-->
+
+                                        <td ng-switch-when="true">&nbsp;</td>
+                                        <td ng-switch-when="true" style="color: red">{{navigationTitles.museum.general.hoursOfOperationTable.closedLabel}}</td>
+                                        <td ng-switch-when="true">&nbsp;</td>
+
+                                        <td ng-switch-default>{{museum.hoursOfOperation[key].open}}</td>
+                                        <td ng-switch-default>-</td>
+                                        <td ng-switch-default>{{museum.hoursOfOperation[key].close}}</td>
+
+
+
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                                <p>&nbsp;</p>
+                                </div>
+                        <!--</div>-->
+
+
+
+                    <!--</div>-->
 
                 </div>
 
@@ -57,7 +97,7 @@
                         <div ng-bind-html="museum.location"></div>
                         <div class="row">
                             <div class="col col-33 col-offset-33">
-                                <button ng-click="openMap()"  data-rel="external" class="button  icon-left">{{navigationTitles.museum.general.directionsButtonLabel}}</button>
+                                <button ng-click="openMap()"  data-rel="external" class="button  icon-left musa">{{navigationTitles.museum.general.directionsButtonLabel}}</button>
                             </div>
                         </div>
                     </div>
@@ -79,7 +119,7 @@
 
                 <div class="list card">
 
-                    <div class="item ">
+                    <div class="item">
                         <h2><strong>{{navigationTitles.museum.general.links}}</strong></h2>
                     </div>
 

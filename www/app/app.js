@@ -6,15 +6,27 @@
 angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-services', 'app-services',
 
 
-    'collection-controllers', 'map-controllers', 'qr-code-controllers', 'user-preferences-controllers','museum-services', 'exhibition-services', 'content-services', 'app-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic'])//,'ngMockE2E'])
+    'collection-controllers', 'map-controllers', 'qr-code-controllers', 'ngCordova.plugins.push','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services'])//,'ngMockE2E'])
 
-    .run(function($ionicPlatform, AppNavigationTitles,$filter,  $rootScope, $cordovaPush, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
-
-
+    .run(function(ionPlatform, AppNavigationTitles,$filter,Notifications,$ionicHistory, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         $rootScope.app = {};
 
         $rootScope.app.fontSize = UserPreferences.getFontSize();
+        $rootScope.navigationTitles = AppNavigationTitles.get();
+
+        $rootScope.$on('http:notFound', function()
+        {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Not Found'});
+            alertPopup.then(function(res) {
+                $ionicHistory.goBack();
+
+
+            });
+
+        });
+
         $rootScope.$on('' +
         'loading:show', function() {
             $ionicLoading.show();
@@ -34,42 +46,22 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
 
         });
 
+        $rootScope.$on('http:timeout', function()
+        {
+            var alertPopup = $ionicPopup.alert({
+                title: $rootScope.navigationTitles.app.httpTimeoutLabel});
+            alertPopup.then(function(res) {
 
-        $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
-            if (notification.alert) {
-                navigator.notification.alert(notification.alert);
-            }
-
-            if (notification.sound) {
-                var snd = new Media(event.sound);
-                snd.play();
-            }
-
-            if (notification.badge) {
-                $cordovaPush.setBadgeNumber(notification.badge).then(function(result) {
-                    // Success!
-                }, function(err) {
-                    // An error occurred. Show a message to the user
-                });
-            }
+            });
         });
-
-
-
-
-        var iosConfig = {
-            "badge": true,
-            "sound": true,
-            "alert": true
-        };
-        $rootScope.navigationTitles = AppNavigationTitles.get();
-
 
         /* Update preferences */
         $rootScope.$on('preferences:updated', function(){
             $rootScope.navigationTitles = AppNavigationTitles.get();
             $rootScope.app.fontSize = UserPreferences.getFontSize();
         });
+
+
         $rootScope.$on('$stateChangeStart',   function(event, toState, toParams, fromState, fromParams){
 
             var connection = Connection.checkConnection();
@@ -95,29 +87,26 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
         });
 
 
-
-        //if (ionicPlatform.cordova.platform == "browser") {
-        //    facebookConnectPlugin.browserInit(appID, version);
-        //    // version is optional. It refers to the version of API you may want to use.
-        //}
+        //$rootScope.$on('pushNotificationReceived', function(notification)
+        //{
+        //    console.log("Received!!!");
+        //    console.log("DANCEDANCE");
+        //    //console.log(JSON.stringify([notification]));
+        //    ////if (ionic.Platform.isAndroid()) {
+        //    ////    handleAndroid(notification);
+        //    ////}
+        //    ////else if (ionic.Platform.isIOS()) {
+        //    ////    console.log("HANDLING IOS");
+        //    ////    handleIOS(notification);
+        //    ////    //$scope.$apply(function () {
+        //    ////    //    $scope.notifications.push(JSON.stringify(notification.alert));
+        //    ////    //})
+        //    ////}
         //
+        //});
 
 
-        $ionicPlatform.ready(function() {
-
-            //var volumeSlider = window.plugins.volumeSlider;
-            //volumeSlider.createVolumeSlider(10,350,300,30); // origin x, origin y, width, height
-            //volumeSlider.showVolumeSlider();
-
-            $cordovaPush.register(iosConfig).then(function(result) {
-
-                // Success -- send deviceToken to server, and store for future use
-                console.log("result: " + result);
-                //$http.post("http://server.co/", {user: "Bob", tokenID: result.deviceToken})
-            }, function(err) {
-                console.log(err);
-                //alert("Registration error: " + err)
-            });
+        ionPlatform.ready.then(function(device) {
 
 
 
@@ -134,10 +123,55 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
             console.log(isIOS);
             console.log(android);
 
-
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
+            Notifications.setup();
+
+
+            if(ionic.Platform.isAndroid() || ionic.Platform.isIOS())
+            {
+                console.log("Setting up Notifications");
+                //Notifications.setup();
+            }
+
+
+            //console.log(ionic);
+            //
+            ///* Push Notification Handling*/
+            var config = {
+
+            };
+            //console.ll
+
+            if (ionic.Platform.isAndroid()) {
+                config = {
+                    "senderID": "755713541489"
+                };
+            }
+            else if (ionic.Platform.isIOS()) {
+                config = {
+                    "badge": true,
+                    "sound": true,
+                    "alert": true
+                }
+            }
+
+            console.log(config);
+            //var registerDisable;
+
+            $cordovaPush.register(config).then(function(deviceToken) {
+                // Success -- send deviceToken to server, and store for future use
+                console.log("deviceToken: " + deviceToken);
+                //$http.post("http://server.co/", {user: "Bob", tokenID: deviceToken})
+            }, function(err) {
+                alert("Registration error: " + err)
+            });
+
+
+
+
+
 
         });
     })
@@ -365,6 +399,7 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
             }
 
         }];
+
         $httpProvider.interceptors.push('HTTPInterceptor');
 
             //$httpProvider.interceptors.push(function($rootScope) {
@@ -381,7 +416,6 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
             //        }
             //    }
             //});
-
 
 
     });

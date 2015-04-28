@@ -266,6 +266,12 @@ img.map {
     width: 1px;
 }
 
+th{
+    text-align: left;
+}
+td{
+    text-align: center;
+}
 /*.thumbnail {*/
     /*position: relative;*/
     /*width: 200px;*/
@@ -289,6 +295,10 @@ img.map {
 
 .center-image {
     text-align: center;
+}
+.button.musa{
+
+    color:white;
 }
 
 /*hr.{*/

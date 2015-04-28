@@ -22,7 +22,7 @@ angular.module('collection-controllers', [])
     {
         if(oldValue == 'nearMe' || newValue == 'nearMe')
         {
-            console.log("Toggling iBeacon Ranging");
+            //console.log("Toggling iBeacon Ranging");
             iBeacons.toggleRanging();
         }
 
@@ -62,7 +62,7 @@ angular.module('collection-controllers', [])
         $scope.getPage = function()
         {
 
-            console.log("GEtting da page");
+            //console.log("GEtting da page");
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
                 .then(function(response)
                 {
@@ -86,11 +86,11 @@ angular.module('collection-controllers', [])
                         }
 
                         else if ($scope.pageNumber == 0 && $scope.museumObjects.length == 0) {
-                            console.log("No Objects Found");
+                            //console.log("No Objects Found");
                         }
 
                         else {
-                            console.log("Mistake Happened");
+                            //console.log("Mistake Happened");
                         }
 
                         $scope.loading = false;
@@ -178,7 +178,7 @@ angular.module('collection-controllers', [])
             $scope.text = {};
             $scope.text.title = $scope.navigationTitles.collection.singleObject.descriptionLabel;
             $scope.text.description = $scope.museumObject.description;
-            console.log($scope.text);
+            //console.log($scope.text);
             $scope.openModal('text-view.html');
 
         };
@@ -199,15 +199,15 @@ angular.module('collection-controllers', [])
                     {
                         $scope.audible = Audio;
 
-                        console.log($scope.audible);
-                        console.log($scope.audible.duration);
+                        //console.log($scope.audible);
+                        //console.log($scope.audible.duration);
 
                         $scope.playbackInterval =  $interval(function()
                         {
                             $scope.stream.watchPlaybackTime = Audio.currentTime();
 
                         },1000);
-                        console.log("Opening Audio modal");
+                        //console.log("Opening Audio modal");
                         $scope.openModal('audio-player.html');
 
 
@@ -241,7 +241,7 @@ angular.module('collection-controllers', [])
             }
 
             $scope.images = chunk($scope.museumObject.Images,3);
-            console.log($scope.images);
+            //console.log($scope.images);
             $scope.openModal('image-grid.html');
             //
             //Gallery.getImages($scope.museumObject.id)
@@ -317,7 +317,7 @@ angular.module('collection-controllers', [])
         /* Play the audio stream */
         $scope.playStream = function()
         {
-            console.log("Playing Stream");
+            //console.log("Playing Stream");
 
             Audio.play();
         };
@@ -325,13 +325,13 @@ angular.module('collection-controllers', [])
         /* Pause the audio stream */
         $scope.pauseStream = function()
         {
-            console.log("Pausing Stream");
+            //console.log("Pausing Stream");
             Audio.pause();
         };
 
         $scope.seekToTime = function()
         {
-            console.log("Clicked");
+            //console.log("Clicked");
             Audio.seekTo($scope.stream.watchPlaybackTime);
         };
 
@@ -339,7 +339,7 @@ angular.module('collection-controllers', [])
         {
             var _currentTime = Audio.currentTime() + 15;
 
-            console.log(_currentTime);
+            //console.log(_currentTime);
             Audio.seekTo(_currentTime);
         };
 
@@ -383,7 +383,7 @@ angular.module('collection-controllers', [])
             Archive.getArchive(archiveId)
                 .then(function(response)
                 {
-                    console.log(response);
+                    //console.log(response);
                     if(response.status == 200)
                     {
                         Archive.setActiveArchive(response.data);
@@ -485,7 +485,7 @@ angular.module('collection-controllers', [])
 
                 for (var i = 0; i < beacons.length; i++) {
                     var beaconID = beacons[i].proximityUUID + beacons[i].major + beacons[i].minor;
-                    console.log(beaconID);
+                    //console.log(beaconID);
                     beaconIdArray.push(beaconID.toUpperCase());
 
                 }
@@ -496,7 +496,7 @@ angular.module('collection-controllers', [])
                 Exhibitions.findByBeacons(beaconIdArray)
                     .then(function (response) {
 
-                        console.log(response);
+                        //console.log(response);
                         if (response.status == 200) {
 
                             if (response.data.length == 0) {
@@ -540,7 +540,7 @@ angular.module('collection-controllers', [])
         /* When beacons change state load up the exhibitions */
         $scope.$on('beacons:stateChange', function()
         {
-            console.log("State change - $scope");
+            //console.log("State change - $scope");
             $scope.loadExhibitions();
 
         });
@@ -606,12 +606,12 @@ angular.module('collection-controllers', [])
 
                     else if($scope.pageNumber == 0 && $scope.museumObjects.length == 0)
                     {
-                        console.log("No Objects Found");
+                        //console.log("No Objects Found");
                     }
 
                     else
                     {
-                        console.log("Mistake Happened");
+                        //console.log("Mistake Happened");
                     }
 
                     $scope.loading = false;

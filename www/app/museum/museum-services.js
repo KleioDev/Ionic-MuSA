@@ -24,6 +24,9 @@ angular.module('museum-services', [])
     .factory('Museum', function(Routes, $http)
     {
 
+        var days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+
         /**
          * Returns a response from the API
          * @memberof Museum
@@ -33,9 +36,32 @@ angular.module('museum-services', [])
         {
             return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(function(response)
             {
-                return response.data;
+                if(response.status == 200)
+                {
+
+                    /* Parse out data */
+
+                    var hoursOfOperation = response.data.hoursOfOperation;
+
+                    for(var dayName in hoursOfOperation)
+                    {
+                        var day = hoursOfOperation[dayName];
+                        console.log(day);
+                        if(!day.closed) {
+                            hoursOfOperation[dayName].open = moment(day.open, 'h:mm A').format('h:mm A');
+                            hoursOfOperation[dayName].close = moment(day.close, 'h:mm A').format('h:mm A');
+                        }
+
+                    }
+
+                    response.data.hoursOfOperation = hoursOfOperation;
+                    response.data.days = days;
+                    return response.data;
+
+                }
             })
         };
+
 
         /**
          * Returns the uri for forwarding the application to the locally installed Maps/Google Maps application
@@ -47,10 +73,11 @@ angular.module('museum-services', [])
             return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
         };
 
+
         return {
 
             getGeneralMuseumInfo: getGeneralMuseumInfo,
-            getLocation: getLocation
+            getLocation: getLocation,
         }
     })
 
@@ -172,13 +199,21 @@ angular.module('museum-services', [])
         events.event = event;
     };
 
+
+    /* Get Event */
+    var getEvent = function()
+    {
+        return events.event;
+    };
+
     return {
 
         getEvents: getEvents,
         getSingleEvent: getSingleEvent,
         setEvent: setEvent,
         eventsToday: events.eventsToday,
-        upcomingEvents : events.upcomingEvents
+        upcomingEvents : events.upcomingEvents,
+        getEvent: getEvent
     }
 
 })

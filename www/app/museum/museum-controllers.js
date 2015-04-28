@@ -91,6 +91,7 @@ angular.module('museum-controllers', ['ngCordova'])
 
                     if(response.status == 200)
                     {
+                        console.log(response);
                         response.data.datetime = moment(new Date(response.data.eventDate));
                         Events.setEvent(response.data);
                         $state.go('tab.museum-events-single', {eventId: eventId});
@@ -137,7 +138,7 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
 
         /* Pass the event to the view */
-        $scope.event = Events.event;
+        $scope.event = Events.getEvent();
 
         /* Add the calendar */
         $scope.addToCalendar = function() {

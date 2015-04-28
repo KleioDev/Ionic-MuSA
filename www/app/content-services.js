@@ -180,11 +180,23 @@ angular.module('content-services', [])
             audible = null;
         };
 
+        var getDescription = function()
+        {
+            return description;
+
+        };
+
+        var getTitle = function()
+        {
+            return title;
+        };
+
 
         return {
             requestAudible: requestAudible,
             audible: audible,
-            description: description,
+            getDescription: getDescription,
+            getTitle: getTitle,
             title: title,
             create: create,
             play: play,

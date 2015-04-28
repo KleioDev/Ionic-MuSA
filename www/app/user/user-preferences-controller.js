@@ -329,7 +329,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         /* Fails to Login */
         function failureAccess(error) {
-            console.log("FAILED TO GET DA TOKEN FROM MUSA SERVER");
+            //console.log("FAILED TO GET DA TOKEN FROM MUSA SERVER");
             /* Don't proceed with the login, show an error message */
             loading.hide();
             $rootScope.$broadcast('http:error', {});
@@ -340,13 +340,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Server responded successfully */
             /* now we get the user info */
             if (response.status == 200) {
-                console.log("Storing Token=");
+                //console.log("Storing Token=");
                 //console.log(response);
                 $window.localStorage.setItem('userAuthenticationToken', response.data.token);
 
                 $window.localStorage.setItem('userIDAPI', response.data.userId);
 
-                console.log(response);
+                //console.log (response);
 
                 /* Make an API Call to Facebook */
                 return user.getUserInfo();
@@ -408,8 +408,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         function successResponse(response)
         {
-            console.log("SUCCESS GOT LOGIN STATUS");
-            console.log(response);
+            //console.log("SUCCESS GOT LOGIN STATUS");
+            //console.log(response);
             var _user = {};
             if(response.status == 'connected')
             {
@@ -429,7 +429,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         }
         function failureResponse(err)
         {
-            console.log("FAILED TO GET LOGIN STATUS");
+            //console.log("FAILED TO GET LOGIN STATUS");
             var _user = {
                 loggedIn : false
             }
@@ -458,7 +458,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* If he is logged in, get the user's info from Facebook's API */
             if(response.status == 'connected')
             {
-                console.log(response);
+                //console.log(response);
                 /* Before getting the info from FB we need to check if the user has a token from our server */
                 var serverToken = $window.localStorage.getItem('userAuthenticationToken');
 
@@ -469,7 +469,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 /* If token is not defined */
                 if(serverToken == null)
                 {
-                    console.log("SERVER TOKEN NOT DEFINED");
+                    //console.log("SERVER TOKEN NOT DEFINED");
                     return user.getToken(response);
                 }
 
@@ -484,7 +484,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             else{
                 $window.localStorage.setItem('userID', null);
 
-                console.log("NOT LOGGED IN");
+                //console.log("NOT LOGGED IN");
                 loading.hide();
 
                 var _user = {};
@@ -496,7 +496,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         function failureLoginStatus(error)
         {
-            console.log("FAILED TO GET LOGIN STATUS");
+            //console.log("FAILED TO GET LOGIN STATUS");
             //console.log(error);
             loading.hide();
             return error;
@@ -506,7 +506,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         function getUserInfoFailure(response)
         {
-            console.log("FAILED TO GET USER INFO");
+            //console.log("FAILED TO GET USER INFO");
 
             /* Log out to avoid inconsistencies*/
             $window.localStorage.setItem('userID', null);
@@ -526,7 +526,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             .then(function(success) {
 
                 var user = {};
-                console.log("GOT INFO");
+                //console.log("GOT INFO");
                 //console.log(success);
 
                 /* Parse out the correct Info */
@@ -545,7 +545,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             }, function (error) {
                 loading.hide();
 
-                console.log("GETTING USER INFO FAILED");
+                //console.log("GETTING USER INFO FAILED");
 
                 // error
             });
@@ -616,7 +616,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             }
         };
 
-        console.log(request);
+        //console.log(request);
 
         return $http(request);
     };
