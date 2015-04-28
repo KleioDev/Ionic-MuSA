@@ -15,6 +15,12 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
         $rootScope.app.fontSize = UserPreferences.getFontSize();
         $rootScope.navigationTitles = AppNavigationTitles.get();
 
+        $rootScope.goBack = function()
+        {
+            console.log("DANCING");
+            $ionicHistory.goBack();
+        };
+
         $rootScope.$on('http:notFound', function()
         {
             var alertPopup = $ionicPopup.alert({
