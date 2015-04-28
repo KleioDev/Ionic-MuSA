@@ -18,7 +18,27 @@ angular.module('exhibition-services', [])
                 per_page: PER_PAGE,
                 artist: searchTerm
 
-            }});
+            }})
+            .then(pageRetrievalSuccess, pageRetrievalFailure);
+
+
+            function pageRetrievalSuccess(response)
+            {
+                return response;
+            }
+            function pageRetrievalFailure(response)
+            {
+
+                if(response.status == 404)
+                {
+
+                    response.data.artifacts = [];
+                }
+
+                return response;
+
+            }
+
     };
 
     museumObjects.getById = function(id)
