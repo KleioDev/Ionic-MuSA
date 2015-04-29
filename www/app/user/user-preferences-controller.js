@@ -535,7 +535,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 user.userID = success.id;
                 user.loginStatus = success.verified;
 
-                user.points  = 20;
                 //user.loginStatus = true; /* Prove that he is connected */
                 loading.hide();
 

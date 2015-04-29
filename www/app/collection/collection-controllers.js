@@ -67,9 +67,10 @@ angular.module('collection-controllers', [])
                 .then(function(response)
                 {
 
-                    if(response.status == 200) {
+
 
                         var page = response.data.artifacts;
+                        console.log(typeof page);
                         if (typeof page == 'object') {
 
                             if (page.length > 0) {
@@ -94,12 +95,8 @@ angular.module('collection-controllers', [])
                         }
 
                         $scope.loading = false;
-                    }
 
-                    else if(response.status == 404)
-                    {
-                        $scope.morePages = false;
-                    }
+
                 });
 
         };
@@ -446,7 +443,8 @@ angular.module('collection-controllers', [])
         {
 
             return $sce.trustAsResourceUrl(src);
-        }
+        };
+
         $scope.parseVideo();
 
     })

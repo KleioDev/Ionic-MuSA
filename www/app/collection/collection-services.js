@@ -29,11 +29,16 @@ angular.module('exhibition-services', [])
             function pageRetrievalFailure(response)
             {
 
+                console.log("retrieval failure");
                 if(response.status == 404)
                 {
+                    response.data = {
+                        artifacts : []
+                    }
 
-                    response.data.artifacts = [];
                 }
+
+
 
                 return response;
 
@@ -76,10 +81,19 @@ angular.module('exhibition-services', [])
                     title: searchTerm,
                     per_page: PER_PAGE
                 }})
-                .then(function(response)
+                .then(
+
+
+                function(response)
                 {
                     return response.data.exhibitions;
-                });
+                },
+                function(err)
+                {
+                    return [];
+                }
+
+            );
         };
 
         exhibitions.getById = function(id)

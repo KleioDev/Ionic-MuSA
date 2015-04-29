@@ -382,6 +382,7 @@ angular.module('qr-code-controllers', [])
 
             /* Should I check if the user is logged in ? */
             var authToken = $window.localStorage.getItem('userAuthenticationToken');
+            var _userID = $window.localStorage.getItem('userIDAPI');
 
             var matchHuntId = matchHunt.getId();
 
@@ -394,9 +395,9 @@ angular.module('qr-code-controllers', [])
                         'Authorization': 'Bearer ' + authToken
                     },
                     data: {
-                        userId: _user.userID,
+                        UserId: _userID,
                         qrcode: _qrCodeData.text,
-                        clueId: matchHuntId
+                        ClueId: matchHuntId
                     }
                 };
 

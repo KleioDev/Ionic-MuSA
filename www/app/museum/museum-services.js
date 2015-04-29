@@ -46,7 +46,6 @@ angular.module('museum-services', [])
                     for(var dayName in hoursOfOperation)
                     {
                         var day = hoursOfOperation[dayName];
-                        console.log(day);
                         if(!day.closed) {
                             hoursOfOperation[dayName].open = moment(day.open, 'h:mm A').format('h:mm A');
                             hoursOfOperation[dayName].close = moment(day.close, 'h:mm A').format('h:mm A');
@@ -291,11 +290,8 @@ angular.module('museum-services', [])
 
                 function newsSuccess(response)
                 {
-                    //console.log("RES:");
-                    //console.log(response);
 
                     var _news = response.data.news;
-                    //console.log(_news);
 
                     for(var j = 0; j < _news.length; j++)
                     {
