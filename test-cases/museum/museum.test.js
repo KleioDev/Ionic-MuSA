@@ -39,8 +39,41 @@ describe('Museum Tab Segmented Control Test', function(){
 
 });
 
-//.describe('Museum General Info', function()
-//    {
-//
-//
-//    });
+describe('Museum General Info', function()
+    {
+        var scope;
+        var Museum;
+
+        beforeEach(module('museum-services', 'museum-controllers', 'ngCordova', 'app-services'));
+
+        beforeEach(inject(function ($rootScope, $controller) {
+
+            scope = $rootScope.$new();
+            $controller('MuseumGeneralCtrl', {$scope: scope});
+        }));
+
+        beforeEach(inject(function(_Museum_)
+        {
+            Museum = _Museum_;
+        }));
+
+
+        it('phone number is a string it should be parsed out', inject(function(Museum)
+        {
+            Museum.getGeneralMuseumInfo().then(function(museumInfo){
+
+                console.log(museum.phone);
+                /* Should be in the form of a regex */
+                if(museumInfo.phone)
+                {
+                    expect("l").toContain(/\((\d{3})\)\s(\d{3})-(\d{4})/);
+
+                }
+            })
+
+
+        }));
+
+        it()
+
+    });

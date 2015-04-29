@@ -26,8 +26,9 @@
 {{event.datetime.format('h:mm A')}}    </span>
             </ion-item>
 
-            <ion-item class="" ng-style="{'font-size': app.fontSize};">
-                {{navigationTitles.eventLocationLabel}}    <span class="item-note" ng-style="{'font-size': app.fontSize};">
+            <ion-item class="" ng-if="event.location" ng-style="{'font-size': app.fontSize};">
+                {{navigationTitles.eventLocationLabel}}
+                <span class="item-note" ng-style="{'font-size': app.fontSize};">
 {{event.location}}  </span>
             </ion-item>
         </ion-list>

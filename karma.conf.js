@@ -24,7 +24,7 @@ module.exports = function(config) {
         "www/app/app-services.js",
         "www/app/museum/museum-controllers.js",
 
-        "test-cases/controller_unit_testing.js"
+        "test-cases/museum/museum.test.js"
     ],
 
 
@@ -64,11 +64,11 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Safari', 'Firefox'],
+    browsers: ['Safari'],
 
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: true
   });
 };

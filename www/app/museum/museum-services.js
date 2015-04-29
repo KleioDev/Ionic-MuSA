@@ -34,31 +34,52 @@ angular.module('museum-services', [])
          */
         var getGeneralMuseumInfo = function()
         {
-            return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(function(response)
+            return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(museumInfoSuccess, museumInfoFailure);
+
+
+            function museumInfoSuccess(response)
             {
-                if(response.status == 200)
-                {
 
-                    /* Parse out data */
-
-                    var hoursOfOperation = response.data.hoursOfOperation;
-
-                    for(var dayName in hoursOfOperation)
+                    if(response.status == 200)
                     {
-                        var day = hoursOfOperation[dayName];
-                        if(!day.closed) {
-                            hoursOfOperation[dayName].open = moment(day.open, 'h:mm A').format('h:mm A');
-                            hoursOfOperation[dayName].close = moment(day.close, 'h:mm A').format('h:mm A');
+
+                        /* Parse out data */
+
+                        var hoursOfOperation = response.data.hoursOfOperation;
+
+                        for(var dayName in hoursOfOperation)
+                        {
+                            var day = hoursOfOperation[dayName];
+                            if(!day.closed) {
+                                hoursOfOperation[dayName].open = moment(day.open, 'h:mm A').format('h:mm A');
+                                hoursOfOperation[dayName].close = moment(day.close, 'h:mm A').format('h:mm A');
+                            }
+
                         }
+
+                        response.data.hoursOfOperation = hoursOfOperation;
+                        response.data.days = days;
+
+                        response.data.phone = phoneFormat(response.data.phone);
+
+
+                        function phoneFormat(phone) {
+                            phone = phone.replace(/[^0-9]/g, '');
+                            phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+                            return phone;
+                        }
+
+                        return response.data;
 
                     }
 
-                    response.data.hoursOfOperation = hoursOfOperation;
-                    response.data.days = days;
-                    return response.data;
+            }
 
-                }
-            })
+            function museumInfoFailure(response)
+            {
+                /* A mistake happened */
+                return $q.reject(response);
+            }
         };
 
 
@@ -76,7 +97,7 @@ angular.module('museum-services', [])
         return {
 
             getGeneralMuseumInfo: getGeneralMuseumInfo,
-            getLocation: getLocation,
+            getLocation: getLocation
         }
     })
 
@@ -249,7 +270,7 @@ angular.module('museum-services', [])
  * @name News
  * @description
  **
- * Stores and retrieves the news articles. Provides an interfact for requests to the server
+ * Stores and retrieves the news articles. Provides an interface for requests to the server
  * + News Title
  * + ID
  * + Description
@@ -354,7 +375,23 @@ angular.module('museum-services', [])
          */
         var getNewsById = function(id)
         {
-            return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id);
+            return  $http.get(Routes.MUSEUM_SINGLE_NEWS_ROUTE + id)
+                .then(success, failure);
+
+
+            function success(response)
+            {
+                if(response.status == 200)
+                {
+                    return response.data;
+                }
+            }
+
+            function failure(err)
+            {
+                console.log('Load Single Event Failure');
+
+            }
 
         };
 

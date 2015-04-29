@@ -26,7 +26,7 @@
                         <h2 class=""><strong>{{navigationTitles.museum.general.hoursOfOperation}}</strong></h2>
                     </div>
 
-                    <div class="item item-body padding " ng-style="{'font-size': app.fontSize};">
+                    <div class="item item-body " ng-style="{'font-size': app.fontSize};">
                         <!--<div class="row">-->
 
                             <!--<div class="col col-80 col-offset-10">-->
@@ -37,7 +37,7 @@
                                     <!--<ANY ng-switch-default>...</ANY>-->
                                 <!--</ANY>-->
 
-                                <table cellpadding="1" cellspacing="1" width="100%" ng-if="museum.hoursOfOperation">
+                                <table cellpadding="1" class="" cellspacing="1" width="100%" ng-if="museum.hoursOfOperation">
                                     <tbody>
 
                                     <tr ng-switch="{{museum.hoursOfOperation[key].closed}}" ng-repeat="key in museum.days">

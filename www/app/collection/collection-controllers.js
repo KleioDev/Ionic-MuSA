@@ -136,7 +136,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $stateParams, $interval, $ionicLoading, $ionicModal, Audio, Video, Archive, Gallery, Facebook)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook)
     {
         /* Maintains the stack of modals */
         var modals = new Array();
@@ -418,6 +418,18 @@ angular.module('collection-controllers', [])
             var title = $scope.museumObject.title;
 
             Facebook.postToFacebook(title, img_source, desc);
+        };
+
+        $scope.loadExhibition = function(exhibitionID)
+        {
+
+            Exhibitions.getById(exhibitionID)
+                .then(function(exhibition)
+            {
+
+                Exhibitions.setActiveExhibition(exhibition);
+                $state.go('tab.collection-exhibition-view');
+            });
         }
 
     })
@@ -524,14 +536,13 @@ angular.module('collection-controllers', [])
         $scope.preLoadExhibition = function(id)
         {
             Exhibitions.getById(id)
-                .then(function(response)
+                .then(function(exhibition)
                 {
-                    if(response.status == 200)
-                    {
 
-                        Exhibitions.setActiveExhibition(response.data);
+
+                        Exhibitions.setActiveExhibition(exhibition);
                         $state.go('tab.collection-exhibition-view');
-                    }
+
                 })
         };
 
@@ -621,13 +632,12 @@ angular.module('collection-controllers', [])
         $scope.loadExhibition = function(id)
         {
             Exhibitions.getById(id)
-                .then(function(response)
+                .then(function(exhibition)
                 {
-                    if(response.status == 200)
-                    {
-                        Exhibitions.setActiveExhibition(response.data);
+
+                        Exhibitions.setActiveExhibition(exhibition);
                         $state.go('tab.collection-exhibition-view');
-                    }
+
                 })
         };
 

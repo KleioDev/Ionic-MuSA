@@ -9,14 +9,13 @@ angular.module('exhibition-services', [])
 
     var PER_PAGE = 10;
 
-    museumObjects.getPage = function(pageNumber,searchTerm)
+    var getPage = function(pageNumber,searchTerm)
     {
         return $http.get(Routes.COLLECTION_OBJECTS, {
             params: {
                 page: pageNumber,
                 title: searchTerm,
-                per_page: PER_PAGE,
-                artist: searchTerm
+                per_page: PER_PAGE
 
             }})
             .then(pageRetrievalSuccess, pageRetrievalFailure);
@@ -46,34 +45,40 @@ angular.module('exhibition-services', [])
 
     };
 
-    museumObjects.getById = function(id)
+    var getById = function(id)
     {
         return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id);
     };
 
 
-    museumObjects.setActiveObject = function(object)
+    var setActiveObject = function(object)
     {
         museumObjects.activeObject = object;
     };
 
-    museumObjects.getActiveObject = function()
+    var getActiveObject = function()
     {
         return museumObjects.activeObject;
     };
 
 
-    return museumObjects;
+    return {
+
+        getPage: getPage,
+        getById: getById,
+        setActiveObject: setActiveObject,
+        getActiveObject: getActiveObject
+    };
 
 })
 
-.factory('Exhibitions', function($filter, Routes, $http)
+.factory('Exhibitions', function($q, Routes, $http)
     {
 
         var exhibitions = {};
         var PER_PAGE = 4;
 
-        exhibitions.getPage = function(pageNumber, searchTerm)
+        var getPage = function(pageNumber, searchTerm)
         {
             return $http.get(Routes.COLLECTION_MUSEUM_EXHIBITIONS,{
                 params: {
@@ -96,23 +101,38 @@ angular.module('exhibition-services', [])
             );
         };
 
-        exhibitions.getById = function(id)
+        var getById = function(id)
         {
-            return $http.get(Routes.COLLECTION_SINGLE_EXHIBITION + id);
+            return $http.get(Routes.COLLECTION_SINGLE_EXHIBITION + id)
+                .then(success, failure);
+
+            function success(response)
+            {
+                console.log("Exhibition");
+
+
+                    return response.data;
+
+
+            }
+            function failure(err)
+            {
+                return $q.reject('Exhibition not Found');
+            }
         };
 
 
-        exhibitions.setActiveExhibition = function(object)
+        var setActiveExhibition = function(object)
         {
             exhibitions.activeObject = object;
         };
 
-        exhibitions.getActiveExhibition = function()
+        var getActiveExhibition = function()
         {
             return exhibitions.activeObject;
         };
 
-        exhibitions.findByBeacons = function(beacons)
+        var findByBeacons = function(beacons)
         {
 
             var _params = {};
@@ -126,6 +146,13 @@ angular.module('exhibition-services', [])
         };
 
 
-        return exhibitions;
+        return {
+
+            getPage: getPage,
+            getById: getById,
+            setActiveExhibition: setActiveExhibition,
+            getActiveExhibition: getActiveExhibition,
+            findByBeacons: findByBeacons
+        };
 
     });

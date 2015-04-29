@@ -18,7 +18,6 @@ angular.module('museum-controllers', ['ngCordova'])
     {
         $scope.museumTabState = SegmentedControl.create('museum', ['general', 'events', 'news'], 'general');
 
-
         /**
          * Handles the state of the segmented button bar
          * @memberOf Museum Segment Controller
@@ -50,6 +49,9 @@ angular.module('museum-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo().then(function(museumGeneralInfo)
         {
             $scope.museum = museumGeneralInfo;
+        }, function(response)
+        {
+
         });
 
         /* Open the map */
@@ -120,8 +122,8 @@ angular.module('museum-controllers', ['ngCordova'])
             function success(news)
             {
 
-                News.setNewsArticle(response.data);
-                $state.go('tab.single_news_article',{newsId: newsId});
+                News.setNewsArticle(news);
+                $state.go('tab.single_news_article');
 
 
             }

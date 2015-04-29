@@ -6,20 +6,22 @@
 angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-services', 'app-services',
 
 
-    'collection-controllers', 'map-controllers', 'qr-code-controllers', 'ngCordova.plugins.push','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services'])//,'ngMockE2E'])
+    'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services'])//,'ngMockE2E'])
 
     .run(function(ionPlatform, AppNavigationTitles,$filter,Notifications,$ionicHistory, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
-        $rootScope.app = {};
 
+        /* Set the user global variables */
+        $rootScope.app = {};
         $rootScope.app.fontSize = UserPreferences.getFontSize();
         $rootScope.navigationTitles = AppNavigationTitles.get();
 
         $rootScope.goBack = function()
         {
-            console.log("DANCING");
             $ionicHistory.goBack();
         };
+
+        /* HTTP Defined Routes */
 
         $rootScope.$on('http:notFound', function()
         {
@@ -33,8 +35,7 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
 
         });
 
-        $rootScope.$on('' +
-        'loading:show', function() {
+        $rootScope.$on('loading:show', function() {
             $ionicLoading.show();
         });
 
@@ -61,6 +62,7 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
             });
         });
 
+
         /* Update preferences */
         $rootScope.$on('preferences:updated', function(){
             $rootScope.navigationTitles = AppNavigationTitles.get();
@@ -70,51 +72,22 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
 
         $rootScope.$on('$stateChangeStart',   function(event, toState, toParams, fromState, fromParams){
 
+            /* Check if connection is available between states */
             var connection = Connection.checkConnection();
             if(!connection)
             {
+                var alertPopup = $ionicPopup.alert({
+                    title: $rootScope.navigationTitles.app.noConnectionLabel,
+                    template: $rootScope.navigationTitles.app.noConnectionContent
+                });
+                alertPopup.then(function(res) {
 
-                        var alertPopup = $ionicPopup.alert({
-                            title: $rootScope.navigationTitles.app.noConnectionLabel,
-                                template: $rootScope.navigationTitles.app.noConnectionContent
-                        });
-                        alertPopup.then(function(res) {
-
-                        });
-
-
+                });
             }
-
-            });
-
-        /* Check for internet connection on all changes */
-        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
 
         });
 
-
-        //$rootScope.$on('pushNotificationReceived', function(notification)
-        //{
-        //    console.log("Received!!!");
-        //    console.log("DANCEDANCE");
-        //    //console.log(JSON.stringify([notification]));
-        //    ////if (ionic.Platform.isAndroid()) {
-        //    ////    handleAndroid(notification);
-        //    ////}
-        //    ////else if (ionic.Platform.isIOS()) {
-        //    ////    console.log("HANDLING IOS");
-        //    ////    handleIOS(notification);
-        //    ////    //$scope.$apply(function () {
-        //    ////    //    $scope.notifications.push(JSON.stringify(notification.alert));
-        //    ////    //})
-        //    ////}
-        //
-        //});
-
-
         ionPlatform.ready.then(function(device) {
-
-
 
             var deviceInformation = ionic.Platform.device();
 
@@ -142,54 +115,11 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
             }
 
 
-            //console.log(ionic);
-            //
-            ///* Push Notification Handling*/
-            var config = {
-
-            };
-            //console.ll
-
-            if (ionic.Platform.isAndroid()) {
-                config = {
-                    "senderID": "755713541489"
-                };
-            }
-            else if (ionic.Platform.isIOS()) {
-                config = {
-                    "badge": true,
-                    "sound": true,
-                    "alert": true
-                }
-            }
-
-            console.log(config);
-            //var registerDisable;
-
-            $cordovaPush.register(config).then(function(deviceToken) {
-                // Success -- send deviceToken to server, and store for future use
-                console.log("deviceToken: " + deviceToken);
-                //$http.post("http://server.co/", {user: "Bob", tokenID: deviceToken})
-            }, function(err) {
-                alert("Registration error: " + err)
-            });
-
-
-
-
-
-
         });
     })
 
     .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
-
-       // or leave blank and default is v2.0
-        // Ionic uses AngularUI Router which uses the concept of states
-        // Learn more here: https://github.com/angular-ui/ui-router
-        // Set up the various states which the app can be in.
-        // Each state's controller can be found in controllers.js
         $stateProvider
 
             // setup an abstract state for the tabs directive
@@ -373,55 +303,12 @@ angular.module('musa-app', ['ngCordova', 'ionic', 'museum-controllers', 'museum-
                 }
             });
 
-
-
-        // if none of the above states are matched, use this as the fallback
+        /* Fallback State */
         $urlRouterProvider.otherwise('/tab/museum-segmented-control');
 
         $httpProvider.defaults.useXDomain = true;
 
-        var interceptor = ['$rootScope', '$q', function (scope, $q) {
-
-            function success(response) {
-                return response;
-            }
-
-            function error(response) {
-                var status = response.status;
-
-
-                console.log("ERROR@");
-                //if (status == 401) {
-                //    window.location = "./index.html";
-                //    return;
-                //}
-                // otherwise
-                return $q.reject(response);
-
-            }
-
-            return function (promise) {
-                return promise.then(success, error);
-            }
-
-        }];
-
         $httpProvider.interceptors.push('HTTPInterceptor');
-
-            //$httpProvider.interceptors.push(function($rootScope) {
-            //    return {
-            //        request: function(config) {
-            //            $rootScope.$broadcast('loading:show');
-            //            return config
-            //        },
-            //        response: function(response) {
-            //            $rootScope.$broadcast('loading:hide');
-            //            console.log(response.status);
-            //
-            //            return response
-            //        }
-            //    }
-            //});
 
 
     });
