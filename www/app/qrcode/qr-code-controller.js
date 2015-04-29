@@ -26,26 +26,22 @@ angular.module('qr-code-controllers', [])
 
                         $window.localStorage.setItem('userID', user.userID);
                         MatchHunt.getMatchHunt(user)
-                            .then(function(response)
+                            .then(function(matchHunt)
                             {
                                 console.log("MATCH HUNT");
-                                console.log(response);
-
-                                /* Now store the ID */
-                                if(response.status == 200) {
 
 
-                                    var matchHuntID = response.data.id;
+                                var matchHuntID = matchHunt.id;
 
-                                    MatchHunt.saveId(matchHuntID);
+                                MatchHunt.saveId(matchHuntID);
 
-                                    MatchHunt.setActiveGame(response.data);
+                                MatchHunt.setActiveGame(matchHunt);
 
                                     //Now Change the state
                                     $state.go('tab.tab-match-hunt');
 
 
-                                }
+
 
                             },
 
@@ -132,17 +128,15 @@ angular.module('qr-code-controllers', [])
                     $state.go('tab.tab-qrcode-scanner');
                 }
             });
+
+
+
         /* Get the labels */
         $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Calls the Match Hunt service for a match hunt game */
         $scope.matchHunt = MatchHunt.getActiveGame();
         console.log($scope.matchHunt);
-
-        /* Preferences changed */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
 
         $scope.skip = function()
         {
@@ -278,24 +272,23 @@ angular.module('qr-code-controllers', [])
 
                         $window.localStorage.setItem('userID', user.userID);
                         MatchHunt.getMatchHunt(user)
-                            .then(function(response)
+                            .then(function(matchHunt)
                             {
                                 console.log("MATCH HUNT");
-                                console.log(response);
-
-                                /* Now store the ID */
-                                if(response.status == 200) {
+                                console.log(matchHunt);
 
 
-                                    var matchHuntID = response.data.id;
+
+
+                                    var matchHuntID = matchHunt.id;
 
                                     MatchHunt.saveId(matchHuntID);
 
-                                    MatchHunt.setActiveGame(response.data);
+                                    MatchHunt.setActiveGame(matchHunt);
 
                                     $scope.matchHunt = MatchHunt.getActiveGame();
 
-                                }
+
 
                             },
 
@@ -318,7 +311,7 @@ angular.module('qr-code-controllers', [])
     })
 
     /* Match Hunt game */
-    .factory('MatchHunt', function(Routes, $http, $window)
+    .factory('MatchHunt', function(Routes, $http, $q, $window)
     {
         var matchHunt = {};
 
@@ -327,9 +320,9 @@ angular.module('qr-code-controllers', [])
             console.log("GETTING AUTH");
 
             var authToken = $window.localStorage.getItem('userAuthenticationToken');
-            var id = matchHunt.getId();
+            var id = matchHunt.getId(); //Get ID from localstorage
 
-            /* If it is undefined  set to 0 */
+            /* If it is undefined  set to 0, get a random Match Hunt Game */
             if(id == null || typeof id == 'undefined')
             {
                 id = 0;
@@ -349,7 +342,21 @@ angular.module('qr-code-controllers', [])
 
             };
 
-            return $http(request);
+            /* Should handle the http response here */
+            return $http(request).then(success, failure);
+
+            function success(response) {
+                if (response.status == 200) {
+                    return response.data;
+                }
+
+            }
+            function failure(response)
+            {
+                $q.reject('Failed to get a Match Hunt Game');
+            }
+
+
 
         };
 

@@ -61,12 +61,15 @@
                 <div class="col"></div>
 
                 <div class="col col-90 portrait-box">
+                    <!--<div class="crop">-->
+
+                    <!--<img  class="match-hunt"  ng-src="{{matchHunt.image}}">-->
+                    <!--</div>-->
+                    <div id='crop' ng-style="{'background-image': 'url({{matchHunt.image}})'}"></div>​
 
 
-                    <img  class="match-hunt"  ng-src="{{matchHunt.image}}">
                     <br><br>
                     <button  style="width: 100%; color: white;" class="button icon-left ion-qr-scanner padding" ng-click="takeAGuess()">{{navigationTitles.scanner.takeAGuessLabel}}</button>
-
                 </div>
             <div class="col"></div>
             </div>

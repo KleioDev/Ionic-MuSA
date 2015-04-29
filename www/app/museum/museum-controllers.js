@@ -87,14 +87,11 @@ angular.module('museum-controllers', ['ngCordova'])
 
             /* Load the event before opening */
             Events.getSingleEvent(eventId)
-                .then(function(response){
-
-                    if(response.status == 200)
-                    {
-                        console.log(response);
-                        response.data.datetime = moment(new Date(response.data.eventDate));
-                        Events.setEvent(response.data);
-                        $state.go('tab.museum-events-single', {eventId: eventId});
+                .then(function(event){
+                    if(event != null){
+                        event.datetime = moment(new Date(event.eventDate));
+                        Events.setEvent(event);
+                        $state.go('tab.museum-events-single');
                     }
                 });
         };
@@ -118,15 +115,22 @@ angular.module('museum-controllers', ['ngCordova'])
         {
 
             News.getNewsById(newsId)
-                .then(function(response){
+                .then(success, failure);
 
-                    if(response.status == 200)
-                    {
-                        News.setNewsArticle(response.data);
-                        $state.go('tab.single_news_article',{newsId: newsId});
+            function success(news)
+            {
 
-                    }
-                })
+                News.setNewsArticle(response.data);
+                $state.go('tab.single_news_article',{newsId: newsId});
+
+
+            }
+
+            function failure(news)
+            {
+                //Do Nothing
+            }
+
         };
 
     })

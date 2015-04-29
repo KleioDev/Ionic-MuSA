@@ -21,7 +21,7 @@ angular.module('museum-services', [])
  * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
  *  @requires Routes
  */
-    .factory('Museum', function(Routes, $http)
+    .factory('Museum', function(Routes, $http, $q)
     {
 
         var days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -98,7 +98,7 @@ angular.module('museum-services', [])
  * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
  *
  */
-.factory('Events', function(Routes,$http)
+.factory('Events', function(Routes,$http, $q)
 {
     var events = {};
 
@@ -124,47 +124,59 @@ angular.module('museum-services', [])
      */
     var getEvents = function(){
         return  $http.get(Routes.MUSEUM_EVENTS_ROUTE)
-            .then(function(response)
-            {
+            .then(handleEventsSuccess, handleEventsFailure);
+
+        function handleEventsSuccess(response)
+        {
 
 
-                var data = response.data;
+                if(response.status == 200){
 
-                //console.log(data);
+                    var data = response.data;
 
-                for(var i = 0; i < data.events.length ; i++)
-                {
-                    data.events[i].datetime = moment(new Date(data.events[i].eventDate));
-                }
+                    //console.log(data);
 
-
-                /* Save today's events */
-                events.eventsToday = [];
-                var currentDate = moment(new Date());
-
-
-                for (var i = 0; i < data.events.length; i++)
-                {
-                    //console.log(events[i].datetime.diff(currentDate));
-                    if (data.events[i].datetime.diff(currentDate,'days') == 0)
+                    for(var i = 0; i < data.events.length ; i++)
                     {
-                        events.eventsToday.push(data.events[i]);
+                        data.events[i].datetime = moment(new Date(data.events[i].eventDate));
                     }
+
+
+                    /* Save today's events */
+                    events.eventsToday = [];
+                    var currentDate = moment(new Date());
+
+
+                    for (var i = 0; i < data.events.length; i++)
+                    {
+                        //console.log(events[i].datetime.diff(currentDate));
+                        if (data.events[i].datetime.diff(currentDate,'days') == 0)
+                        {
+                            events.eventsToday.push(data.events[i]);
+                        }
+                    }
+
+                    /* Store the upcoming events */
+                    events.upcomingEvents = [];
+                    for (var i = 0; i < data.events.length; i++) {
+                        if (data.events[i].datetime.diff(currentDate, 'days') != 0 ){
+                            events.upcomingEvents.push(data.events[i]);
+                        }
+                    }
+
+                    // console.log(events);
+                    return events;
+
                 }
 
-                /* Store the upcoming events */
-                events.upcomingEvents = [];
-                for (var i = 0; i < data.events.length; i++) {
-                    if (data.events[i].datetime.diff(currentDate, 'days') != 0 ){
-                        events.upcomingEvents.push(data.events[i]);
-                    }
-                }
 
-               // console.log(events);
-                return events;
 
-            });
+        }
 
+        function handleEventsFailure(response)
+        {
+
+        }
 
     };
 
@@ -190,7 +202,21 @@ angular.module('museum-services', [])
      */
     var getSingleEvent = function(id)
     {
-       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id);
+       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id)
+           .then(success, failure);
+
+        function success(response)
+        {
+            if(response.status == 200)
+            {
+                return response.data;
+            }
+        }
+        function failure(response)
+        {
+            return $q.reject('Event Failure');
+        }
+
     };
 
     /* Event */
@@ -259,7 +285,11 @@ angular.module('museum-services', [])
         {
 
             return  $http.get(Routes.MUSEUM_NEWS_ROUTE)
-                .then(function(response)
+                .then(newsSuccess, newsFailure);
+
+
+
+                function newsSuccess(response)
                 {
                     //console.log("RES:");
                     //console.log(response);
@@ -299,7 +329,12 @@ angular.module('museum-services', [])
                     //console.log(news);
                     return news;
 
-                });
+                };
+
+                function newsFailure()
+                {
+                    $.reject('Failed to get News');
+                };
         };
 
         /**
