@@ -36,7 +36,7 @@ angular.module('content-services', [])
                         title = _audioData.title;
 
                         /* Create an Audio*/
-                        return create('http://www.noiseaddicts.com/samples/2539.mp3')
+                        return create(_audioData.link)
                             .then(function(data) {
                                 console.log(audible.duration);
                                 audible.play();

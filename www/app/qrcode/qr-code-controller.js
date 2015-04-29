@@ -163,6 +163,7 @@ angular.module('qr-code-controllers', [])
 
             scanner.scan( function (_qrcodeData) {
 
+                console.log(_qrcodeData);
 
                 //TODO: IF we use some parsing or not
                 MatchHunt.guess($scope.user, _qrcodeData)
