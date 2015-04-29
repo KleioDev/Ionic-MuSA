@@ -54,10 +54,9 @@
 
             </ion-header-bar>
 
-            <ion-content>
+            <ion-content scroll="false">
 
             <div class="row">
-
                 <div class="col"></div>
 
                 <div class="col col-90 portrait-box">
@@ -65,7 +64,8 @@
 
                     <!--<img  class="match-hunt"  ng-src="{{matchHunt.image}}">-->
                     <!--</div>-->
-                    <div id='crop' ng-style="{'background-image': 'url({{matchHunt.image}})'}"></div>​
+                    <div id='crop' ng-style="{'background-image': 'url({{matchHunt.image}})', 'background-position': matchHunt.displacements.x + 'px ' + matchHunt.displacements.y + 'px'
+}"></div>​
 
 
                     <br><br>

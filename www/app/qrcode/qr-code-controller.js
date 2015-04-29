@@ -37,8 +37,15 @@ angular.module('qr-code-controllers', [])
 
                                 MatchHunt.setActiveGame(matchHunt);
 
+
+                                MatchHunt.generateRandomDisplacement()
+                                    .then(function(response)
+                                {
                                     //Now Change the state
+
                                     $state.go('tab.tab-match-hunt');
+
+                                });
 
 
 
@@ -136,6 +143,8 @@ angular.module('qr-code-controllers', [])
 
         /* Calls the Match Hunt service for a match hunt game */
         $scope.matchHunt = MatchHunt.getActiveGame();
+
+        $scope.displacements =
         console.log($scope.matchHunt);
 
         $scope.skip = function()
@@ -286,7 +295,14 @@ angular.module('qr-code-controllers', [])
 
                                     MatchHunt.setActiveGame(matchHunt);
 
-                                    $scope.matchHunt = MatchHunt.getActiveGame();
+                                MatchHunt.generateRandomDisplacement()
+                                    .then(function(response)
+                                    {
+                                        //Now Change the state
+
+                                        $scope.matchHunt = MatchHunt.getActiveGame();
+
+                                    });
 
 
 
@@ -387,6 +403,95 @@ angular.module('qr-code-controllers', [])
                 return $http(request);
         };
 
+
+        matchHunt.generateRandomDisplacement = function()
+        {
+
+            var defer = $q.defer();
+
+
+            var img = new Image();
+            img.src = matchHunt.activeGame.image;
+
+
+            img.onload = function()
+            {
+
+                var _displacements = $window.localStorage.getItem('matchHuntDisplacements');
+
+                if(_displacements == null) {
+
+                    var imgWidth = img.width;
+                    var imgHeight = img.height;
+
+                    var windowWidth = 250;
+                    var windowHeight = 250;
+
+                    console.log(imgWidth);
+                    console.log(imgHeight);
+                    var X = 0;
+                    var Y = 0;
+                    if (imgWidth > windowWidth && imgHeight > windowHeight) {
+                        /* Generate random displacement */
+
+                        /* X has to be a number such that X + windowWidth < imgWidth */
+                        X = -1 * Math.floor((Math.random() * (imgWidth - windowWidth )) + 0);
+
+
+                        /* Y has to be a number such that Y + windowHeight < imgHeight */
+                        Y = -1 * Math.floor((Math.random() * (imgHeight - windowHeight)) + 0);
+
+
+                    }
+
+
+                    console.log(X);
+                    console.log(Y);
+
+
+                    /* Store displacements */
+
+                    var displacements = {
+                        x: X,
+                        y: Y
+                    };
+
+                    matchHunt.activeGame.displacements = {
+                        x: X,
+                        y: Y
+                    };
+                    if (matchHunt.getId() != null) {
+                        var displacementsStr = JSON.stringify(displacements);
+
+                        $window.localStorage.setItem('matchHuntDisplacements', displacementsStr);
+                    }
+                }
+
+                else {
+
+                    console.log("using previous displacements");
+
+                    var _parseDisplacements = JSON.parse(_displacements);
+
+                    console.log(_parseDisplacements);
+                    matchHunt.activeGame.dispplacements = {
+                        x : _parseDisplacements.x,
+                        y: _parseDisplacements.y
+                    }
+
+
+                }
+
+                defer.resolve('Image Loaded');
+            };
+
+
+            return defer.promise;
+
+
+
+
+        };
         matchHunt.setActiveGame = function(_matchHunt)
         {
             matchHunt.activeGame = _matchHunt;
@@ -402,7 +507,33 @@ angular.module('qr-code-controllers', [])
 
         matchHunt.saveId = function(id)
         {
-            $window.localStorage.setItem('activeMatchHunt', id);
+            /* See if ID has changed */
+            console.log(typeof id);
+            var currentID = matchHunt.getId();
+
+            /* No ID has been made */
+            if(currentID == null)
+            {
+                console.log("new game");
+                $window.localStorage.setItem('activeMatchHunt', id);
+
+            }
+            /* Same game */
+            else if(parseInt(currentID) == id)
+            {
+                console.log("same game");
+            }
+
+            /* New Game */
+            else if(parseInt(currentID) != id)
+            {
+
+                console.log("new game");
+                /* Clear Displacements */
+                $window.localStorage.setItem('matchHuntDisplacements', null);
+                $window.localStorage.setItem('activeMatchHunt', id);
+
+            }
         };
 
         matchHunt.getId = function()
