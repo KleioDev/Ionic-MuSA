@@ -91,7 +91,7 @@ angular.module('exhibition-services', [])
     {
 
         var exhibitions = {};
-        var PER_PAGE = 4;
+        var PER_PAGE = 10;
 
         var getPage = function(pageNumber, searchTerm)
         {

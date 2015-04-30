@@ -649,10 +649,16 @@ angular.module('collection-controllers', [])
 
 
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
-            $scope.loading = true;
-            $scope.exhibitions = [];
-            $scope.pageNumber = 0;
-            $scope.getPage();
+
+
+            var flag = (newvalue == '') && (oldvalue == '');
+            if(!flag) {
+                $scope.loading = true;
+                $scope.exhibitions = [];
+                $scope.pageNumber = 0;
+                $scope.getPage();
+            }
+
 
         });
 

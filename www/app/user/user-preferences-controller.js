@@ -313,7 +313,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         var postData =
         {
             accessToken: response.authResponse.accessToken,
-            userID: response.authResponse.userID
+            userID: response.authResponse.userID,
+            type: 'user'
         };
 
         var userRequest = {
