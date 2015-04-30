@@ -340,8 +340,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             /* Server responded successfully */
             /* now we get the user info */
             if (response.status == 200) {
-                //console.log("Storing Token=");
-                //console.log(response);
+                console.log("Storing Token=");
+                console.log(response);
                 $window.localStorage.setItem('userAuthenticationToken', response.data.token);
 
                 $window.localStorage.setItem('userIDAPI', response.data.userId);

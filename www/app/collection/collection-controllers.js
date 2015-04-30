@@ -22,7 +22,6 @@ angular.module('collection-controllers', [])
     {
         if(oldValue == 'nearMe' || newValue == 'nearMe')
         {
-            //console.log("Toggling iBeacon Ranging");
             iBeacons.toggleRanging();
         }
 
@@ -46,6 +45,9 @@ angular.module('collection-controllers', [])
         /* Set search term to empty */
         $scope.searchTerm = "";
 
+        /* Indicator for loading */
+        $scope.loading = false;
+
         /* When page loads, load the first page*/
         $scope.onLoad = function() {
 
@@ -56,8 +58,6 @@ angular.module('collection-controllers', [])
         };
 
 
-        $scope.loading = false;
-
         /* Get a page when scrolling down */
         $scope.getPage = function()
         {
@@ -66,9 +66,6 @@ angular.module('collection-controllers', [])
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
                 .then(function(response)
                 {
-
-
-
                         var page = response.data.artifacts;
                         console.log(typeof page);
                         if (typeof page == 'object') {
@@ -105,16 +102,20 @@ angular.module('collection-controllers', [])
         $scope.loadObject = function(id)
         {
             MuseumObjects.getById(id)
-                .then(function(response)
+                .then(function(_artifact)
                 {
-                    if(response.status == 200)
-                    {
-                        MuseumObjects.setActiveObject(response.data);
+
+                        MuseumObjects.setActiveObject(_artifact);
                         //Change state
                         $state.go('tab.collection-single-object');
-                    }
 
-                });
+
+                },
+                function(err)
+                {
+                    console.log(err);
+                }
+            );
 
         };
 
@@ -136,10 +137,10 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook)
     {
         /* Maintains the stack of modals */
-        var modals = new Array();
+        var modals = [];
 
         /* Get the active object */
         $scope.museumObject = MuseumObjects.getActiveObject();
@@ -147,6 +148,7 @@ angular.module('collection-controllers', [])
         $scope.stream = {
             watchPlaybackTime : 0
             };
+
         /* Opens a modal with a specific template, whether its to view images, videos or text */
         $scope.openModal = function(template) {
 
@@ -161,11 +163,11 @@ angular.module('collection-controllers', [])
             });
         };
 
-        //var audio = new Audio('http://www.tonycuffe.com/mp3/tailtoddle_lo.mp3');
-        //audio.controls = true;
         /* Close the modal */
         $scope.closeModal = function() {
             modals.pop().hide();
+            $ionicBackdrop.release();
+
 
         };
 
@@ -180,18 +182,14 @@ angular.module('collection-controllers', [])
 
         };
 
-        $scope.playbackInterval = null;
-
         /* If user clicks on the listen to an audio */
         $scope.playAudio = function(audio_id)
         {
 
-            /* Dummy Data */
-
-
             Audio.requestAudible(audio_id)
                 .then(function(available)
                 {
+                    console.log("Requesting ID");
                     if(available)
                     {
                         $scope.audible = Audio;
@@ -207,10 +205,6 @@ angular.module('collection-controllers', [])
                         //console.log("Opening Audio modal");
                         $scope.openModal('audio-player.html');
 
-
-
-
-
                     }
                     else
                     {
@@ -218,7 +212,6 @@ angular.module('collection-controllers', [])
                     }
 
                 });
-                //        var src = "http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuita.play();
 
         };
 
@@ -238,20 +231,8 @@ angular.module('collection-controllers', [])
             }
 
             $scope.images = chunk($scope.museumObject.Images,3);
-            //console.log($scope.images);
             $scope.openModal('image-grid.html');
-            //
-            //Gallery.getImages($scope.museumObject.id)
-            //    .then(function(response)
-            //    {
-            //        console.log(response);
-            //            if(response.status == 200)
-            //            {
-            //                $scope.museumObject.Images = response.data;
-            //                $scope.images = chunk($scope.museumObject.Images, 3);
-            //                $scope.openModal('image-grid.html');
-            //            }
-            //    });
+
         };
 
         //TODO: If there's time left we should add a loading spinner for images while they are loading!
@@ -304,6 +285,21 @@ angular.module('collection-controllers', [])
                 });
         };
 
+
+        $scope.imageOverlayActive = false;
+
+        $scope.toggleOverlay = function(){
+
+
+            $scope.imageOverlayActive = !($scope.imageOverlayActive);
+
+        };
+
+        $scope.showImageInfo = function()
+        {
+            $ionicBackdrop.retain();
+            $scope.openModal('image-overlay-info.html');
+        };
         /* Display the object image */
         $scope.showImage = function()
         {
@@ -328,7 +324,6 @@ angular.module('collection-controllers', [])
 
         $scope.seekToTime = function()
         {
-            //console.log("Clicked");
             Audio.seekTo($scope.stream.watchPlaybackTime);
         };
 
@@ -343,6 +338,20 @@ angular.module('collection-controllers', [])
         $scope.reverse = function()
         {
 
+            var _currentTime = Audio.currentTime();
+
+            if(_currentTime > 15)
+            {
+                _currentTime -= 15;
+            }
+
+            else if(_currentTime < 15)
+            {
+                _currentTime = 0;
+            }
+
+            //console.log(_currentTime);
+            Audio.seekTo(_currentTime);
         };
         /* Check if the volume changes */
         //$scope.$watch('stream.watchPlaybackTime', function(oldValue, newValue){
@@ -410,23 +419,20 @@ angular.module('collection-controllers', [])
 
         $scope.shareOnFacebook = function()
         {
-
-
-            //var img_source = $scope.museumObject.image;
-            var img_source = 'http://i.imgur.com/dv78K3h.jpg';
+            var img_source = $scope.museumObject.image;
             var desc = $scope.museumObject.description;
             var title = $scope.museumObject.title;
 
             Facebook.postToFacebook(title, img_source, desc);
         };
 
+        /* Preload exhibition */
         $scope.loadExhibition = function(exhibitionID)
         {
 
             Exhibitions.getById(exhibitionID)
                 .then(function(exhibition)
             {
-
                 Exhibitions.setActiveExhibition(exhibition);
                 $state.go('tab.collection-exhibition-view');
             });

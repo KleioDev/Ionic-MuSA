@@ -11,11 +11,10 @@
     <ion-content>
         <div class="padding">
             <h2>{{museumObject.title}}</h2>
-            <p>{{museumObject.Artist.name}}</p>
+            <h3>{{museumObject.Artist.name}}</h3>
+            <p>{{museumObject.dated}}</p>
 
 
-
-            <ion-list>
 
 
 
@@ -23,7 +22,6 @@
 
         </div>
 
-        <hr>
         <!--<div class="row">-->
             <!--<div class="col"></div>-->
             <!--<div class="col-90 portrait-box">-->
@@ -49,6 +47,8 @@
                 <img src="{{museumObject.image}}" alt="Image" />
         </div>
 
+
+        <ion-list>
 
         <ion-item ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.mediumLabel}}
@@ -263,6 +263,19 @@
             </div>
 
 
+            <br>
+
+
+            <a ng-if="museumObject.ExhibitionId" class="item item-icon-left item-icon-right" ng-click="loadExhibition(museumObject.ExhibitionId)">
+                <i class="icon ion-ios-albums-outline" ></i>
+
+                {{navigationTitles.collection.singleObject.viewParentExhibitionLabel}}
+
+                <i class="icon ion-ios-arrow-right"></i>
+
+            </a>
+
+
             <div class="row">
                 <div class="col col-80 col-offset-10">
                     <button class="button icon-left  icon ion-social-facebook button-royal" ng-style="{'font-size': app.fontSize};"  style="width: 100%;" ng-click="shareOnFacebook()">{{navigationTitles.collection.singleObject.shareOnFacebookLabel}}</button>
@@ -357,7 +370,7 @@
                         {{navigationTitles.collection.singleObject.audioLabel}}
                     </div>
                     <ion-list class="transparent">
-                        <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-repeat="audio in museumObject.Audibles" type="item-text-wrap" ng-click="doSomething()">
+                        <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-repeat="audio in museumObject.Audibles" type="item-text-wrap" ng-click="playAudio(audio.id)">
                             {{audio.title}}
 
                             <i class="icon ion-ios-arrow-right"></i>
@@ -511,12 +524,44 @@
 </script>
 
         <script id="image-preview.html" type="text/ng-template">
-            <div class="modal image-modal transparent" ng-click="closeModal()">
-                <ion-pane class="transparent">
-                    <img ng-src="{{image.link}}" class="fullscreen-image"/>
-                </ion-pane>
+
+            <div class="modal image-modal transparent" >
+
+
+
+                <ion-modal-view class="caption" ng-if="imageOverlayActive" ng-click="toggleOverlay()">
+                    <ion-header-bar class="bar-positive" ng-if="imageOverlayActive">
+                        <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
+
+                    </ion-header-bar>
+                    <ion-content class="img-caption padding" style="color: white">
+                        <h3 style="color: white">{{image.title}}</h3>
+                        <strong>{{image.description}} </strong>  </ion-content>
+                </ion-modal-view>
+
+                <ion-slide-box ng-click="toggleOverlay()">
+                    <ion-slide>
+                        <!--<div class="desc padding">{{image.title}}</div>-->
+                        <img ng-src="{{image.link}}" class="fullscreen-image"/>
+                    </ion-slide>
+
+
+
+                </ion-slide-box>
+
             </div>
         </script>
+
+        <!--<script id="image-overlay-info.html" type="text/ng-template">-->
+
+            <!--<ion-modal-view class="caption" ng-click="closeModal()">-->
+                <!--<ion-content class="img-caption padding" style="color: white">-->
+                    <!--<h3>{{image.title}}</h3>-->
+              <!--<strong>{{image.description}} </strong>  </ion-content>-->
+            <!--</ion-modal-view>-->
+
+
+        <!--</script>-->
 
     </ion-content>
 </ion-view>

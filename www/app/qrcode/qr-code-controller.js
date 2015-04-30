@@ -72,39 +72,39 @@ angular.module('qr-code-controllers', [])
     /* Open the scanner when the user wants to scan a qr code */
     $scope.openScanner = function()
     {
-
         var scanner = cordova.require("cordova/plugin/BarcodeScanner");
 
-        scanner.scan( function (result) {
-            console.log(result);
+        scanner.scan( function (scan) {
+            console.log(scan);
 
-            /* Query the server if it works */
-            if(result.text.indexOf("MuSA") < 0)
+            var qrCodeText = scan.text;
+
+            if(!isNaN(qrCodeText))
             {
-
-                        $ionicPopup.alert({
-                            title: $scope.navigationTitles.scanner.invalidQRCodeLabel
-                        });
-
-            }
-            else {
-
-                //console.log(result.text.split(':')[1]);
-                /* Preload the Object */
-                var objectId = result.text.split(':')[1]
 
                 /* Load Object */
 
-                    MuseumObjects.getById(objectId)
-                        .then(function(response)
+                    MuseumObjects.getById(qrCodeText)
+                        .then(function(object)
                         {
-                            if(response.status == 200)
-                            {
-                                MuseumObjects.setActiveObject(response.data);
+                           MuseumObjects.setActiveObject(object);
                                 //Change state
                                 $state.go('tab.scanner-object');
-                            }
-                        });
+
+                        },
+                        function(response)
+                        {
+                            console.log(response);
+                        }
+                    );
+            }
+
+            else {
+
+                $ionicPopup.alert({
+                    title: $scope.navigationTitles.scanner.invalidQRCodeLabel
+                });
+
             }
 
         }, function (error) {

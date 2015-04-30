@@ -106,6 +106,7 @@ img {
     right: 0;
     top: 0;
     opacity: 1;
+    z-index:-1;
 
 
 }
@@ -321,9 +322,59 @@ td{
     color:white;
 }
 
-/*hr.{*/
-    /*background-color:#fff;*/
-    /*border:#000 1px dotted;*/
-    /*border-style: dotted;*/
-    /*color:#fff;*/
-/*}*/
+.desc {
+    background-color: #666;
+    color: white !important;
+    bottom: 5%;
+    left: 0;
+    right: 0;
+    top: 90%;
+    position: fixed;
+}
+.my-overlay {
+    background-color: #222;
+    opacity: 0.2;
+}
+
+.caption{
+
+    background: transparent !important;
+
+    opacity:1.0;
+
+
+}
+.img-caption {
+    opacity:1.0;
+    background: transparent !important;
+
+
+    color: white !important;
+    position: fixed;
+    top: 15%;
+    bottom: 10%
+    z-index: 1;
+
+
+}
+
+
+.image-list-thumb {
+    padding: 2px 2px 2px 2px;
+    height: 100px;
+}
+
+.image-modal {
+    width: 100% !important;
+    height: 100%;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+
+
+
+.slider {
+    width: 100%;
+    height: 100%;
+}

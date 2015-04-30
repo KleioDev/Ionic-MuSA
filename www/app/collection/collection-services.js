@@ -2,7 +2,7 @@ angular.module('exhibition-services', [])
 
 
 /* Manages Museum objects related features */
-.factory('MuseumObjects', function($filter, Routes, $http)
+.factory('MuseumObjects', function($q, Routes, $http)
 {
 
     var museumObjects = {};
@@ -36,9 +36,6 @@ angular.module('exhibition-services', [])
                     }
 
                 }
-
-
-
                 return response;
 
             }
@@ -47,7 +44,25 @@ angular.module('exhibition-services', [])
 
     var getById = function(id)
     {
-        return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id);
+        return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id)
+            .then(successArtifact, failureArtifact);
+
+
+        function successArtifact(response)
+        {
+            if(response.status == 200) //IF OK
+            {
+                return response.data;
+            }
+        }
+
+        function failureArtifact(response)
+        {
+            if(response.status == 404)
+            {
+                return $.reject('Artifact could not be received');
+            }
+        }
     };
 
 
