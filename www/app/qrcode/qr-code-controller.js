@@ -16,16 +16,23 @@ angular.module('qr-code-controllers', [])
         {
             /* If is logged in OPen Match Hunt */
 
-            Facebook.isLoggedIn()
+            Facebook.isLoggedInOnly()
                 .then(function(user)
                 {
-                    console.log("MATCH HUNT");
-                    console.log(user);
+
+
                     if(user.loginStatus)
                     {
 
-                        $window.localStorage.setItem('userID', user.userID);
-                        MatchHunt.getMatchHunt(user)
+                        console.log("Getting UserID");
+                        var userID = $window.localStorage.getItem('userIDAPI')
+
+                        console.log(userID);
+
+                        console.log("Retrieving Authorization");
+                        var authToken = $window.localStorage.getItem('userAuthenticationToken');
+                        //$window.localStorage.setItem('userID', user.userID);
+                        MatchHunt.getMatchHunt(userID, authToken)
                             .then(function(matchHunt)
                             {
                                 $scope.matchHunt = matchHunt;
@@ -282,18 +289,21 @@ angular.module('qr-code-controllers', [])
     {
         var matchHunt = {};
 
-        matchHunt.getMatchHunt = function(user)
-        {
-            console.log("GETTING AUTH");
 
-            var authToken = $window.localStorage.getItem('userAuthenticationToken');
+        var getMatchHunt = function(user, token)
+        {
+
+            console.log("Checking if there is a current match hunt id stored");
             var id = matchHunt.getId(); //Get ID from localstorage
 
-            /* If it is undefined  set to 0, get a random Match Hunt Game */
-            if(id == null || typeof id == 'undefined')
+
+
+            if(!id)
             {
                 id = 0;
             }
+
+            console.log("Defining Request:");
 
             var request = {
 
@@ -309,7 +319,6 @@ angular.module('qr-code-controllers', [])
 
             };
 
-            /* Should handle the http response here */
             return $http(request).then(success, failure);
 
             function success(response) {
@@ -326,7 +335,6 @@ angular.module('qr-code-controllers', [])
 
                     this.generateRandomDisplacement().then(function()
                     {
-
                         return matchHunt.activeGame;
                     })
                 }
@@ -336,12 +344,47 @@ angular.module('qr-code-controllers', [])
             {
                 $q.reject('Failed to get a Match Hunt Game');
             }
+        };
 
-
+        var getId = function()
+        {
+            return $window.localStorage.getItem('activeMatchHunt');
 
         };
 
-        matchHunt.guess = function(_user, _qrCodeData)
+        var setId = function(id)
+        {
+            /* See if ID has changed */
+            console.log(typeof id);
+            var currentID = matchHunt.getId();
+
+            /* No ID has been made */
+            if(currentID == null)
+            {
+                console.log("new game");
+                $window.localStorage.setItem('activeMatchHunt', id);
+
+            }
+            /* Same game */
+            else if(parseInt(currentID) == id)
+            {
+                console.log("same game");
+            }
+
+            /* New Game */
+            else if(parseInt(currentID) != id)
+            {
+
+                console.log("new game");
+                /* Clear Displacements */
+                $window.localStorage.setItem('matchHuntDisplacements', null);
+                $window.localStorage.setItem('activeMatchHunt', id);
+
+            }
+        };
+
+
+        var guess = function(_qrCodeData)
         {
 
             /* Should I check if the user is logged in ? */
@@ -418,8 +461,9 @@ angular.module('qr-code-controllers', [])
 
         };
 
-        matchHunt.skip = function()
+        var skip = function()
         {
+
             return $http.put(Routes.MATCH_HUNT + this.getId()).then(
                 function(response)
                 {
@@ -441,7 +485,7 @@ angular.module('qr-code-controllers', [])
             )
         };
 
-        matchHunt.generateRandomDisplacement = function()
+        var generateRandomDisplacement = function()
         {
 
             var defer = $q.defer();
@@ -453,7 +497,6 @@ angular.module('qr-code-controllers', [])
 
             img.onload = function()
             {
-
                 var _displacements = $window.localStorage.getItem('matchHuntDisplacements');
 
                 if(_displacements == null) {
@@ -477,9 +520,7 @@ angular.module('qr-code-controllers', [])
                         /* Y has to be a number such that Y + windowHeight < imgHeight */
                         Y = -1 * Math.floor((Math.random() * (imgHeight - windowHeight)) + 0);
 
-
                     }
-
 
                     console.log(X);
                     console.log(Y);
@@ -528,65 +569,31 @@ angular.module('qr-code-controllers', [])
 
 
         };
-        matchHunt.setActiveGame = function(_matchHunt)
+        var setActiveGame = function(_matchHunt)
         {
-            matchHunt.activeGame = _matchHunt;
+            this.matchHunt = _matchHunt;
 
             /* Save the current Id */
-            matchHunt.saveId(_matchHunt.id);
+            this.saveId(_matchHunt.id);
         };
 
-        matchHunt.getActiveGame = function()
+
+        var reset = function()
         {
-            return matchHunt.activeGame;
-        };
-
-        matchHunt.saveId = function(id)
-        {
-            /* See if ID has changed */
-            console.log(typeof id);
-            var currentID = matchHunt.getId();
-
-            /* No ID has been made */
-            if(currentID == null)
-            {
-                console.log("new game");
-                $window.localStorage.setItem('activeMatchHunt', id);
-
-            }
-            /* Same game */
-            else if(parseInt(currentID) == id)
-            {
-                console.log("same game");
-            }
-
-            /* New Game */
-            else if(parseInt(currentID) != id)
-            {
-
-                console.log("new game");
-                /* Clear Displacements */
-                $window.localStorage.setItem('matchHuntDisplacements', null);
-                $window.localStorage.setItem('activeMatchHunt', id);
-
-            }
-        };
-
-        matchHunt.getId = function()
-        {
-            return $window.localStorage.getItem('activeMatchHunt');
-        };
-
-
-        matchHunt.reset = function()
-        {
-            matchHunt.setActiveGame(null);
-            matchHunt.saveId(null);
+            this.setActiveGame(null);
+            this.saveId(null);
         };
 
 
 
-        return matchHunt;
+        return {
+
+            getMatchHunt : getMatchHunt,
+            setActiveGame : setActiveGame,
+            guess: guess,
+            skip: skip
+
+        };
 
 
     });

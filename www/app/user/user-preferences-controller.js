@@ -82,7 +82,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo()
             .then(function(response)
             {
-
                 $scope.text.title = $scope.navigationTitles.user.termsOfServiceLabel;
                 $scope.text.content = response.terms;
                 $scope.openModal('text-view.html');
@@ -148,10 +147,49 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     {
         //console.log("LOGIN");
         Facebook.login()
-            .then(function(user)
+            .then(function(response)
             {
+                console.log(response);
+                if(response)
+                {
+                    console.log(response);
+                    /* Now we should generate the token Info */
+                    Facebook.generateToken(response)
+                        .then(function(valid)
+                        {
 
-                $scope.user = user;
+                            if(valid)
+                            {
+                                console.log(valid);
+                                Facebook.getUserInfo()
+                                    .then(function(user)
+                                    {
+                                        console.log(user);
+                                        $scope.user = user;
+                                    });
+
+                                Facebook.getPoints()
+                                    .then(function (points) {
+                                        console.log(points);
+
+                                        $scope.user.points = points;
+
+
+                                        $scope.loading.points = true;
+
+                                    }, function (err) {
+                                    })
+                            }
+                            else
+                            {
+                                $scope.user.loginStatus = false;
+                                Facebook.logout();
+                            }
+
+
+                        });
+
+                }
             });
 
         //$scope.user = Facebook.getUser();
@@ -173,32 +211,56 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             //TODO: Check if the state is changed to User */
 
             Facebook.isLoggedIn()
-                .then(function (response) {
-                    //console.log("LOGGED IN?");
-                    //console.log(response);
-                    $scope.user = response;
+                .then(function(user)
+                {
+                    //User is logged in
+                    if(user.connected)
+                    {
+                        $scope.user.loginStatus = user.connected;
 
-                    /* Show loading for Points */
+                        /* Now we should generate the token Info */
+                        Facebook.generateToken(user)
+                            .then(function(valid)
+                            {
 
-                    Facebook.getPoints()
-                        .then(function (response) {
-                            //console.log(response);
-                            if (response.status == 200) {
-                                $scope.user.points = response.data.points;
-                            }
-                            else {
-                                $scope.user.points = "N/A";
-                            }
-
-                            $scope.loading.points = true;
-
-                        }, function (err) {
-                        })
+                                if(valid)
+                                {
+                                    Facebook.getUserInfo()
+                                        .then(function(user)
+                                        {
+                                            $scope.user = user;
 
 
-                }, function (err) {
-                    console.log(err);
-                });
+                                            Facebook.getPoints()
+                                                .then(function (points) {
+                                                    console.log(points);
+
+                                                    $scope.user.points = points;
+
+
+                                                    $scope.loading.points = true;
+
+                                                }, function (err) {
+                                                })
+                                        });
+                                }
+                                else
+                                {
+                                    $scope.user.loginStatus = false;
+                                    Facebook.logout();
+                                }
+
+
+                            });
+                    }
+                    //User is not connected
+                    else
+                    {
+
+                        $scope.user.loginStatus = user.connected;
+
+                    }
+                }, console.log)
 
 
 
@@ -364,22 +426,82 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     user.login = function() {
 
-        loading.show();
 
-        var me = this;
 
         /* If login was successful get the token from our server */
-        return $cordovaFacebook.login(["public_profile", "email"]).then(user.getToken, failureLogin);
+        return $cordovaFacebook.login(["public_profile", "email"]).then(successLogin, failureLogin);
 
 
+        function successLogin(response)
+        {
+            console.log(response);
+            return response;
+        }
         /* Fails to Login */
         function failureLogin(error) {
-            loading.hide();
            // console.log("FACEBOOK ERR:");
             //console.log(error);
             /* DOn't proceed with the login, show an error message */
             $rootScope.$broadcast('http:error', {});
+            $q.reject('Failed to get login');
         };
+    };
+
+    user.generateToken = function(response)
+    {
+        /* User Response */
+
+        console.log("Generating Token");
+        console.log(response);
+
+
+            console.log("Token Post Data: ");
+            var postData =
+            {
+                accessToken: response.authResponse.accessToken,
+                userID: response.authResponse.userID,
+                type: 'user'
+            };
+            console.log(postData);
+
+
+            console.log("Token Post Request: ");
+            var userRequest = {
+
+                url: Routes.USER_AUTHENTICATION,
+                method: 'POST',
+                data: postData
+            };
+
+            console.log(userRequest);
+
+            return $http(userRequest).then(storeToken, failureAccess);
+
+
+
+
+        function storeToken(response)
+        {
+            if (response.status == 200)
+            {
+                console.log("Storing Token=");
+                console.log(response);
+
+                $window.localStorage.setItem('userAuthenticationToken', response.data.token);
+
+                $window.localStorage.setItem('userIDAPI', response.data.userId);
+
+                /* Make an API Call to Facebook */
+                return response;
+
+            }
+            return null;
+        }
+
+        function failureAccess(response)
+        {
+            $q.reject('Failed to Get/Store Token');
+        }
 
 
 
@@ -401,121 +523,37 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     };
 
-    user.isLoggedInOnly = function()
-    {
-            return $cordovaFacebook.getLoginStatus()
-                .then(successResponse, failureResponse);
-
-
-        function successResponse(response)
-        {
-            //console.log("SUCCESS GOT LOGIN STATUS");
-            //console.log(response);
-            var _user = {};
-            if(response.status == 'connected')
-            {
-                _user.loggedIn = true;
-                _user.userID  = response.authResponse.userID;
-
-            }
-
-            else
-            {
-                _user.loggedIn = false;
-                _user.userID = null;
-            }
-
-            return _user;
-
-        }
-        function failureResponse(err)
-        {
-            //console.log("FAILED TO GET LOGIN STATUS");
-            var _user = {
-                loggedIn : false
-            }
-
-            return _user;
-        }
-    };
-
-
     user.isLoggedIn = function()
     {
-        var loading = $ionicLoading.show(  {content: 'Showing Loading Indicator!',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 500});
-
-
-       return  $cordovaFacebook.getLoginStatus().then(successLoginStatus, failureLoginStatus);
+       return $cordovaFacebook.getLoginStatus().then(successLoginStatus, failureLoginStatus);
 
 
         function successLoginStatus(response)
         {
-            //console.log("LOGIN STATUS: ");
-            //console.log(response);
-            /* If he is logged in, get the user's info from Facebook's API */
+
+            var _userStatus = {};
+
+
             if(response.status == 'connected')
             {
-                //console.log(response);
-                /* Before getting the info from FB we need to check if the user has a token from our server */
-                var serverToken = $window.localStorage.getItem('userAuthenticationToken');
-
-                /* Store userID */
-                $window.localStorage.setItem('userID', response.authResponse.userID);
-                //console.log("TOKEN");
-                //console.log(serverToken);
-                /* If token is not defined */
-                if(serverToken == null)
-                {
-                    //console.log("SERVER TOKEN NOT DEFINED");
-                    return user.getToken(response);
-                }
-
-                /* Token probably defined so just get the user info*/
-                else
-                {
-                    return user.getUserInfo().then(user.getUserInfo, getUserInfoFailure);
-                }
+                response.connected = true;
             }
 
             /* Let them know he's not logged in */
             else{
-                $window.localStorage.setItem('userID', null);
-
-                //console.log("NOT LOGGED IN");
-                loading.hide();
-
-                var _user = {};
-                _user.loginStatus = false;
-                return _user;
-
+                response.connected = false;
             }
+
+            return response;
+
         }
 
         function failureLoginStatus(error)
         {
-            //console.log("FAILED TO GET LOGIN STATUS");
-            //console.log(error);
-            loading.hide();
-            return error;
+            $q.reject('Facebook/Login Status Could not Be Reached');
 
         }
 
-
-        function getUserInfoFailure(response)
-        {
-            //console.log("FAILED TO GET USER INFO");
-
-            /* Log out to avoid inconsistencies*/
-            $window.localStorage.setItem('userID', null);
-
-            user.logout();
-
-            //TODO: SEND OUT ERROR
-        }
 
     };
 
@@ -527,8 +565,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             .then(function(success) {
 
                 var user = {};
-                //console.log("GOT INFO");
-                //console.log(success);
+
 
                 /* Parse out the correct Info */
                 user.name = success.name;
@@ -536,21 +573,18 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 user.userID = success.id;
                 user.loginStatus = success.verified;
 
-                //user.loginStatus = true; /* Prove that he is connected */
-                loading.hide();
 
                 return user;
 
 
             }, function (error) {
-                loading.hide();
 
-                //console.log("GETTING USER INFO FAILED");
 
-                // error
             });
 
     };
+
+
 
 
     user.showLoginPopup = function()
@@ -603,9 +637,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         var authToken = $window.localStorage.getItem('userAuthenticationToken');
         var _userID = $window.localStorage.getItem('userIDAPI');
-        //console.log("SENDING REQ");
-        //console.log(userID);
-        //console.log(authToken);
 
         var request = {
             url: Routes.USER + _userID,
@@ -618,7 +649,19 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         //console.log(request);
 
-        return $http(request);
+        return $http(request)
+            .then(function(response)
+            {
+                if(response.status == 200)
+                {
+                    console.log("Got the points");
+                    console.log(response.data.points);
+                    return response.data.points;
+                }
+            }, function(err){
+
+                $q.reject('failed to get the points');
+            })
     };
 
 
@@ -644,6 +687,19 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     };
 
 
+    user.isTokenAvailable = function()
+    {
+        var authToken = $window.localStorage.getItem('userAuthenticationToken');
+
+        if(authToken)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    };
     return user;
 
 
