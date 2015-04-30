@@ -350,78 +350,14 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
 /* Service handles Facebook calls */
-.factory('Facebook', function($cordovaFacebook, $timeout, $q, AppNavigationTitles, $window, Routes, $http, $ionicPopup, $rootScope, $ionicLoading)
+.factory('Facebook', function($cordovaFacebook, $timeout, $q, AppNavigationTitles, $window, Routes, $http, $ionicPopup, $rootScope)
 {
 
     /* User info */
-    var user = {
-
-
-    };
-
-    var loading = $ionicLoading.show({
-        template: '<ion-spinner icon="ios"></ion-spinner>                '
-    });
-    loading.hide();
+    var user = {};
 
     user.loginStatus = false;
     user.userInfo = {};
-
-    user.getToken = function(response)
-    {
-
-        $window.localStorage.setItem('userID', response.authResponse.userID);
-
-        var postData =
-        {
-            accessToken: response.authResponse.accessToken,
-            userID: response.authResponse.userID,
-            type: 'user'
-        };
-
-        var userRequest = {
-
-            url: Routes.USER_AUTHENTICATION,
-            method: 'POST',
-            data: postData
-        };
-
-        //console.log("post");
-        //console.log(postData);
-        return $http(userRequest).then(storeToken, failureAccess);
-
-        /* Fails to Login */
-        function failureAccess(error) {
-            //console.log("FAILED TO GET DA TOKEN FROM MUSA SERVER");
-            /* Don't proceed with the login, show an error message */
-            loading.hide();
-            $rootScope.$broadcast('http:error', {});
-        };
-
-        /* Store the server token */
-        function storeToken(response) {
-            /* Server responded successfully */
-            /* now we get the user info */
-            if (response.status == 200) {
-                console.log("Storing Token=");
-                console.log(response);
-                $window.localStorage.setItem('userAuthenticationToken', response.data.token);
-
-                $window.localStorage.setItem('userIDAPI', response.data.userId);
-
-                //console.log (response);
-
-                /* Make an API Call to Facebook */
-                return user.getUserInfo();
-
-            }
-
-            loading.hide();
-
-
-        }
-
-    };
 
 
     user.login = function() {
@@ -453,6 +389,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         console.log("Generating Token");
         console.log(response);
+
 
 
             console.log("Token Post Data: ");
@@ -531,7 +468,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         function successLoginStatus(response)
         {
 
-            var _userStatus = {};
 
 
             if(response.status == 'connected')
@@ -700,6 +636,19 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             return false;
         }
     };
+
+    user.getAPIToken = function()
+    {
+        var APIToken = $window.localStorage.getItem('userAuthenticationToken');
+        return APIToken;
+    };
+
+    user.getUserID = function()
+    {
+
+        return $window.localStorage.getItem('userIDAPI');
+    };
+
     return user;
 
 

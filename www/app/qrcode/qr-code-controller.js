@@ -16,26 +16,28 @@ angular.module('qr-code-controllers', [])
         {
             /* If is logged in OPen Match Hunt */
 
-            Facebook.isLoggedInOnly()
+            Facebook.isLoggedIn()
                 .then(function(user)
                 {
 
 
-                    if(user.loginStatus)
+                    if(user.connected)
                     {
 
                         console.log("Getting UserID");
-                        var userID = $window.localStorage.getItem('userIDAPI')
-
+                        var userID = Facebook.getUserID();
                         console.log(userID);
 
                         console.log("Retrieving Authorization");
-                        var authToken = $window.localStorage.getItem('userAuthenticationToken');
+                        var authToken = Facebook.getAPIToken();
+
                         //$window.localStorage.setItem('userID', user.userID);
                         MatchHunt.getMatchHunt(userID, authToken)
                             .then(function(matchHunt)
                             {
                                 $scope.matchHunt = matchHunt;
+
+                                $state.go('tab.tab-match-hunt');
                             },
 
                             function(err)
@@ -106,24 +108,6 @@ angular.module('qr-code-controllers', [])
 .controller('MatchHuntCtrl', function($scope,$state, Facebook, MatchHunt)
     {
 
-        /* Always check for Facebook Login */
-        Facebook.isLoggedInOnly()
-            .then(function(_user)
-            {
-                /* If the user is logged in */
-                if(_user.loggedIn)
-                {
-                    $scope.user = _user;
-                }
-                else
-                {
-                    /* Go back */
-                    $state.go('tab.tab-qrcode-scanner');
-                }
-            });
-
-
-
 
         /* Calls the Match Hunt service for a match hunt game */
         $scope.matchHunt = MatchHunt.getActiveGame();
@@ -149,99 +133,123 @@ angular.module('qr-code-controllers', [])
             /* Open Bar Code Scanner */
             var scanner = cordova.require("cordova/plugin/BarcodeScanner");
 
-            scanner.scan( function (_qrcodeData) {
+            scanner.scan( function (scan) {
 
-                console.log(_qrcodeData);
+                console.log(scan);
 
-                //TODO: IF we use some parsing or not
-                MatchHunt.guess($scope.user, _qrcodeData)
-                    .then(function(status)
-                    {
-                        if(status == 'won')
-                        {
-                            var okButton = {
-                                text: $scope.navigationTitles.scanner.playAgainLabel,
-                                type: 'button-positive',
-                                onTap: $scope.loadNewMatchHuntGame
 
-                            };
+                if(scan) {
 
-                            var cancelButton = {
-                                text: $scope.navigationTitles.scanner.quitLabel,
-                                onTap: function()
-                                {
-                                    $state.go('tab.tab-qrcode-scanner');
+                    if(!scan.cancelled) {
+
+                        Facebook.isLoggedIn()
+                            .then(function (user) {
+
+
+                                if (user.connected) {
+
+                                    console.log("Getting UserID");
+                                    var userID = Facebook.getUserID();
+                                    console.log(userID);
+
+                                    console.log("Retrieving Authorization");
+                                    var authToken = Facebook.getAPIToken();
+
+
+                                    //TODO: IF we use some parsing or not
+                                    MatchHunt.guess(userID, authToken, scan.text)
+                                        .then(function (status) {
+                                            if (status == 'won') {
+                                                var okButton = {
+                                                    text: $scope.navigationTitles.scanner.playAgainLabel,
+                                                    type: 'button-positive',
+                                                    onTap: $scope.loadNewMatchHuntGame
+
+                                                };
+
+                                                var cancelButton = {
+                                                    text: $scope.navigationTitles.scanner.quitLabel,
+                                                    onTap: function () {
+                                                        $state.go('tab.tab-qrcode-scanner');
+                                                    }
+                                                };
+
+                                                var wonPopup = $ionicPopup.show(
+                                                    {
+                                                        title: $scope.navigationTitles.scanner.youWonLabel,
+                                                        subTitle: $scope.navigationTitles.scanner.pointsReceivedLabel + game.points,
+                                                        buttons: [
+                                                            cancelButton, okButton
+                                                        ]
+                                                    }
+                                                );
+
+                                                wonPopup.then(function (res) {
+                                                    console.log("Doing something");
+                                                });
+                                            }
+
+                                            else if (status == 'lost') {
+                                                var okButton = {
+                                                    text: $scope.navigationTitles.scanner.playAgainLabel,
+                                                    type: 'button-positive',
+                                                    onTap: $scope.loadNewMatchHuntGame
+
+                                                };
+
+                                                var cancelButton = {
+                                                    text: $scope.navigationTitles.scanner.quitLabel,
+                                                    onTap: function () {
+                                                        $state.go('tab.tab-qrcode-scanner');
+                                                    }
+                                                };
+
+                                                var losePopup = $ionicPopup.show(
+                                                    {
+                                                        title: $scope.navigationTitles.scanner.youLoseLabel,
+                                                        subTitle: $scope.navigationTitles.scanner.youLoseBodyLabel,
+                                                        buttons: [
+                                                            cancelButton, okButton
+                                                        ]
+                                                    }
+                                                );
+
+                                                losePopup.then(function (res) {
+                                                    console.log("Doing something");
+                                                });
+                                            }
+
+                                            else if (status == 'incorrect') {
+                                                //TODO: Show a popup dialog saying you failed
+                                                var alertFail = $ionicPopup.show(
+                                                    {
+                                                        title: $scope.navigationTitles.scanner.failGuessLabel,
+                                                        template: $scope.navigationTitles.scanner.livesLeftLabel + game.tries + "<br>" + $scope.navigationTitles.scanner.pointsLeftLabel + game.points
+
+                                                    }
+                                                );
+
+                                                alertFail.then(function (res) {
+                                                    console.log("Guess Fail Alert Acknowledged");
+                                                });
+                                            }
+
+
+                                        }, function(err){console.log(err);});
                                 }
-                            };
 
-                            var wonPopup = $ionicPopup.show(
-                                {
-                                    title: $scope.navigationTitles.scanner.youWonLabel,
-                                    subTitle: $scope.navigationTitles.scanner.pointsReceivedLabel + game.points,
-                                    buttons: [
-                                        cancelButton, okButton
-                                    ]
+
+                                else {
+
+                                    //TODO: Show a popup asking the user to login
+
+                                    Facebook.showLoginPopup();
                                 }
-                            );
-
-                            wonPopup.then(function(res)
-                            {
-                                console.log("Doing something");
                             });
-                        }
 
-                        else if(status == 'lost')
-                        {
-                            var okButton = {
-                                text: $scope.navigationTitles.scanner.playAgainLabel,
-                                type: 'button-positive',
-                                onTap: $scope.loadNewMatchHuntGame
 
-                            };
-
-                            var cancelButton = {
-                                text: $scope.navigationTitles.scanner.quitLabel,
-                                onTap: function()
-                                {
-                                    $state.go('tab.tab-qrcode-scanner');
-                                }
-                            };
-
-                            var losePopup = $ionicPopup.show(
-                                {
-                                    title: $scope.navigationTitles.scanner.youLoseLabel,
-                                    subTitle: $scope.navigationTitles.scanner.youLoseBodyLabel,
-                                    buttons: [
-                                        cancelButton, okButton
-                                    ]
-                                }
-                            );
-
-                            losePopup.then(function(res)
-                            {
-                                console.log("Doing something");
-                            });
-                        }
-
-                        else if(status == 'incorrect')
-                        {
-                            //TODO: Show a popup dialog saying you failed
-                            var alertFail = $ionicPopup.show(
-                                {
-                                    title: $scope.navigationTitles.scanner.failGuessLabel,
-                                    template: $scope.navigationTitles.scanner.livesLeftLabel + game.tries + "<br>" + $scope.navigationTitles.scanner.pointsLeftLabel + game.points
-
-                                }
-                            );
-
-                            alertFail.then(function(res)
-                            {
-                                console.log("Guess Fail Alert Acknowledged");
-                            });
-                        }
-
-                    });
-
+                }
+            }
             }, function (error) {
                 console.log("Scanning failed: ", error);
             } );
@@ -259,8 +267,13 @@ angular.module('qr-code-controllers', [])
                     if(user.loginStatus)
                     {
 
-                        $window.localStorage.setItem('userID', user.userID);
-                        MatchHunt.getMatchHunt(user)
+                        console.log("Getting UserID");
+                        var userID = Facebook.getUserID();
+                        console.log(userID);
+
+                        console.log("Retrieving Authorization");
+                        var authToken = Facebook.getAccessToken();
+                        MatchHunt.getMatchHunt(userID, authToken)
                             .then(function(matchHunt)
                             {
                                 $scope.matchHunt = matchHunt;
@@ -290,18 +303,22 @@ angular.module('qr-code-controllers', [])
         var matchHunt = {};
 
 
-        var getMatchHunt = function(user, token)
+        var getMatchHunt = function(user, authToken)
         {
 
             console.log("Checking if there is a current match hunt id stored");
-            var id = matchHunt.getId(); //Get ID from localstorage
+            var id = this.getId();
 
 
+            var me = this;
 
             if(!id)
             {
                 id = 0;
             }
+
+            console.log("Current ID:");
+            console.log(id);
 
             console.log("Defining Request:");
 
@@ -312,9 +329,6 @@ angular.module('qr-code-controllers', [])
                 headers:
                 {
                     'Authorization': 'Bearer ' + authToken
-                },
-                data: {
-                    userID: user.userID
                 }
 
             };
@@ -322,20 +336,22 @@ angular.module('qr-code-controllers', [])
             return $http(request).then(success, failure);
 
             function success(response) {
+                console.log("Retrieved Game");
+                console.log(response);
                 if (response.status == 200) {
 
                     var _matchHunt = response.data;
 
                     var matchHuntID = _matchHunt.id;
 
-                    this.saveId(matchHuntID);
+                    me.setId(matchHuntID);
 
-                    this.setActiveGame(_matchHunt);
+                    me.setActiveGame(_matchHunt);
 
 
-                    this.generateRandomDisplacement().then(function()
+                    me.generateRandomDisplacement().then(function()
                     {
-                        return matchHunt.activeGame;
+                        return matchHunt;
                     })
                 }
 
@@ -356,7 +372,8 @@ angular.module('qr-code-controllers', [])
         {
             /* See if ID has changed */
             console.log(typeof id);
-            var currentID = matchHunt.getId();
+            console.log(id);
+            var currentID = this.getId();
 
             /* No ID has been made */
             if(currentID == null)
@@ -384,16 +401,13 @@ angular.module('qr-code-controllers', [])
         };
 
 
-        var guess = function(_qrCodeData)
+        var guess = function(_userID, authToken,_qrCodeData)
         {
 
-            /* Should I check if the user is logged in ? */
-            var authToken = $window.localStorage.getItem('userAuthenticationToken');
-            var _userID = $window.localStorage.getItem('userIDAPI');
 
 
 
-            var matchHuntId = matchHunt.getId();
+            var matchHuntId = this.getId();
 
                 var request = {
 
@@ -405,7 +419,7 @@ angular.module('qr-code-controllers', [])
                     },
                     data: {
                         UserId: _userID,
-                        qrcode: _qrCodeData.text,
+                        qrcode: _qrCodeData,
                         ClueId: matchHuntId
                     }
                 };
@@ -416,8 +430,7 @@ angular.module('qr-code-controllers', [])
             function successGuess(response)
             {
 
-                if(response.status == 200)
-                {
+
                     if(response.data)
                     {
                         var game = response.data;
@@ -449,11 +462,12 @@ angular.module('qr-code-controllers', [])
 
 
                     }
-                }
+
             }
 
             function failureGuess(response)
             {
+
 
                 return $q.reject('Failed to get game due to status: ' + response.status + '\nError: ' + response.data);
 
@@ -492,7 +506,7 @@ angular.module('qr-code-controllers', [])
 
 
             var img = new Image();
-            img.src = matchHunt.activeGame.image;
+            img.src = matchHunt.image;
 
 
             img.onload = function()
@@ -533,7 +547,7 @@ angular.module('qr-code-controllers', [])
                         y: Y
                     };
 
-                    matchHunt.activeGame.displacements = {
+                    matchHunt.displacements = {
                         x: X,
                         y: Y
                     };
@@ -551,7 +565,7 @@ angular.module('qr-code-controllers', [])
                     var _parseDisplacements = JSON.parse(_displacements);
 
                     console.log(_parseDisplacements);
-                    matchHunt.activeGame.dispplacements = {
+                    matchHunt.displacements = {
                         x : _parseDisplacements.x,
                         y: _parseDisplacements.y
                     }
@@ -574,14 +588,19 @@ angular.module('qr-code-controllers', [])
             this.matchHunt = _matchHunt;
 
             /* Save the current Id */
-            this.saveId(_matchHunt.id);
+            this.setId(_matchHunt.id);
+        };
+
+        var getActiveGame = function()
+        {
+            return this.matchHunt;
         };
 
 
         var reset = function()
         {
             this.setActiveGame(null);
-            this.saveId(null);
+            this.setId(null);
         };
 
 
@@ -590,8 +609,13 @@ angular.module('qr-code-controllers', [])
 
             getMatchHunt : getMatchHunt,
             setActiveGame : setActiveGame,
+            getActiveGame: getActiveGame,
             guess: guess,
-            skip: skip
+            skip: skip,
+            setId: setId,
+            generateRandomDisplacement: generateRandomDisplacement,
+            getId: getId,
+            reset: reset
 
         };
 
