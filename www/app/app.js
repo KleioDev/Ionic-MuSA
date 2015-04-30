@@ -8,10 +8,15 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$filter,Notifications,$ionicHistory, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$log,Notifications,$ionicHistory, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
+        DEBUG = 1;
 
         /* Set the user global variables */
+        if(!DEBUG)
+            console.log = function() {};
+
+        $rootScope.$log = $log;
         $rootScope.app = {};
         $rootScope.app.fontSize = UserPreferences.getFontSize();
         $rootScope.navigationTitles = AppNavigationTitles.get();
@@ -118,7 +123,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         });
     })
 
-    .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+    .config(function($stateProvider, $urlRouterProvider, $logProvider,$httpProvider) {
 
         $stateProvider
 
@@ -301,7 +306,33 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
                         controller: 'MatchHuntCtrl'
                     }
                 }
-            });
+            })
+
+        /* Map view exhibition in room */
+
+        /* Exhibition View State */
+        .state('tab.maps-exhibition-view', {
+            url: '/map/room/exhibitions/:exhibitionId',
+            views:
+            {
+                'tab-maps':{
+                    templateUrl: 'app/collection/tab-collection/collection-exhibition-view.html',
+                    controller: 'ExhibitionViewCtrl'
+                }
+            }
+        })
+
+        /* Single Object View */
+        .state('tab.maps-single-object',{
+            url: '/map/room/exhibitions/object/:objectId',
+            views:
+            {
+                'tab-maps':{
+                    templateUrl: 'app/collection/tab-collection/collection-single-object.html',
+                    controller: 'ObjectViewCtrl'
+                }
+            }
+        });
 
         /* Fallback State */
         $urlRouterProvider.otherwise('/tab/museum-segmented-control');
@@ -309,6 +340,9 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         $httpProvider.defaults.useXDomain = true;
 
         $httpProvider.interceptors.push('HTTPInterceptor');
+
+        $logProvider.debugEnabled(false);
+
 
 
     });

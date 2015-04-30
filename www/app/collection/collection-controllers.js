@@ -165,8 +165,9 @@ angular.module('collection-controllers', [])
 
         /* Close the modal */
         $scope.closeModal = function() {
-            modals.pop().hide();
-            $ionicBackdrop.release();
+           var modal =  modals.pop();
+            modal.hide();
+            modal.remove();
 
 
         };
@@ -297,7 +298,6 @@ angular.module('collection-controllers', [])
 
         $scope.showImageInfo = function()
         {
-            $ionicBackdrop.retain();
             $scope.openModal('image-overlay-info.html');
         };
         /* Display the object image */
@@ -480,7 +480,7 @@ angular.module('collection-controllers', [])
         $scope.loadExhibitions = function()
         {
 
-            var beacons = iBeacons.get();
+            var beacons = iBeacons.getBeaconIds();
             /* Start loading view */
             $scope.loading.status = true;
 
@@ -496,20 +496,9 @@ angular.module('collection-controllers', [])
             }
             /* More beacons Found */
             else {
-                /* Parse iBeacons */
-                var beaconIdArray = [];
-
-                for (var i = 0; i < beacons.length; i++) {
-                    var beaconID = beacons[i].proximityUUID + beacons[i].major + beacons[i].minor;
-                    //console.log(beaconID);
-                    beaconIdArray.push(beaconID.toUpperCase());
-
-                }
-
 
                 /* Find the exhibitions related to iBeacons */
-
-                Exhibitions.findByBeacons(beaconIdArray)
+                Exhibitions.findByBeacons(beacons)
                     .then(function (response) {
 
                         //console.log(response);
@@ -640,7 +629,6 @@ angular.module('collection-controllers', [])
             Exhibitions.getById(id)
                 .then(function(exhibition)
                 {
-
                         Exhibitions.setActiveExhibition(exhibition);
                         $state.go('tab.collection-exhibition-view');
 
@@ -649,7 +637,6 @@ angular.module('collection-controllers', [])
 
 
         $scope.$watch('searchTerm', function(newvalue,oldvalue) {
-
 
             var flag = (newvalue == '') && (oldvalue == '');
             if(!flag) {

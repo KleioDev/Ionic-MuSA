@@ -1,25 +1,28 @@
 <ion-view>
 
     <ion-content>
+<br>
+        <ul class="list">
+            <li class="item" ng-repeat="room in rooms" ng-click="loadRoom(room.id)">
+                <p>{{room.name}}</p>
+            </li>
+        </ul>
 
-        <div class="button-bar padding" >
-            <a class="button button-small  segmented-control" ng-click="changeLevel('entry')" ng-class="{'active' : segmentedControl.state == 'entry'}">{{navigationTitles.map.entryLevelButtonLabel}}</a>
-            <a class="button button-small segmented-control" ng-click="changeLevel('basement')" ng-class="{'active' : segmentedControl.state == 'basement'}">{{navigationTitles.map.basementLevelButtonLabel}}</a>
-        </div>
 
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
+        <script id="room-details.html" type="text/ng-template">
+            <ion-modal-view>
 
-        <!--<div class="scroll_view1">-->
-        <ion-scroll direction="xy" locking="false" zooming="true" min-zoom="1" >
+                <ion-list >
+                    <ion-item  ng-repeat="exhibition in room.exhibitions" ng-click="loadExhibition(exhibition.id)">
+                        {{exhibition.title}}
 
-            <img ng-src="{{map.img_href}}" />
+                    </ion-item>
 
-        </ion-scroll>
+                </ion-list>
+            </ion-modal-view>
 
+
+</script>
     </ion-content>
     <!--<ion-scroll direction="xy" locking="false"  zooming="true" min-zoom="1"-->
                 <!--class="animate modal-content">-->

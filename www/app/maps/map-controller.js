@@ -1,47 +1,100 @@
 angular.module('map-controllers', [])
 
 /* Map View Controller */
-.controller('MapViewCtrl', function($scope, AppNavigationTitles, Map, SegmentedControl, iBeacons)
+.controller('MapViewCtrl', function($scope, AppNavigationTitles, Map,$state, Rooms, $ionicModal, Exhibitions, SegmentedControl, iBeacons)
 {
+    $scope.modal = null;
 
-    /* Create segmented control */
-    if(!SegmentedControl.exists('map'))
-        SegmentedControl.create('map', ["entry", "map"], 'entry');
+    $scope.rooms = [];
 
-    /* Segmented control */
-    $scope.segmentedControl = SegmentedControl.get('map');
+    /* Load rooms */
+    $scope.loadRooms = function() {
+        Rooms.getRooms().then(function (rooms) {
+            $scope.rooms = rooms;
 
-    /* GEt application labels */
-    $scope.navigationTitles = AppNavigationTitles.get();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (err) {
+            console.log(err)
+        });
 
-    /* Get the current map displayed */
-    $scope.map =  Map.getMap();
-
-    /* Change the level */
-    $scope.changeLevel = function(level)
+    }
+    /* When beacons change state load up an active room */
+    $scope.$on('beacons:stateChange', function()
     {
-        SegmentedControl.set('map', level);
-        Map.setViewState(level);
-        $scope.map.img_href = Map.getMap().img_href;
-        console.log($scope.map);
+        console.log("Gathering room information");
+    });
+
+    $scope.openModal = function(template)
+    {
+
+        $ionicModal.fromTemplateUrl(template, {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+
+            $scope.modal = modal;
+            $scope.modal.show();
+
+        });
+
     };
 
-    /* When page loads */
-    //$scope.$on('$stateChangeSuccess', function() {
-    //
-    //    $scope.map = Map.getMap();
-    //
-    //});
+    $scope.closeModal = function() {
 
-    /* Listen for when the user changes room with iBeacons */
-    $scope.$on('beacons:changed', function(beacons)
+        $scope.modal.hide();
+        //$scope.modal.destroy();
+
+    };
+
+    $scope.loadRoom = function(roomID)
     {
-        /* Use the beacons to change the map */
+        /* Load a room */
+        Rooms.getDetails(roomID)
+            .then(successRoomRequest, failureRoomRequest);
 
-        /* Get the closest beacon */
+        /* Load up room */
+        function successRoomRequest(room)
+        {
 
-        Map.getRoomWithBeaconId(beacons);
-    });
+            if(room) {
+                console.log(room);
+                $scope.room = room;
+
+                /* Load up Modal */
+                /**
+                 * Modal needs a title of the room, description, room number, and list of exhibitions
+                 */
+                $scope.openModal('room-details.html');
+            }
+
+        }
+        function failureRoomRequest(err)
+        {
+            console.log(err);
+        }
+    };
+
+    $scope.loadExhibition = function(id){
+        Exhibitions.getById(id)
+            .then(function(exhibition)
+            {
+
+
+                Exhibitions.setActiveExhibition(exhibition);
+                $scope.closeModal();
+
+                $state.go('tab.maps-exhibition-view');
+
+
+            })
+
+    };
+
+    $scope.loadRooms();
 
 
 });
+
+

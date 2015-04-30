@@ -28,28 +28,7 @@ angular.module('qr-code-controllers', [])
                         MatchHunt.getMatchHunt(user)
                             .then(function(matchHunt)
                             {
-                                console.log("MATCH HUNT");
-
-
-                                var matchHuntID = matchHunt.id;
-
-                                MatchHunt.saveId(matchHuntID);
-
-                                MatchHunt.setActiveGame(matchHunt);
-
-
-                                MatchHunt.generateRandomDisplacement()
-                                    .then(function(response)
-                                {
-                                    //Now Change the state
-
-                                    $state.go('tab.tab-match-hunt');
-
-                                });
-
-
-
-
+                                $scope.matchHunt = matchHunt;
                             },
 
                             function(err)
@@ -117,7 +96,7 @@ angular.module('qr-code-controllers', [])
 })
 
 /* Open the math hunt game */
-.controller('MatchHuntCtrl', function($scope,$state, Facebook, AppNavigationTitles, MatchHunt)
+.controller('MatchHuntCtrl', function($scope,$state, Facebook, MatchHunt)
     {
 
         /* Always check for Facebook Login */
@@ -138,8 +117,6 @@ angular.module('qr-code-controllers', [])
 
 
 
-        /* Get the labels */
-        $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Calls the Match Hunt service for a match hunt game */
         $scope.matchHunt = MatchHunt.getActiveGame();
@@ -150,8 +127,12 @@ angular.module('qr-code-controllers', [])
         $scope.skip = function()
         {
             /* Get a new match hunt */
+            MatchHunt.skip().then(function(res){
 
-            $scope.loadNewMatchHuntGame();
+                    if(res)
+                        $scope.loadNewMatchHuntGame();
+
+            }, function(err){console.log(err)})
 
         };
 
@@ -167,17 +148,10 @@ angular.module('qr-code-controllers', [])
 
                 //TODO: IF we use some parsing or not
                 MatchHunt.guess($scope.user, _qrcodeData)
-                    .then(function(response)
+                    .then(function(status)
                     {
-                        //TODO: Here I handle the game response
-                        console.log("HANDLING RESPONSE");
-                        console.log(response);
-                        var game = response.data;
-
-                        if(game.status == 'won')
+                        if(status == 'won')
                         {
-                            //TODO: Show popup dialog ask to play again
-
                             var okButton = {
                                 text: $scope.navigationTitles.scanner.playAgainLabel,
                                 type: 'button-positive',
@@ -207,9 +181,9 @@ angular.module('qr-code-controllers', [])
                             {
                                 console.log("Doing something");
                             });
-
                         }
-                        else if(game.status == 'lose')
+
+                        else if(status == 'lost')
                         {
                             var okButton = {
                                 text: $scope.navigationTitles.scanner.playAgainLabel,
@@ -240,10 +214,9 @@ angular.module('qr-code-controllers', [])
                             {
                                 console.log("Doing something");
                             });
-
                         }
 
-                        else
+                        else if(status == 'incorrect')
                         {
                             //TODO: Show a popup dialog saying you failed
                             var alertFail = $ionicPopup.show(
@@ -260,7 +233,6 @@ angular.module('qr-code-controllers', [])
                             });
                         }
 
-                        $scope.matcHunt = MatchHunt.setActiveGame(response);
                     });
 
             }, function (error) {
@@ -284,29 +256,7 @@ angular.module('qr-code-controllers', [])
                         MatchHunt.getMatchHunt(user)
                             .then(function(matchHunt)
                             {
-                                console.log("MATCH HUNT");
-                                console.log(matchHunt);
-
-
-
-
-                                    var matchHuntID = matchHunt.id;
-
-                                    MatchHunt.saveId(matchHuntID);
-
-                                    MatchHunt.setActiveGame(matchHunt);
-
-                                MatchHunt.generateRandomDisplacement()
-                                    .then(function(response)
-                                    {
-                                        //Now Change the state
-
-                                        $scope.matchHunt = MatchHunt.getActiveGame();
-
-                                    });
-
-
-
+                                $scope.matchHunt = matchHunt;
                             },
 
                             function(err)
@@ -364,7 +314,21 @@ angular.module('qr-code-controllers', [])
 
             function success(response) {
                 if (response.status == 200) {
-                    return response.data;
+
+                    var _matchHunt = response.data;
+
+                    var matchHuntID = _matchHunt.id;
+
+                    this.saveId(matchHuntID);
+
+                    this.setActiveGame(_matchHunt);
+
+
+                    this.generateRandomDisplacement().then(function()
+                    {
+
+                        return matchHunt.activeGame;
+                    })
                 }
 
             }
@@ -384,6 +348,8 @@ angular.module('qr-code-controllers', [])
             var authToken = $window.localStorage.getItem('userAuthenticationToken');
             var _userID = $window.localStorage.getItem('userIDAPI');
 
+
+
             var matchHuntId = matchHunt.getId();
 
                 var request = {
@@ -402,9 +368,78 @@ angular.module('qr-code-controllers', [])
                 };
 
             console.log(request);
-                return $http(request);
+                return $http(request).then(successGuess, failureGuess);
+
+            function successGuess(response)
+            {
+
+                if(response.status == 200)
+                {
+                    if(response.data)
+                    {
+                        var game = response.data;
+
+                        console.log("Guess Response");
+                        console.log(game);
+
+
+                        if(game.correct == 'true') //User Won
+                        {
+                            console.log('won match hunt');
+                            this.reset();
+                            return 'won';
+
+                        }
+                        /* user lost */
+                        else if(game.correct == 'false' && game.attempts == 3)
+                        {
+                            this.reset();
+
+                                return 'lost';
+                        }
+
+                        /* You lost update */
+                        else
+                        {
+                           return 'incorrect';
+                        }
+
+
+                    }
+                }
+            }
+
+            function failureGuess(response)
+            {
+
+                return $q.reject('Failed to get game due to status: ' + response.status + '\nError: ' + response.data);
+
+            }
+
         };
 
+        matchHunt.skip = function()
+        {
+            return $http.put(Routes.MATCH_HUNT + this.getId()).then(
+                function(response)
+                {
+
+                    if(response.status == 200)
+                    {
+                        if(response.data)
+                        {
+                            this.reset();
+                            return response;
+                        }
+                    }
+                },
+
+                function(response)
+                {
+                    return $q.reject('Failed to SKIP game due to status: ' + response.status + '\nError: ' + response.data);
+                }
+            )
+        };
 
         matchHunt.generateRandomDisplacement = function()
         {
@@ -438,7 +473,6 @@ angular.module('qr-code-controllers', [])
 
                         /* X has to be a number such that X + windowWidth < imgWidth */
                         X = -1 * Math.floor((Math.random() * (imgWidth - windowWidth )) + 0);
-
 
                         /* Y has to be a number such that Y + windowHeight < imgHeight */
                         Y = -1 * Math.floor((Math.random() * (imgHeight - windowHeight)) + 0);
@@ -544,6 +578,11 @@ angular.module('qr-code-controllers', [])
         };
 
 
+        matchHunt.reset = function()
+        {
+            matchHunt.setActiveGame(null);
+            matchHunt.saveId(null);
+        };
 
 
 

@@ -10,31 +10,31 @@
 
                         <div class="col">
 
-                            <div ng-switch="matchHunt.hearts" style="color: red; font-size: 150%">
+                            <div ng-switch="matchHunt.attempts" style="color: red; font-size: 150%">
 
 
-                                <div ng-switch-when=0>
+                                <div ng-switch-when=3>
                                     <i class="icon ion-ios-heart-outline"></i>
                                     <i class="icon ion-ios-heart-outline"></i>
 
                                     <i class="icon ion-ios-heart-outline"></i>
                                 </div>
-                                <div ng-switch-when=1>
-                                    <i class="icon ion-ios-heart"></i>
-                                    <i class="icon ion-ios-heart-outline"></i>
-
-                                    <i class="icon ion-ios-heart-outline"></i>
-                                </div>
-
                                 <div ng-switch-when=2>
                                     <i class="icon ion-ios-heart"></i>
+                                    <i class="icon ion-ios-heart-outline"></i>
+
+                                    <i class="icon ion-ios-heart-outline"></i>
+                                </div>
+
+                                <div ng-switch-when=1>
+                                    <i class="icon ion-ios-heart"></i>
                                     <i class="icon ion-ios-heart"></i>
 
                                     <i class="icon ion-ios-heart-outline"></i>
                                 </div>
 
 
-                                <div ng-switch-default=3>
+                                <div ng-switch-default=0>
                                     <i class="icon ion-ios-heart"></i>
                                     <i class="icon ion-ios-heart"></i>
 
