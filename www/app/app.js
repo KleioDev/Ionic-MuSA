@@ -28,10 +28,18 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
         /* HTTP Defined Routes */
 
-        $rootScope.$on('http:notFound', function()
+        $rootScope.$on('http:notFound', function(event, type)
         {
+
+            var text = 'Not Found';
+
+            if(type == 'MATCH-HUNT')
+            {
+                text = $rootScope.navigationTitles.app.matchHuntNoMoreCluesLabel;
+
+            }
             var alertPopup = $ionicPopup.alert({
-                title: 'Not Found'});
+                title: text});
             alertPopup.then(function(res) {
                 $ionicHistory.goBack();
 
@@ -48,13 +56,18 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $ionicLoading.hide();
         });
 
-        $rootScope.$on('http:error', function()
+        $rootScope.$on('http:error', function(event, type)
         {
-            var alertPopup = $ionicPopup.alert({
-                title: $rootScope.navigationTitles.app.httpErrorLabel});
-            alertPopup.then(function(res) {
 
-            });
+            var text = $rootScope.navigationTitles.app.httpErrorLabel;
+
+                var alertPopup = $ionicPopup.alert({
+                    title: text
+                });
+                alertPopup.then(function (res) {
+
+                });
+
 
         });
 

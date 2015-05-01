@@ -362,17 +362,15 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     user.login = function() {
 
-
-
         /* If login was successful get the token from our server */
         return $cordovaFacebook.login(["public_profile", "email"]).then(successLogin, failureLogin);
-
 
         function successLogin(response)
         {
             console.log(response);
             return response;
-        }
+        };
+
         /* Fails to Login */
         function failureLogin(error) {
            // console.log("FACEBOOK ERR:");
@@ -389,7 +387,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         console.log("Generating Token");
         console.log(response);
-
 
 
             console.log("Token Post Data: ");
@@ -448,16 +445,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     {
 
             $cordovaFacebook.logout()
-                .then(function(success) {
-                    loading.hide();
+                .then(function(response) {
 
                     var user = {loginStatus: false};
                     return user;
                 }, function (error) {
                     // error
                 });
-
-
     };
 
     user.isLoggedIn = function()
@@ -467,8 +461,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         function successLoginStatus(response)
         {
-
-
 
             if(response.status == 'connected')
             {
@@ -482,13 +474,12 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
             return response;
 
-        }
+        };
 
         function failureLoginStatus(error)
         {
             $q.reject('Facebook/Login Status Could not Be Reached');
-
-        }
+        };
 
 
     };
@@ -525,7 +516,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     user.showLoginPopup = function()
     {
-        loading.hide();
 
         var labels = AppNavigationTitles.get();
         var loginButton = {

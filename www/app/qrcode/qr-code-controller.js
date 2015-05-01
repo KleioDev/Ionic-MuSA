@@ -32,12 +32,13 @@ angular.module('qr-code-controllers', [])
                         var authToken = Facebook.getAPIToken();
 
                         //$window.localStorage.setItem('userID', user.userID);
-                        MatchHunt.getMatchHunt(userID, authToken)
-                            .then(function(matchHunt)
+                        MatchHunt.generateGame(authToken)
+                            .then(function(response)
                             {
-                                $scope.matchHunt = matchHunt;
-
-                                $state.go('tab.tab-match-hunt');
+                                //console.log("Generated the Game");
+                                //console.log(response);
+                                //if(response)
+                                    $state.go('tab.tab-match-hunt');
                             },
 
                             function(err)
@@ -57,27 +58,27 @@ angular.module('qr-code-controllers', [])
 
         };
 
-    /* Open the scanner when the user wants to scan a qr code */
-    $scope.openScanner = function()
-    {
-        var scanner = cordova.require("cordova/plugin/BarcodeScanner");
+        /* Open the scanner when the user wants to scan a qr code */
+        $scope.openScanner = function()
+        {
+            var scanner = cordova.require("cordova/plugin/BarcodeScanner");
 
-        scanner.scan( function (scan) {
-            console.log(scan);
+            scanner.scan( function (scan) {
+                console.log(scan);
 
-            var qrCodeText = scan.text;
+                var qrCodeText = scan.text;
 
-            if(!isNaN(qrCodeText))
-            {
+                if(!isNaN(qrCodeText))
+                {
 
-                /* Load Object */
+                    /* Load Object */
 
                     MuseumObjects.getById(qrCodeText)
                         .then(function(object)
                         {
-                           MuseumObjects.setActiveObject(object);
-                                //Change state
-                                $state.go('tab.scanner-object');
+                            MuseumObjects.setActiveObject(object);
+                            //Change state
+                            $state.go('tab.scanner-object');
 
                         },
                         function(response)
@@ -85,34 +86,33 @@ angular.module('qr-code-controllers', [])
                             console.log(response);
                         }
                     );
-            }
+                }
 
-            else {
+                else {
 
-                $ionicPopup.alert({
-                    title: $scope.navigationTitles.scanner.invalidQRCodeLabel
-                });
+                    $ionicPopup.alert({
+                        title: $scope.navigationTitles.scanner.invalidQRCodeLabel
+                    });
 
-            }
+                }
 
-        }, function (error) {
+            }, function (error) {
 
-        } );
+            } );
 
-    };
+        };
 
 
-})
+    })
 
-/* Open the math hunt game */
-.controller('MatchHuntCtrl', function($scope,$state, Facebook, MatchHunt)
+    /* Open the math hunt game */
+    .controller('MatchHuntCtrl', function($scope,$state, Facebook,$ionicPopup, MatchHunt)
     {
 
 
         /* Calls the Match Hunt service for a match hunt game */
-        $scope.matchHunt = MatchHunt.getActiveGame();
+        $scope.matchHunt = MatchHunt.activeGame;
 
-        $scope.displacements =
         console.log($scope.matchHunt);
 
         $scope.skip = function()
@@ -120,8 +120,8 @@ angular.module('qr-code-controllers', [])
             /* Get a new match hunt */
             MatchHunt.skip().then(function(res){
 
-                    if(res)
-                        $scope.loadNewMatchHuntGame();
+                if(res)
+                    $scope.loadNewMatchHuntGame();
 
             }, function(err){console.log(err)})
 
@@ -157,8 +157,12 @@ angular.module('qr-code-controllers', [])
 
 
                                     //TODO: IF we use some parsing or not
-                                    MatchHunt.guess(userID, authToken, scan.text)
-                                        .then(function (status) {
+                                    MatchHunt.guess( authToken,userID,  scan.text)
+                                        .then(function (game) {
+
+                                            var status = game.status;
+                                            console.log("PARSING GAME");
+                                            console.log(game);
                                             if (status == 'won') {
                                                 var okButton = {
                                                     text: $scope.navigationTitles.scanner.playAgainLabel,
@@ -177,7 +181,7 @@ angular.module('qr-code-controllers', [])
                                                 var wonPopup = $ionicPopup.show(
                                                     {
                                                         title: $scope.navigationTitles.scanner.youWonLabel,
-                                                        subTitle: $scope.navigationTitles.scanner.pointsReceivedLabel + game.points,
+                                                        subTitle: $scope.navigationTitles.scanner.pointsReceivedLabel + $scope.matchHunt.pointsValue,
                                                         buttons: [
                                                             cancelButton, okButton
                                                         ]
@@ -221,10 +225,10 @@ angular.module('qr-code-controllers', [])
 
                                             else if (status == 'incorrect') {
                                                 //TODO: Show a popup dialog saying you failed
-                                                var alertFail = $ionicPopup.show(
+                                                var alertFail = $ionicPopup.alert(
                                                     {
                                                         title: $scope.navigationTitles.scanner.failGuessLabel,
-                                                        template: $scope.navigationTitles.scanner.livesLeftLabel + game.tries + "<br>" + $scope.navigationTitles.scanner.pointsLeftLabel + game.points
+                                                        template: $scope.navigationTitles.scanner.livesLeftLabel + game.attempts + "<br>"
 
                                                     }
                                                 );
@@ -248,8 +252,8 @@ angular.module('qr-code-controllers', [])
                             });
 
 
+                    }
                 }
-            }
             }, function (error) {
                 console.log("Scanning failed: ", error);
             } );
@@ -262,9 +266,9 @@ angular.module('qr-code-controllers', [])
             Facebook.isLoggedIn()
                 .then(function(user)
                 {
-                    console.log("MATCH HUNT");
-                    console.log(user);
-                    if(user.loginStatus)
+
+
+                    if(user.connected)
                     {
 
                         console.log("Getting UserID");
@@ -272,11 +276,14 @@ angular.module('qr-code-controllers', [])
                         console.log(userID);
 
                         console.log("Retrieving Authorization");
-                        var authToken = Facebook.getAccessToken();
-                        MatchHunt.getMatchHunt(userID, authToken)
+                        var authToken = Facebook.getAPIToken();
+
+                        //$window.localStorage.setItem('userID', user.userID);
+                        MatchHunt.generateGame( authToken)
                             .then(function(matchHunt)
                             {
                                 $scope.matchHunt = matchHunt;
+
                             },
 
                             function(err)
@@ -297,223 +304,135 @@ angular.module('qr-code-controllers', [])
 
     })
 
-    /* Match Hunt game */
-    .factory('MatchHunt', function(Routes, $http, $q, $window)
-    {
-        var matchHunt = {};
+    ///* Match Hunt game */
+    .factory('MatchHunt',function(Routes, $http, $q, $window){
 
 
-        var getMatchHunt = function(user, authToken)
+        var MatchHunt = {};
+
+        MatchHunt.activeGame = {};
+
+        MatchHunt.getId = function(){
+            return $window.localStorage.getItem('MusAMatchHuntId');
+        };
+        MatchHunt.setId = function(id){
+            $window.localStorage.setItem('MusAMatchHuntId', id);
+        };
+
+        MatchHunt.reset = function(){
+            MatchHunt.activeGame = {};
+            $window.localStorage.removeItem('MusAMatchHuntId');
+            $window.localStorage.removeItem('matchHuntDisplacements');
+        };
+
+
+        MatchHunt.generateGame = function(authToken)
         {
 
             console.log("Checking if there is a current match hunt id stored");
             var id = this.getId();
 
-
-            var me = this;
+            console.log("Current MatchHunt Id: ");
+            console.log(id);
 
             if(!id)
             {
+                console.log("No ID Found, Resetting to 0");
                 id = 0;
             }
-
-            console.log("Current ID:");
-            console.log(id);
-
-            console.log("Defining Request:");
 
             var request = {
 
                 url: Routes.MATCH_HUNT + id,
                 method: 'GET',
-                headers:
-                {
+                headers:  {
+
                     'Authorization': 'Bearer ' + authToken
                 }
-
             };
 
-            return $http(request).then(success, failure);
-
-            function success(response) {
-                console.log("Retrieved Game");
-                console.log(response);
-                if (response.status == 200) {
-
-                    var _matchHunt = response.data;
-
-                    var matchHuntID = _matchHunt.id;
-
-                    me.setId(matchHuntID);
-
-                    me.setActiveGame(_matchHunt);
-
-
-                    me.generateRandomDisplacement().then(function()
-                    {
-                        return matchHunt;
-                    })
-                }
-
-            }
-            function failure(response)
-            {
-                $q.reject('Failed to get a Match Hunt Game');
-            }
-        };
-
-        var getId = function()
-        {
-            return $window.localStorage.getItem('activeMatchHunt');
-
-        };
-
-        var setId = function(id)
-        {
-            /* See if ID has changed */
-            console.log(typeof id);
-            console.log(id);
-            var currentID = this.getId();
-
-            /* No ID has been made */
-            if(currentID == null)
-            {
-                console.log("new game");
-                $window.localStorage.setItem('activeMatchHunt', id);
-
-            }
-            /* Same game */
-            else if(parseInt(currentID) == id)
-            {
-                console.log("same game");
-            }
-
-            /* New Game */
-            else if(parseInt(currentID) != id)
-            {
-
-                console.log("new game");
-                /* Clear Displacements */
-                $window.localStorage.setItem('matchHuntDisplacements', null);
-                $window.localStorage.setItem('activeMatchHunt', id);
-
-            }
-        };
-
-
-        var guess = function(_userID, authToken,_qrCodeData)
-        {
-
-
-
-
-            var matchHuntId = this.getId();
-
-                var request = {
-
-                    url: Routes.GUESS,
-                    method: 'POST',
-                    headers:
-                    {
-                        'Authorization': 'Bearer ' + authToken
-                    },
-                    data: {
-                        UserId: _userID,
-                        qrcode: _qrCodeData,
-                        ClueId: matchHuntId
-                    }
-                };
-
+            console.log("Retrieve Match Hunt Request");
             console.log(request);
-                return $http(request).then(successGuess, failureGuess);
 
-            function successGuess(response)
-            {
-
-
-                    if(response.data)
-                    {
-                        var game = response.data;
-
-                        console.log("Guess Response");
-                        console.log(game);
-
-
-                        if(game.correct == 'true') //User Won
-                        {
-                            console.log('won match hunt');
-                            this.reset();
-                            return 'won';
-
-                        }
-                        /* user lost */
-                        else if(game.correct == 'false' && game.attempts == 3)
-                        {
-                            this.reset();
-
-                                return 'lost';
-                        }
-
-                        /* You lost update */
-                        else
-                        {
-                           return 'incorrect';
-                        }
-
-
-                    }
-
-            }
-
-            function failureGuess(response)
-            {
-
-
-                return $q.reject('Failed to get game due to status: ' + response.status + '\nError: ' + response.data);
-
-            }
-
-        };
-
-        var skip = function()
-        {
-
-            return $http.put(Routes.MATCH_HUNT + this.getId()).then(
+            return $http(request).then(
+                /* 200 Response */
                 function(response)
                 {
-
+                    var defer = $q.defer();
+                    console.log(response);
                     if(response.status == 200)
                     {
-                        if(response.data)
-                        {
-                            this.reset();
-                            return response;
-                        }
-                    }
-                },
+                        /* Store the game */
+                        var _matchHunt = response.data;
 
+                        if(_matchHunt.Matches.length > 0)
+                        {
+                            _matchHunt.attempts = _matchHunt.Matches[0].attempts;
+
+                        }
+                        else{
+                            _matchHunt.attempts = 0;
+
+                        }
+
+                        /* Generate the random displacements */
+
+                        console.log("Printout the retrieved game");
+                        console.log(_matchHunt);
+                        MatchHunt.setId(_matchHunt.id);
+                        MatchHunt.activeGame = _matchHunt;
+
+                        MatchHunt.generateRandomDisplacements(_matchHunt)
+                            .then(
+                            function(displacements)
+                            {
+                                if(displacements)
+                                {
+                                    console.log("Valid game");
+                                    MatchHunt.activeGame.displacements = displacements;
+                                    console.log(MatchHunt);
+                                }
+
+                                return displacements;
+
+                            },
+                            function(err)
+                            {
+                                console.log("Couldn't calcualte the displacements");
+                            }
+                        )
+                    }
+
+                },
                 function(response)
                 {
-                    return $q.reject('Failed to SKIP game due to status: ' + response.status + '\nError: ' + response.data);
+
+                    console.log("Failed to get Match Hunt Game");
+                    console.log("Response Status: " + response.status);
+                    console.log("Data: " + response.data);
+                    $q.reject(null)
                 }
-            )
+
+
+            );
         };
 
-        var generateRandomDisplacement = function()
+        MatchHunt.generateRandomDisplacements = function(matchHunt)
         {
+
 
             var defer = $q.defer();
 
-
             var img = new Image();
             img.src = matchHunt.image;
-
-
             img.onload = function()
             {
                 var _displacements = $window.localStorage.getItem('matchHuntDisplacements');
 
-                if(_displacements == null) {
+                var displacements = null;
+                if(!_displacements) {
+
+                    console.log("Creating new displacements");
 
                     var imgWidth = img.width;
                     var imgHeight = img.height;
@@ -529,10 +448,10 @@ angular.module('qr-code-controllers', [])
                         /* Generate random displacement */
 
                         /* X has to be a number such that X + windowWidth < imgWidth */
-                        X = -1 * Math.floor((Math.random() * (imgWidth - windowWidth )) + 0);
+                        X = -1 * Math.floor((Math.random() * (imgWidth - windowWidth )));
 
                         /* Y has to be a number such that Y + windowHeight < imgHeight */
-                        Y = -1 * Math.floor((Math.random() * (imgHeight - windowHeight)) + 0);
+                        Y = -1 * Math.floor((Math.random() * (imgHeight - windowHeight)));
 
                     }
 
@@ -541,21 +460,12 @@ angular.module('qr-code-controllers', [])
 
 
                     /* Store displacements */
+                    $window.localStorage.setItem('matchHuntDisplacements', JSON.stringify(displacements));
 
-                    var displacements = {
+                    displacements = {
                         x: X,
                         y: Y
                     };
-
-                    matchHunt.displacements = {
-                        x: X,
-                        y: Y
-                    };
-                    if (matchHunt.getId() != null) {
-                        var displacementsStr = JSON.stringify(displacements);
-
-                        $window.localStorage.setItem('matchHuntDisplacements', displacementsStr);
-                    }
                 }
 
                 else {
@@ -565,59 +475,138 @@ angular.module('qr-code-controllers', [])
                     var _parseDisplacements = JSON.parse(_displacements);
 
                     console.log(_parseDisplacements);
-                    matchHunt.displacements = {
-                        x : _parseDisplacements.x,
-                        y: _parseDisplacements.y
-                    }
+
+                    displacements = _parseDisplacements;
 
 
                 }
 
-                defer.resolve('Image Loaded');
+                console.log(displacements);
+                defer.resolve(displacements);
             };
 
 
             return defer.promise;
 
-
-
-
         };
-        var setActiveGame = function(_matchHunt)
+
+        MatchHunt.guess = function(authToken, userID, qrcodeData)
         {
-            this.matchHunt = _matchHunt;
 
-            /* Save the current Id */
-            this.setId(_matchHunt.id);
+
+            //var clueID = MatchHunt.getId();
+
+            var matchHuntId = MatchHunt.getId();
+
+                        var request = {
+
+                            url: Routes.GUESS,
+                            method: 'POST',
+                            headers:
+                            {
+                                'Authorization': 'Bearer ' + authToken
+                            },
+                            data: {
+                                UserId: userID,
+                                qrcode: qrcodeData,
+                                ClueId: matchHuntId
+                            }
+                        };
+
+                    console.log(request);
+            return $http(request)
+                .then(
+                function(response)
+                {
+                    console.log("Receiving success from Guess");
+
+                    console.log(response);
+
+                        var gameStatus = response.data;
+
+                        console.log("Game Status");
+                        console.log(response.data);
+
+                        MatchHunt.activeGame.attempts = gameStatus.attempts;
+
+                        /* User has won */
+                        if(gameStatus.correct)
+                        {
+                            console.log("Game Won");
+                            MatchHunt.reset();
+                            gameStatus.status = "won";
+                        }
+
+                        else if(!gameStatus.correct && gameStatus.attempts == 3)
+                        {
+                            console.log("Game Lost");
+                            MatchHunt.reset();
+                            gameStatus.status = "lost";
+                        }
+
+                        else{
+                            console.log("Incorrect Guess!");
+                            gameStatus.status = "incorrect";
+                        }
+
+                        return gameStatus;
+
+
+
+
+
+                },
+                function(response)
+                {
+                    console.log("FAILED TO PUT IN A GUESS REQUEST");
+                    console.log("Stat: " + response.status);
+                    console.log("Data: " + response.data);
+                }
+            )
+
+
         };
 
-        var getActiveGame = function()
+
+        MatchHunt.skip = function(authToken)
         {
-            return this.matchHunt;
-        };
+            var id = MatchHunt.getId();
+
+            var request = {
+
+                url: Routes.MATCH_HUNT + id,
+                method: 'PUT',
+                headers:  {
+
+                    'Authorization': 'Bearer ' + authToken
+                }
+            };
+
+            return $http(request)
+                .then(
+                        function(response)
+                        {
+
+                            if(response.status)
+                            {
+                                if(response.data)
+                                {
+                                    MatchHunt.reset();
+                                    return response;
+                                }
+                            }
+                        },
+
+                        function(response)
+                        {
+                            return $q.reject('Failed to SKIP game due to status: ' + response.status + '\nError: ' + response.data);
+                        }
+                    )
 
 
-        var reset = function()
-        {
-            this.setActiveGame(null);
-            this.setId(null);
-        };
+        }
 
-
-
-        return {
-
-            getMatchHunt : getMatchHunt,
-            setActiveGame : setActiveGame,
-            getActiveGame: getActiveGame,
-            guess: guess,
-            skip: skip,
-            setId: setId,
-            generateRandomDisplacement: generateRandomDisplacement,
-            getId: getId,
-            reset: reset
-
-        };
+        return MatchHunt;
 
 
     });
