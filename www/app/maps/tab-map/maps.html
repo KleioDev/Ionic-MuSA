@@ -1,12 +1,103 @@
 <ion-view>
 
-    <ion-content>
+    <!--<ion-content>-->
+        <ion-scroll>
 <br>
-        <ul class="list">
-            <li class="item" ng-repeat="room in rooms" ng-click="loadRoom(room.id)">
-                <p>{{room.name}}</p>
-            </li>
-        </ul>
+
+        <div class="row" style="min-height: 100px">
+            <div class="col-lg-2">
+                <div style="padding-top:10px;"></div>
+                <div style="width: 100%; min-height: 140px; background-color: cornflowerblue; padding-top: 15px; padding-bottom: 15px; border-style: dashed; border-width: 5px">
+                    <p style="text-align: center"><a href="/room/1">Room 1</a></p>
+                </div>
+                <br>
+                <div  style="width: 100%; min-height: 140px; background-color: cornflowerblue;padding-top: 15px; padding-bottom: 15px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center"><a href="/room/2">Room 2</a></p>
+                </div>
+
+            </div>
+
+            <div class="col-lg-2">
+                <div style="width: 100%; height: 95px; background-color: cornflowerblue;padding-top: 5px; padding-bottom: 5px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center"><a href="/room/3">Room 3</a></p>
+                </div>
+                <br>
+
+                <div style="width: 100%; height: 95px; background-color: cornflowerblue;padding-top: 5px; padding-bottom: 5px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center"><a href="/room/4">Room 4</a></p>
+                </div>
+                <br>
+
+                <div style="width: 100%; height: 95px; background-color: cornflowerblue;padding-top: 5px; padding-bottom: 5px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center"><a href="/room/5">Room 5</a></p>
+                </div>
+            </div>
+
+            <div class="col-lg-1">
+                <div style="padding-top:10px;"></div>
+
+                <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 10px; padding-bottom: 10px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center; -webkit-transform: rotate(90deg);margin-top: 10px"><a href="/room/6">Room 6</a></p>
+                </div>
+                <br>
+
+                <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 10px; padding-bottom: 10px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center;-webkit-transform: rotate(90deg);margin-top: 10px"><a href="/room/7">Room 7</a></p>
+                </div>
+            </div>
+
+            <div class="col-lg-1">
+                <div style="padding-top:10px;"></div>
+
+                <div  style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 10px; padding-bottom: 10px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center;-webkit-transform: rotate(90deg);margin-top: 10px"><a href="/room/8">Room 8</a></p>
+                </div>
+                <br>
+
+                <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 10px; padding-bottom: 10px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center;-webkit-transform: rotate(90deg);margin-top: 10px"><a href="/room/9">Room 9</a></p>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div style="padding-top:10px;"></div>
+                <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 15px; padding-bottom: 15px;border-style: dashed; border-width: 5px">
+                    <p style="text-align: center"><a href="/room/10">Room 10</a></p>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 15px; padding-bottom: 15px;border-style: dashed; border-width: 5px">
+                            <p style="text-align: center"><a href="/room/11">Room 11</a></p>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 15px; padding-bottom: 15px;border-style: dashed; border-width: 5px">
+                            <p style="text-align: center"><a href="/room/12">Room 12</a></p>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <div style="width: 100%; height: 140px; background-color: cornflowerblue;padding-top: 15px; padding-bottom: 15px;border-style: dashed; border-width: 5px">
+                            <p style="text-align: center"><a href="/room/13">Room 13</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        </ion-scroll>
+        <!--<ul class="list">-->
+            <!--<li class="item" ng-repeat="room in rooms" ng-click="loadRoom(room.id)">-->
+                <!--<p>{{room.name}}</p>-->
+            <!--</li>-->
+        <!--</ul>-->
 
 
         <script id="room-details.html" type="text/ng-template">
@@ -23,7 +114,7 @@
 
 
 </script>
-    </ion-content>
+    <!--</ion-content>-->
     <!--<ion-scroll direction="xy" locking="false"  zooming="true" min-zoom="1"-->
                 <!--class="animate modal-content">-->
 

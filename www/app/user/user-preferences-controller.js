@@ -4,7 +4,7 @@
 
 angular.module('user-preferences-controllers', ['ngCordova'])
 
-.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Facebook, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
+.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Notifications, Facebook, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
 {
     $scope.navigationTitles = AppNavigationTitles.get();
     $scope.preferences = UserPreferences.get();
@@ -19,6 +19,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         user : false,
         points: false
     };
+
+    $scope.notifications =
+    {
+        checked: true
+    };
+
+
     //$scope.user.loginStatus = false;
 
 
@@ -75,6 +82,19 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     });
 
+    $scope.toggleNotifications = function()
+    {
+        var checked = $scope.notifications.checked;
+
+        if(checked)
+        {
+
+        }
+        else
+        {
+
+        }
+    };
 
     $scope.loadTermsPage = function(){
 
@@ -99,8 +119,10 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             .then(function(user)
             {
                 //console.log(user);
-                if(user.loginStatus)
+                if(user.connected)
                 {
+                    $scope.user.loginStatus = user.connected;
+
 
                     var authToken = $window.localStorage.getItem('userAuthenticationToken');
 
@@ -114,8 +136,9 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                             'Authorization': 'Bearer ' + authToken
                         },
                         data: {
-                            userID: user.userID
-                        }
+                            userID:  $window.localStorage.getItem('userIDAPI')
+
+                }
                     };
 
 
@@ -270,7 +293,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 })
 
-    .controller('FeedbackFormCtrl', function($scope, $http, AppNavigationTitles,$ionicPopup, $ionicLoading)
+    .controller('FeedbackFormCtrl', function($scope, $http, AppNavigationTitles,$ionicPopup, Routes, $ionicLoading)
     {
         //console.log("Feedback");
         $scope.navigationTitles = AppNavigationTitles.get();
@@ -318,12 +341,18 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 {
                     console.log("SUCCESS");
                     /* Feedback accepted */
-                    if(response.status == 200)
+                    if(response.status == 201)
                     {
-                        $ionicPopup.alert({
+                        var feedbackAlert = $ionicPopup.alert({
                             title: $scope.navigationTitles.user.feedbackForm.popUpTitleSuccessLabel,
                             template: $scope.navigationTitles.user.feedbackForm.popUpMessageSuccessLabel
                         });
+
+                        feedbackAlert.then(function(res)
+                        {
+                            $state.go('tab.tab-user');
+
+                        })
 
                     }
 

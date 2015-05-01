@@ -61,19 +61,22 @@
                 {{navigationTitles.user.preferencesLabel}}
 
             </div>
-            <li class="item item-icon-left item-toggle " ng-style="{'font-size': app.fontSize};">
+            <!--<li class="item item-icon-left item-toggle " ng-style="{'font-size': app.fontSize};">-->
                 <!--HTML5-->
-                <i class="icon ion-ios-bell"></i>
 
-                {{navigationTitles.user.notificationsLabel}}
+                <ion-toggle ng-model="notifications"  ng-change="toggleNotifications()" toggle-class="toggle-calm" class="item item-icon-left item-toggle " ng-style="{'font-size': app.fontSize};">
+                    <i class="icon ion-ios-bell"></i>
 
-                <label class="toggle toggle-balanced">
-                    <input type="checkbox" ng-checked="{{preferences.notifications}}">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
-                </label>
-            </li>
+                    {{navigationTitles.user.notificationsLabel}}
+
+                </ion-toggle>
+                <!--<label class="toggle toggle-balanced">-->
+                    <!--<input type="checkbox" ng-checked="preferences.notifications">-->
+                    <!--<div class="track">-->
+                        <!--<div class="handle"></div>-->
+                    <!--</div>-->
+                <!--</label>-->
+            <!--</li>-->
 
             <li class="item item-icon-left range " ng-style="{'font-size': app.fontSize};">
                 <!--HTML5-->

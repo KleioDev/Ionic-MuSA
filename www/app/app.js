@@ -8,7 +8,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$log,Notifications,$ionicHistory, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$log,Notifications,$ionicHistory,  $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         DEBUG = 1;
 
@@ -136,7 +136,10 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         });
     })
 
-    .config(function($stateProvider, $urlRouterProvider, $logProvider,$httpProvider) {
+    .config(function($stateProvider, $urlRouterProvider,$logProvider,$httpProvider) {
+
+        console.log(appID);
+        //$cordovaFacebookProvider.setAppID(appID, version);
 
         $stateProvider
 
