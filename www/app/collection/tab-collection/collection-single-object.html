@@ -50,22 +50,22 @@
 
         <ion-list>
 
-        <ion-item ng-style="{'font-size': app.fontSize};">
+        <ion-item ng-if="museumObject.medium" ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.mediumLabel}}
         <span class="item-note">
                {{museumObject.medium}}    </span>
         </ion-item>
 
-        <ion-item ng-style="{'font-size': app.fontSize};">
+        <ion-item ng-if="museumObject.type" ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.typeLabel}}
             <span class="item-note">{{museumObject.type}}    </span>
         </ion-item>
 
-        <ion-item ng-style="{'font-size': app.fontSize};">
+        <ion-item ng-if="museumObject.culture" ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.cultureLabel}}
             <span class="item-note">{{museumObject.culture}}  </span>
         </ion-item>
-        <ion-item ng-style="{'font-size': app.fontSize};">
+        <ion-item ng-if="museumObject.dimensions" ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.dimensionsLabel}}
             <span class="item-note">{{museumObject.dimensions}}  </span>
         </ion-item>
@@ -129,6 +129,8 @@
                     <a class="item item-icon-left item-icon-right" href="#">
                         <i class="icon ion-document-text"></i>
                         {{museumObject.Texts[0].title}}
+                        <p ng-if="museumObject.Texts[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
+                        <p ng-if="museumObject.Texts[0].lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][museumObject.Texts[0].lang]}})</p>
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -159,9 +161,21 @@
             <div ng-switch="visible(museumObject.Audibles.length)">
                 <div ng-switch-when="SINGLE" >
                     <!-- Only 1 audio file -->
-                    <a class="item item-icon-left item-icon-right" ng-click="playAudio(museumObject.Audibles[0].id)">
+
+                    <!--<a class="item item-icon-right" ng-click="changeLanguage(language)" ng-repeat="language in navigationTitles.user.languagesAvailable">-->
+                        <!--<i ng-if="language.english == preferences.language.english"  ></i>-->
+                        <!--{{language.lang}}-->
+                        <!--<p>{{language[preferences.language.english.toLowerCase()]}}</p>-->
+                    <!--</a>-->
+                    <a class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};" ng-click="playAudio(museumObject.Audibles[0].id)">
                         <i class="icon ion-headphone"></i>
                         {{museumObject.Audibles[0].title}}
+                        <!--<div ng-repeat="language in navigationTitles.user.languages">-->
+                        <p ng-if="museumObject.Audibles[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
+                        <p ng-if="museumObject.Audibles[0].lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][museumObject.Audibles[0].lang]}})</p>
+                         <!--</div>-->
+                        <!--<p ng-if="museumObject.Audibles[0].lang == 'english'">({{navigationTitles.user.languages[preferences.language.english.toLowerCase()]}})-->
+                        <!--</p>-->
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -170,7 +184,7 @@
                 <div ng-switch-when="MULTIPLE" ng-click="showAudio()">
                     <!-- Multiple audio files -->
 
-                    <a class="item item-icon-left item-icon-right" href="#">
+                    <a class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};" href="#">
                         <i class="icon ion-headphone"></i>
 
                         {{navigationTitles.collection.singleObject.audioLabel}}
@@ -195,10 +209,13 @@
             <div ng-switch="visible(museumObject.Videos.length)">
                 <div ng-switch-when="SINGLE" ng-click="playVideo(museumObject.Videos[0].id)" >
                     <!-- Only 1 text file -->
-                    <a class="item item-icon-left item-icon-right" >
+                    <a class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};">
                         <i class="icon ion-social-youtube"></i>
-                        {{museumObject.Videos[0].title}}
-                        <i class="icon ion-ios-arrow-right"></i>
+                       {{museumObject.Videos[0].title}}
+
+                        <p ng-if="museumObject.Videos[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
+                        <p ng-if="museumObject.Videos[0].lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][museumObject.Videos[0].lang]}})</p>
+                    <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
                 </div>
@@ -206,7 +223,7 @@
                 <div ng-switch-when="MULTIPLE" ng-click="showVideos()">
                     <!-- Multiple videos -->
 
-                    <a class="item item-icon-left item-icon-right" >
+                    <a class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};">
                         <i class="icon ion-social-youtube"></i>
 
                         {{navigationTitles.collection.singleObject.videosLabel}}
@@ -230,9 +247,11 @@
                 <div ng-switch-when="SINGLE" ng-click="displayImage(museumObject.Images[0])">
                     <!-- Only 1 image -->
                     <!-- Only 1 text file -->
-                    <a class="item item-icon-left item-icon-right" href="#">
+                    <a class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};" href="#">
                         <i class="icon ion-image"></i>
                         {{museumObject.Images[0].title}}
+
+
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -242,10 +261,12 @@
                 <div ng-switch-when="MULTIPLE" ng-click="imageGrid()">
 
                     <!-- Multiple images -->
-                    <a class="item item-icon-left item-icon-right" href="#">
+                    <a class="item item-icon-left item-icon-right"  href="#">
                         <i class="icon ion-images"></i>
 
                         {{navigationTitles.collection.singleObject.imagesLabel}}
+
+
                         <span class="item-note">
                             {{museumObject.Images.length}}
                         </span>
@@ -266,7 +287,7 @@
             <br>
 
 
-            <a ng-if="museumObject.ExhibitionId" class="item item-icon-left item-icon-right" ng-click="loadExhibition(museumObject.ExhibitionId)">
+            <a ng-if="museumObject.ExhibitionId" class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};" ng-click="loadExhibition(museumObject.ExhibitionId)">
                 <i class="icon ion-ios-albums-outline" ></i>
 
                 {{navigationTitles.collection.singleObject.viewParentExhibitionLabel}}
@@ -304,17 +325,21 @@
             <ion-modal-view>
                 <ion-header-bar  class="bar-positive">
                     <button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
-                    <h1 class="title">MuSA</h1>
+                    <h1 class="title">         {{navigationTitles.collection.singleObject.archivesLabel}}
+                    </h1>
                 </ion-header-bar>
 
                 <ion-content  has-header="true" has-subheader="false" scroll="true">
 
-                    <div class="item item-divider">
-                        {{navigationTitles.collection.singleObject.archivesLabel}}
-                    </div>
+                    <!--<div class="item item-divider">-->
+                    <!--</div>-->
                     <ion-list class="transparent">
-                        <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-click="displayArchive(archive.id)" ng-repeat="archive in museumObject.Texts" type="item-text-wrap" ng-click="doSomething()">
+                        <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-click="displayArchive(archive.id)" ng-repeat="archive in museumObject.Texts" type="item-text-wrap">
                             {{archive.title}}
+                            <p ng-if="archive.lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
+                            <p ng-if="archive.lang != null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][archive.lang.toLowerCase()]}})</p>
+                            <!--<p ng-if="archive.lang != null">({{navigationTitles.getLanguageSubtitle(preferences.language.lang.toLowerCase(),}})</p>-->
+
 
                             <i class="icon ion-ios-arrow-right"></i>
                         </ion-item>
@@ -333,18 +358,22 @@
                 <ion-header-bar  class="bar-positive">
                     <button class="button button-clear" ng-style="{'font-size': app.fontSize};" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
 
-                    <h1 class="title">MuSA</h1>
+                    <h1 class="title">                    {{navigationTitles.collection.singleObject.videosLabel}}
+                    </h1>
                 </ion-header-bar>
 
 
                 <ion-content  has-header="true" has-subheader="false" scroll="true">
 
-                <div class="item item-divider">
-                    {{navigationTitles.collection.singleObject.videosLabel}}
-                </div>
+                <!--<div class="item item-divider">-->
+                    <!--{{navigationTitles.collection.singleObject.videosLabel}}-->
+                <!--</div>-->
                     <ion-list class="transparent">
                         <ion-item class="item item-icon-right padding" ng-click="playVideo(video.id)" ng-repeat="video in museumObject.Videos" type="item-text-wrap" ng-click="doSomething()">
                             {{video.title}}
+
+                            <p ng-if="video.lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
+                            <p ng-if="video.lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][video.lang]}})</p>
 
                             <i class="icon ion-ios-arrow-right"></i>
                         </ion-item>
@@ -361,17 +390,21 @@
             <ion-modal-view>
                 <ion-header-bar  class="bar-positive">
                     <button class="button button-clear" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>
-                    <h1 class="title">MuSA</h1>
+                    <h1 class="title">                        {{navigationTitles.collection.singleObject.audioLabel}}
+                    </h1>
                 </ion-header-bar>
 
                 <ion-content  has-header="true" has-subheader="false" scroll="true">
 
-                    <div class="item item-divider">
-                        {{navigationTitles.collection.singleObject.audioLabel}}
-                    </div>
+                    <!--<div class="item item-divider">-->
+                        <!--{{navigationTitles.collection.singleObject.audioLabel}}-->
+                    <!--</div>-->
                     <ion-list class="transparent">
                         <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-repeat="audio in museumObject.Audibles" type="item-text-wrap" ng-click="playAudio(audio.id)">
                             {{audio.title}}
+
+                            <p ng-if="audio.lang == null">({{preferences.language['eng']}})</p>
+                            <p ng-if="audio.lang">({{preferences.language[audio.lang.toLowerCase()]}})</p>
 
                             <i class="icon ion-ios-arrow-right"></i>
                         </ion-item>
@@ -455,7 +488,9 @@
                     <h1 class="title">{{text.title}}</h1>
                 </ion-header-bar>
 
+                <h2 class="padding">{{text.title}}</h2>
 
+                <br>
                 <ion-content>
                     <div class="padding" ng-style="{'font-size': app.fontSize};" ng-bind-html="text.description"></div>
 
@@ -486,7 +521,7 @@
                     <br>
 
 
-                    <h2>Description</h2>
+                    <h3>Description</h3>
                     <p class=" text-wrap">{{video.description}}</p>
 
 

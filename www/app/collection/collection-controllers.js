@@ -48,6 +48,7 @@ angular.module('collection-controllers', [])
         /* Indicator for loading */
         $scope.loading = false;
 
+
         /* When page loads, load the first page*/
         $scope.onLoad = function() {
 
@@ -140,7 +141,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook, $ionicTabsDelegate)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook, UserPreferences, $ionicTabsDelegate)
     {
         /* Maintains the stack of modals */
         var modals = [];
@@ -151,6 +152,9 @@ angular.module('collection-controllers', [])
         $scope.stream = {
             watchPlaybackTime : 0
             };
+
+        /* Add the preferences to the user */
+        $scope.preferences = UserPreferences.get();
 
         /* Opens a modal with a specific template, whether its to view images, videos or text */
         $scope.openModal = function(template) {
