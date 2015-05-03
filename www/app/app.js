@@ -6,9 +6,9 @@
 angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-controllers', 'museum-services', 'app-services',
 
 
-    'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services'])//,'ngMockE2E'])
+    'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$log,Notifications,$ionicHistory,  $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$state, $window,Notifications,$ionicHistory,  $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         var DEBUG = 1;
 
@@ -16,7 +16,6 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         if(!DEBUG)
             console.log = function() {};
 
-        $rootScope.$log = $log;
         $rootScope.app = {};
         $rootScope.app.fontSize = UserPreferences.getFontSize();
         $rootScope.navigationTitles = AppNavigationTitles.get();
@@ -109,6 +108,8 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
             var deviceInformation = ionic.Platform.device();
 
+
+
             console.log(deviceInformation);
             var isIOS = ionic.Platform.isIOS();
             var android = ionic.Platform.isAndroid();
@@ -117,12 +118,26 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $rootScope.platform.isIOS = isIOS;
             $rootScope.platform.isAndroid = android;
 
-            console.log(isIOS);
-            console.log(android);
+            //console.log(isIOS);
+            //console.log(android);
+
+            //Get the first time opening the app flag
+            var flag = $window.localStorage.getItem('MuSAFirstTimeOpen');
+
+
+
+
+
 
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
+
+
+
+
+
+
             Notifications.setup();
 
 
@@ -132,6 +147,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
                 //Notifications.setup();
             }
 
+            /* Ask user for the language */
 
         });
     })
@@ -388,10 +404,23 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
                         controller: 'VideoViewCtrl'
                     }
                 }
-            });
+            })
+
+        .state('tab.tutorial',{
+
+            url:'/tutorial',
+            views: {
+
+                'tab-tutorial':
+                {
+                    templateUrl: 'app/tutorial/tutorial.html',
+                    controller: 'TutorialCtrl'
+                }
+            }
+        });
 
         /* Fallback State */
-        $urlRouterProvider.otherwise('/tab/museum-segmented-control');
+        $urlRouterProvider.otherwise('/tab/tutorial');
 
         $httpProvider.defaults.useXDomain = true;
 

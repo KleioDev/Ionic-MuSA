@@ -36,7 +36,7 @@ angular.module('museum-controllers', ['ngCordova'])
  * @name Museum General View Controller
  * @description Controls the View Interactions between the Museum General View and the Application
  */
-    .controller('MuseumGeneralCtrl', function($scope, Museum, $window)
+    .controller('MuseumGeneralCtrl', function($scope,$state,  Museum, $window)
     {
         //TODO: Spanish version of hours
         //TODO: Links and Maps
@@ -46,12 +46,16 @@ angular.module('museum-controllers', ['ngCordova'])
         $scope.museum = {};
 
         /* Get the information from the museum view the HTTP Service */
-        Museum.getGeneralMuseumInfo().then(function(museumGeneralInfo)
-        {
-            $scope.museum = museumGeneralInfo;
-        }, function(response)
-        {
+        Museum.getGeneralMuseumInfo().then(function(museumGeneralInfo) {
 
+            if(museumGeneralInfo) {
+
+                $scope.museum = museumGeneralInfo;
+            }
+            else
+            {
+                $state.go($state.current, {}, {reload: true});
+            }
         });
 
         /* Open the map */
@@ -72,7 +76,7 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Events list controller */
-    .controller('MuseumEventsCtrl', function( $scope, $state, AppNavigationTitles, Events)
+    .controller('MuseumEventsCtrl', function( $scope, $state, Events)
     {
         /* Update navigation labels */
         $scope.navigationTitles = AppNavigationTitles.get().museum;
@@ -90,10 +94,16 @@ angular.module('museum-controllers', ['ngCordova'])
             /* Load the event before opening */
             Events.getSingleEvent(eventId)
                 .then(function(event){
-                    if(event != null){
+
+                    if(event){
                         event.datetime = moment(new Date(event.eventDate));
                         Events.setEvent(event);
                         $state.go('tab.museum-events-single');
+                    }
+                    else
+                    {
+                        $state.go($state.current, {}, {reload: true});
+
                     }
                 });
         };

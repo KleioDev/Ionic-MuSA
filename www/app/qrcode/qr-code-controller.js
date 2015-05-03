@@ -35,9 +35,9 @@ angular.module('qr-code-controllers', [])
                             .then(function(response)
                             {
                                 //console.log("Generated the Game");
-                                //console.log(response);
+                                console.log(response);
                                 //if(response)
-                                    $state.go('tab.tab-match-hunt');
+                                //    $state.go('tab.tab-match-hunt');
                             },
 
                             function(err)

@@ -78,7 +78,10 @@ angular.module('museum-services', [])
             function museumInfoFailure(response)
             {
                 /* A mistake happened */
-                return $q.reject(response);
+                console.log("Museum Info Could Not Be Retrieved: ");
+                console.log("Status: " + response.status);
+                console.log("Data: " + response.data);
+                return null
             }
         };
 

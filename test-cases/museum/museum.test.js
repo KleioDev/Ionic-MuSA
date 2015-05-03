@@ -43,6 +43,7 @@ describe('Museum General Info', function()
     {
         var scope;
         var Museum;
+        var $http;
 
         beforeEach(module('museum-services', 'museum-controllers', 'ngCordova', 'app-services'));
 
@@ -52,28 +53,33 @@ describe('Museum General Info', function()
             $controller('MuseumGeneralCtrl', {$scope: scope});
         }));
 
-        beforeEach(inject(function(_Museum_)
+        beforeEach(inject(function(_Museum_,  $httpBackend)
         {
             Museum = _Museum_;
+            $http = $httpBackend
         }));
 
 
         it('phone number is a string it should be parsed out', inject(function(Museum)
         {
+            console.log("Hello!");
+
             Museum.getGeneralMuseumInfo().then(function(museumInfo){
 
-                console.log(museum.phone);
+                //jasmine.log(museumInfo.phone);
                 /* Should be in the form of a regex */
                 if(museumInfo.phone)
                 {
+
                     expect("l").toContain(/\((\d{3})\)\s(\d{3})-(\d{4})/);
 
                 }
-            })
+            });
+
+            $http.flush();
 
 
         }));
 
-        it()
 
     });
