@@ -57,7 +57,7 @@ gulp.task('docs', shell.task([
     '-t node_modules/angular-jsdoc/template '+    // template file
     '-d build/docs '+                             // output directory
     './README.md ' +                              // to include README.md as index contents
-    '-r www/app/museum'                              // source code directory
+    '-r www/app/'                              // source code directory
 ]));
 
 gulp.task('commit', shell.task([

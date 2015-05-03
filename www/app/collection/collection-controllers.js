@@ -31,7 +31,7 @@ angular.module('collection-controllers', [])
 })
 
     /* Collection Object List Controller */
-    .controller('CollectionObjectListCtrl', function($scope, $state, MuseumObjects){
+    .controller('CollectionObjectListCtrl', function($scope,$ionicPopup, $state, MuseumObjects){
 
         /* Set page number to 0 */
         $scope.pageNumber = 0;
@@ -64,10 +64,8 @@ angular.module('collection-controllers', [])
 
             //console.log("GEtting da page");
             MuseumObjects.getPage($scope.pageNumber, $scope.searchTerm)
-                .then(function(response)
+                .then(function(page)
                 {
-                        var page = response.data.artifacts;
-                        console.log(typeof page);
                         if (typeof page == 'object') {
 
                             if (page.length > 0) {
@@ -81,14 +79,6 @@ angular.module('collection-controllers', [])
                                 $scope.morePages = false;
                             }
 
-                        }
-
-                        else if ($scope.pageNumber == 0 && $scope.museumObjects.length == 0) {
-                            //console.log("No Objects Found");
-                        }
-
-                        else {
-                            //console.log("Mistake Happened");
                         }
 
                         $scope.loading = false;
@@ -105,9 +95,15 @@ angular.module('collection-controllers', [])
                 .then(function(_artifact)
                 {
 
+                    if(_artifact){
                         MuseumObjects.setActiveObject(_artifact);
                         //Change state
                         $state.go('tab.collection-single-object');
+                    }
+                    else
+                    {
+                        $scope.noObjectFound();
+                    }
 
 
                 },
@@ -131,6 +127,13 @@ angular.module('collection-controllers', [])
             }
 
         });
+
+        $scope.noObjectFound = function() {
+            var alertPopup = $ionicPopup.alert({
+                title: $scope.navigationTitles.collection.noArtifactFoundLabel
+            });
+
+        };
         $scope.onLoad();
 
 
@@ -512,17 +515,16 @@ angular.module('collection-controllers', [])
 
                 /* Find the exhibitions related to iBeacons */
                 Exhibitions.findByBeacons(beacons)
-                    .then(function (response) {
+                    .then(function (exhibitions) {
 
                         //console.log(response);
-                        if (response.status == 200) {
 
-                            if (response.data.length == 0) {
+                            if (exhibitions.length == 0) {
                                 /* Maybe ask user if he wants to retry */
                             }
 
                             else {
-                                $scope.exhibitions = response.data.exhibitions;
+                                $scope.exhibitions = exhibitions;
                                 $scope.loading.status = false;
                             }
                             /* Apply changes to UI */
@@ -532,7 +534,7 @@ angular.module('collection-controllers', [])
 
                             }
 
-                        }
+
                     }, function(err){
                         console.log(err);
                     });
@@ -684,27 +686,39 @@ angular.module('collection-controllers', [])
         $scope.loadObject = function(id)
         {
             MuseumObjects.getById(id)
-                .then(function(object)
+                .then(function(artifact)
                 {
+
+                    if(artifact) {
                         var index = $ionicTabsDelegate.selectedIndex();
                         MuseumObjects.setActiveObject(object);
 
                         /* Called from collectoin tab */
-                        if(index == 1)
-                        {
+                        if (index == 1) {
                             $state.go('tab.collection-single-object');
 
                         }
                         /* Caled from map tab */
-                        else if(index == 3)
-                        {
+                        else if (index == 3) {
                             $state.go('tab.maps-single-object');
                         }
+                    }
+                    else
+                    {
+                        $scope.noObjectFound();
+                    }
 
                         //Change state
 
 
                 });
+
+        };
+
+        $scope.noObjectFound = function() {
+            var alertPopup = $ionicPopup.alert({
+                title: $scope.navigationTitles.collection.noArtifactFoundLabel
+            });
 
         };
 

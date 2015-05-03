@@ -14,8 +14,7 @@ angular.module('qr-code-controllers', [])
         /* Play match hunt button */
         $scope.playMatchHunt = function()
         {
-            /* If is logged in OPen Match Hunt */
-
+            /* If is logged in Open Match Hunt */
             Facebook.isLoggedIn()
                 .then(function(user)
                 {
@@ -68,7 +67,7 @@ angular.module('qr-code-controllers', [])
 
                 var qrCodeText = scan.text;
 
-                if(!isNaN(qrCodeText))
+                if(!isNaN(qrCodeText) && !(scan.cancelled))
                 {
 
                     /* Load Object */
@@ -88,7 +87,7 @@ angular.module('qr-code-controllers', [])
                     );
                 }
 
-                else {
+                else if(!(scan.cancelled)) {
 
                     $ionicPopup.alert({
                         title: $scope.navigationTitles.scanner.invalidQRCodeLabel
@@ -137,8 +136,7 @@ angular.module('qr-code-controllers', [])
 
                 console.log(scan);
 
-
-                if(scan) {
+                if(!isNaN(scan.text) && !(scan.cancelled)) {
 
                     if(!scan.cancelled) {
 
@@ -228,7 +226,7 @@ angular.module('qr-code-controllers', [])
                                                 var alertFail = $ionicPopup.alert(
                                                     {
                                                         title: $scope.navigationTitles.scanner.failGuessLabel,
-                                                        template: $scope.navigationTitles.scanner.livesLeftLabel + game.attempts + "<br>"
+                                                        template: $scope.navigationTitles.scanner.livesLeftLabel + (3 - game.attempts) + "<br>"
 
                                                     }
                                                 );
@@ -254,6 +252,14 @@ angular.module('qr-code-controllers', [])
 
                     }
                 }
+                else if(!(scan.cancelled)) {
+
+                    $ionicPopup.alert({
+                        title: $scope.navigationTitles.scanner.invalidQRCodeLabel
+                    });
+
+                }
+
             }, function (error) {
                 console.log("Scanning failed: ", error);
             } );

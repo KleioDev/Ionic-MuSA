@@ -34,7 +34,7 @@ angular.module('museum-controllers', ['ngCordova'])
 /**
  * @ngdoc controller
  * @name Museum General View Controller
- * @description
+ * @description Controls the View Interactions between the Museum General View and the Application
  */
     .controller('MuseumGeneralCtrl', function($scope, Museum, $window)
     {
@@ -138,10 +138,8 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Single Event View Controller */
-    .controller('MuseumSingleEventCtrl', function($scope, $stateParams, AppNavigationTitles, Events, $ionicPopup, $cordovaCalendar)
+    .controller('MuseumSingleEventCtrl', function($scope, $stateParams, Events, $ionicPopup, $cordovaCalendar)
     {
-        /* Get the labels for the view */
-        $scope.navigationTitles = AppNavigationTitles.get().museum.eventsSingle;
 
         /* Pass the event to the view */
         $scope.event = Events.getEvent();
@@ -197,11 +195,8 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* Single News View Controller */
-    .controller('MuseumSingleNewsCtrl', function($scope, $stateParams, AppNavigationTitles,News)
+    .controller('MuseumSingleNewsCtrl', function($scope ,News)
     {
-        /* App navigation labels */
-        $scope.navigationTitles = AppNavigationTitles.get().museum.newsSingle;
-
         $scope.news = News.getNewsArticle();
         $scope.news.datetime = moment(new Date($scope.news.createdAt));
 

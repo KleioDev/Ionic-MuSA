@@ -10,7 +10,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     .run(function(ionPlatform, AppNavigationTitles,$log,Notifications,$ionicHistory,  $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
-        var DEBUG = 0;
+        var DEBUG = 1;
 
         /* Set the user global variables */
         if(!DEBUG)

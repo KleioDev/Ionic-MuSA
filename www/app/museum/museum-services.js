@@ -179,7 +179,7 @@ angular.module('museum-services', [])
                     /* Store the upcoming events */
                     events.upcomingEvents = [];
                     for (var i = 0; i < data.events.length; i++) {
-                        if (data.events[i].datetime.diff(currentDate, 'days') != 0 ){
+                        if (currentDate.diff(data.events[i].datetime, 'days') < 0){// && currentDate.diff(data.events[i].datetime, 'months') == 0){
                             events.upcomingEvents.push(data.events[i]);
                         }
                     }
@@ -338,7 +338,7 @@ angular.module('museum-services', [])
                     news.pastWeekNews = [];
                     for (var i = 0; i < _news.length; i++) {
 
-                        if (currentDate.diff(_news[i].datetime, 'days') > 7)
+                        if (currentDate.diff(_news[i].datetime, 'days') > 7 && currentDate.diff(_news[i].datetime, 'years') == 0)
                         {
                             news.pastWeekNews.push(_news[i]);
                         }
