@@ -137,12 +137,12 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook, $ionicTabsDelegate)
     {
         /* Maintains the stack of modals */
         var modals = [];
 
-        /* Get the active object */
+                /* Get the active object */
         $scope.museumObject = MuseumObjects.getActiveObject();
 
         $scope.stream = {
@@ -281,7 +281,20 @@ angular.module('collection-controllers', [])
                         if ($scope.museumObject.Videos.length > 1){
                             $scope.closeModal();
                         }
-                        $state.go('tab.video-view');
+
+                        var index = $ionicTabsDelegate.selectedIndex();
+                        if(index == 1) {
+                            $state.go('tab.video-view');
+                        }
+                        else if(index == 2)
+                        {
+                            $state.go('tab.qrcode-video-view');
+                        }
+                        else if(index == 3)
+                        {
+                            $state.go('tab.maps-video-view');
+                        }
+
                     }
                 });
         };
@@ -653,7 +666,7 @@ angular.module('collection-controllers', [])
 
     })
 
-    .controller('ExhibitionViewCtrl', function($scope, $state, AppNavigationTitles, Exhibitions, MuseumObjects)
+    .controller('ExhibitionViewCtrl', function($scope, $state, $ionicTabsDelegate, AppNavigationTitles, Exhibitions, MuseumObjects)
     {
 
         /* Get exhibition stuff */
@@ -671,14 +684,25 @@ angular.module('collection-controllers', [])
         $scope.loadObject = function(id)
         {
             MuseumObjects.getById(id)
-                .then(function(response)
+                .then(function(object)
                 {
-                    if(response.status == 200)
-                    {
-                        MuseumObjects.setActiveObject(response.data);
+                        var index = $ionicTabsDelegate.selectedIndex();
+                        MuseumObjects.setActiveObject(object);
+
+                        /* Called from collectoin tab */
+                        if(index == 1)
+                        {
+                            $state.go('tab.collection-single-object');
+
+                        }
+                        /* Caled from map tab */
+                        else if(index == 3)
+                        {
+                            $state.go('tab.maps-single-object');
+                        }
+
                         //Change state
-                        $state.go('tab.collection-single-object');
-                    }
+
 
                 });
 

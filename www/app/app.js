@@ -10,7 +10,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     .run(function(ionPlatform, AppNavigationTitles,$log,Notifications,$ionicHistory,  $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
-        DEBUG = 1;
+        var DEBUG = 0;
 
         /* Set the user global variables */
         if(!DEBUG)
@@ -348,7 +348,47 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
                     controller: 'ObjectViewCtrl'
                 }
             }
-        });
+        })
+
+        .state('tab.maps-room-view',{
+                url: '/map/room',
+                views:
+                {
+                    'tab-maps':{
+                        templateUrl: 'app/maps/tab-map/room-view.html',
+                        controller: 'RoomViewCtrl'
+                    }
+                }
+
+        })
+
+        /* View View State */
+        .state('tab.qrcode-video-view',
+            {
+                url:'/videoView/:videoId',
+                views:
+                {
+                    'tab-qrcode':
+                    {
+                        templateUrl: 'app/collection/tab-collection/video-view.html',
+                        controller: 'VideoViewCtrl'
+                    }
+                }
+            })
+
+            /* View View State */
+            .state('tab.maps-video-view',
+            {
+                url:'/videoView/:videoId',
+                views:
+                {
+                    'tab-maps':
+                    {
+                        templateUrl: 'app/collection/tab-collection/video-view.html',
+                        controller: 'VideoViewCtrl'
+                    }
+                }
+            });
 
         /* Fallback State */
         $urlRouterProvider.otherwise('/tab/museum-segmented-control');

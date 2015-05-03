@@ -1,0 +1,33 @@
+<ion-view>
+<!--<ion-header-bar class="bar-positive">-->
+    <!--<button class="button button-icon ion-ios-arrow-left" ng-click="closeModal()">{{navigationTitles.app.backButtonLabel}}</button>-->
+
+<!--</ion-header-bar>-->
+<ion-content class="padding">
+
+    <h2>{{room.name}}</h2>
+
+    <h4>{{navigationTitles.app.descriptionLabel}}</h4>
+    <p>{{room.description}}</p>
+
+    <div class="item item-divider">
+        {{navigationTitles.map.roomExhibitionsLabel}}
+    </div>
+
+    <div ng-switch="(room.exhibitions.length > 0) ? true : false ">
+
+    <ion-list ng-switch-when=true >
+        <ion-item  ng-repeat="exhibition in room.exhibitions" ng-click="loadExhibition(exhibition.id)">
+            {{exhibition.title}}
+
+        </ion-item>
+
+    </ion-list>
+
+
+        <p ng-switch-when=false>{{navigationTitles.map.noExhibitionsFound}}</p>
+
+    </div>
+</ion-content>
+
+</ion-view>

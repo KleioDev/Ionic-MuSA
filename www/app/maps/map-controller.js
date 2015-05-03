@@ -1,11 +1,33 @@
 angular.module('map-controllers', [])
 
 /* Map View Controller */
-.controller('MapViewCtrl', function($scope, AppNavigationTitles, Map,$state, Rooms, $ionicModal, Exhibitions, SegmentedControl, iBeacons)
+.controller('MapViewCtrl', function($scope, $rootScope,Map,$state, $ionicTabsDelegate,$ionicScrollDelegate,$ionicPopup, Rooms, $ionicModal, Exhibitions, SegmentedControl, iBeacons)
 {
     $scope.modal = null;
 
+
+    $scope.segcontrol = SegmentedControl.create('map', ['entry', 'basement'], 'entry');
     $scope.rooms = [];
+
+    $scope.$on('Rooms:NotFound', function()
+    {
+        var roomAlert = $ionicPopup.alert({
+            title: $scope.navigationTitles.map.roomNotFoundLabel
+        });
+
+        roomAlert.then(function(res) {
+
+        });
+
+    });
+
+    $scope.changeState = function(state)
+    {
+        $scope.segcontrol.set(state);
+        $ionicScrollDelegate.scrollTop();
+
+    };
+
 
     /* Load rooms */
     $scope.loadRooms = function() {
@@ -61,12 +83,14 @@ angular.module('map-controllers', [])
             if(room) {
                 console.log(room);
                 $scope.room = room;
+                Rooms.lastRetrievedRoom = room;
 
                 /* Load up Modal */
                 /**
                  * Modal needs a title of the room, description, room number, and list of exhibitions
                  */
-                $scope.openModal('room-details.html');
+                $state.go('tab.maps-room-view');
+                //$scope.openModal('room-details.html');
             }
 
         }
@@ -76,25 +100,31 @@ angular.module('map-controllers', [])
         }
     };
 
-    $scope.loadExhibition = function(id){
-        Exhibitions.getById(id)
-            .then(function(exhibition)
-            {
-
-
-                Exhibitions.setActiveExhibition(exhibition);
-                $scope.closeModal();
-
-                $state.go('tab.maps-exhibition-view');
-
-
-            })
-
-    };
 
     $scope.loadRooms();
+    Map.generateEntryLevel($scope.loadRoom);
 
 
-});
+})
+
+.controller('RoomViewCtrl', function($scope, Rooms,$state, Exhibitions){
+
+        $scope.room = Rooms.lastRetrievedRoom;
+        $scope.loadExhibition = function(id){
+            Exhibitions.getById(id)
+                .then(function(exhibition)
+                {
+
+
+                    Exhibitions.setActiveExhibition(exhibition);
+
+                    $state.go('tab.maps-exhibition-view');
+
+
+                })
+
+        };
+
+    });
 
 
