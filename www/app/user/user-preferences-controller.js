@@ -22,15 +22,15 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         points: false
     };
 
-    $scope.notifications =
-    {
-        checked: true
+
+
+    //$scope.notifications = UserPreferences.getNotificationStatus();
+
+    $scope.notifications  = {
+
+        checked: UserPreferences.getNotificationStatus()
+
     };
-
-
-    //$scope.user.loginStatus = false;
-
-
     $scope.openModal = function(template) {
 
         $ionicModal.fromTemplateUrl(template, {
@@ -88,14 +88,16 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.toggleNotifications = function()
     {
-        var checked = $scope.notifications.checked;
+        console.log("Toggling Notifications");
+        console.log($scope.notifications.checked);
 
-        if(checked)
+        if($scope.notifications.checked)
         {
-
+            UserPreferences.setNotificationStatus(true);
         }
         else
         {
+            UserPreferences.setNotificationStatus(false);
 
         }
     };

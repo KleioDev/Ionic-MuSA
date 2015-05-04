@@ -16,6 +16,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         if(!DEBUG)
             console.log = function() {};
 
+        $window.localStorage.clear();
         $rootScope.app = {};
         $rootScope.app.fontSize = UserPreferences.getFontSize();
         $rootScope.navigationTitles = AppNavigationTitles.get();
