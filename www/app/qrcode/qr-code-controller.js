@@ -37,7 +37,7 @@ angular.module('qr-code-controllers', [])
                                 //console.log("Generated the Game");
                                 console.log(response);
                                 //if(response)
-                                //    $state.go('tab.tab-match-hunt');
+                                    $state.go('tab.tab-match-hunt');
                             },
 
                             function(err)
@@ -533,7 +533,7 @@ angular.module('qr-code-controllers', [])
                         console.log("Game Status");
                         console.log(response.data);
 
-                        MatchHunt.activeGame.attempts = gameStatus.attempts;
+                        MatchHunt.activeGame.pointsValue = 15 - (gameStatus.attempts * 5);
 
                         /* User has won */
                         if(gameStatus.correct)

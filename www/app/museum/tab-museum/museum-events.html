@@ -1,8 +1,10 @@
 <div  ng-controller="MuseumEventsCtrl">
 
+
+    <div ng-if="events.eventsToday.length > 0 || events.upcomingEvents.length > 0">
     <div ng-if="events.eventsToday.length > 0">
     <div class="item item-divider " ng-style="{'font-size': app.fontSize};">
-        {{navigationTitles.events.navHappeningToday}}
+        {{navigationTitles.museum.events.navHappeningToday}}
     </div>
 
     <div class="list card event-card " ng-repeat="event in events.eventsToday" type="item-text-wrap" ng-click="openEvent(event.id)">
@@ -27,7 +29,7 @@
 
 <div ng-if="events.upcomingEvents.length > 0">
     <div class="item item-divider " ng-style="{'font-size': app.fontSize};">
-        {{ navigationTitles.events.navUpcomingToday}}
+        {{ navigationTitles.museum.events.navUpcomingToday}}
     </div>
 
 
@@ -55,4 +57,21 @@
 
 
 </div>
-    <div style="height:25vh"></div>
+
+    <div ng-if="(events.eventsToday.length == 0 && events.upcomingEvents.length == 0)">
+
+        <div class="row">
+
+            <div class="col-10"></div>
+
+            <div class="col-80" style="text-align:center">
+                <br><br><br><br>
+
+                <h2 class="dark">{{navigationTitles.museum.events.noEventsLabel}}</h2>
+
+            </div>
+            <div class="col-10"></div>
+        </div>
+    </div>
+
+</div>

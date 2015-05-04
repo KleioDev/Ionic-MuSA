@@ -79,8 +79,6 @@ angular.module('museum-controllers', ['ngCordova'])
     .controller('MuseumEventsCtrl', function( $scope, $state, Events)
     {
         /* Update navigation labels */
-        $scope.navigationTitles = AppNavigationTitles.get().museum;
-
         Events.getEvents().then(function(events)
         {
             $scope.events = events;
@@ -111,10 +109,9 @@ angular.module('museum-controllers', ['ngCordova'])
     })
 
     /* News list controller */
-    .controller('MuseumNewsCtrl', function($scope,$state, AppNavigationTitles, News)
+    .controller('MuseumNewsCtrl', function($scope,$state, News)
     {
-        /* Get the labels for the application */
-        $scope.navigationTitles = AppNavigationTitles.get().museum;
+
 
         /* Get the news */
         News.getNews().then(function(news)

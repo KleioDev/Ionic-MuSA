@@ -287,7 +287,7 @@
             <br>
 
 
-            <a ng-if="museumObject.ExhibitionId" class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};" ng-click="loadExhibition(museumObject.ExhibitionId)">
+            <a ng-if="(museumObject.ExhibitionId && tabIndex == 1)" class="item item-icon-left item-icon-right" ng-style="{'font-size': app.fontSize};" ng-click="loadExhibition(museumObject.ExhibitionId)">
                 <i class="icon ion-ios-albums-outline" ></i>
 
                 {{navigationTitles.collection.singleObject.viewParentExhibitionLabel}}

@@ -93,7 +93,7 @@ angular.module('museum-services', [])
          */
         var getLocation = function()
         {
-            return 'http://maps.apple.com/?daddr=18.210970,-67.143084'
+            return 'https://www.google.com.pr/maps/dir//18.2099661,-67.1425268/@18.2094647,-67.1421731,395m/data=!3m1!1e3?hl=en'
         };
 
 
@@ -198,7 +198,9 @@ angular.module('museum-services', [])
 
         function handleEventsFailure(response)
         {
-
+            events.eventsToday = [];
+            events.upcomingEvents = [];
+            return events;
         }
 
     };
@@ -353,7 +355,11 @@ angular.module('museum-services', [])
 
                 function newsFailure()
                 {
-                    $.reject('Failed to get News');
+                    console.log("FAILED TO GET THE NEWS");
+
+                    news.currentNews = [];
+                    news.pastWeekNews = [];
+                    return news;
                 };
         };
 

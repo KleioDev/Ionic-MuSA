@@ -10,18 +10,10 @@
         <p ng-style="{'font-size': app.fontSize};"><strong>{{news.author}}</strong>  </p>
             <p ng-style="{'font-size': app.fontSize};">{{news.datetime.format('ll')}}</p>
         </div>
-        <hr>
 
-        <br>
-        <div class="row">
-            <div class="col col-10"></div>
-            <div class="col col-80">
-        <img  class="padding"  src="{{news.image}}" width="100%" />
-                </div>
-            </div>
 <br>
-        <hr>
-    <div class="padding " ng-style="{'font-size': app.fontSize};" ng-bind-html="news.description"></div>
+
+    <p class="padding " ng-style="{'font-size': app.fontSize};" ng-bind-html="news.description"></p>
             <!--</div>-->
             <!--<div class="col col-10"></div>-->
             <!--&lt;!&ndash;ng-repeat="event in eventsToday" type="item-text-wrap" href="#/tab/chats/{{event.id}}">&ndash;&gt;-->

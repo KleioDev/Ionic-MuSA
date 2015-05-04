@@ -8,7 +8,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$state, $window,Notifications,$ionicHistory,  $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$state, $window,Notifications,$ionicHistory,  $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         var DEBUG = 1;
 
@@ -117,6 +117,9 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $rootScope.platform = {};
             $rootScope.platform.isIOS = isIOS;
             $rootScope.platform.isAndroid = android;
+
+            var uuid = $cordovaDevice.getUUID();
+            console.log(uuid);
 
             //console.log(isIOS);
             //console.log(android);

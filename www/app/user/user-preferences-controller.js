@@ -12,6 +12,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     //$scope.user = Facebook.isLoggedIn();
     $scope.user = {};
+
+    $scope.points = 0;
     $scope.text = {};
     $scope.font = {size: 0};
     $scope.loadingUser = false;
@@ -195,7 +197,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                                     .then(function (points) {
                                         console.log(points);
 
-                                        $scope.user.points = points;
+                                        $scope.points = points;
 
 
                                         $scope.loading.points = true;

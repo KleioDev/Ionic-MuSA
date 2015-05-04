@@ -149,6 +149,8 @@ angular.module('collection-controllers', [])
                 /* Get the active object */
         $scope.museumObject = MuseumObjects.getActiveObject();
 
+        $scope.tabIndex =   $ionicTabsDelegate.selectedIndex();
+
         $scope.stream = {
             watchPlaybackTime : 0
             };
@@ -695,7 +697,7 @@ angular.module('collection-controllers', [])
 
                     if(artifact) {
                         var index = $ionicTabsDelegate.selectedIndex();
-                        MuseumObjects.setActiveObject(object);
+                        MuseumObjects.setActiveObject(artifact);
 
                         /* Called from collectoin tab */
                         if (index == 1) {
