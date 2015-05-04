@@ -72,9 +72,21 @@ angular.module('exhibition-services', [])
      * @param id ID of the artifact to be retrieved
      * @returns If the response is successful (200) it returns the data of the object, else it returns an empty object
      */
-    var getById = function(id)
+    var getById = function(id, _params)
     {
-        return $http.get(Routes.COLLECTION_SINGLE_OBJECT + id)
+        var params = {};
+        if(params)
+        {
+            params =_params;
+        }
+        var request = {
+
+            url: Routes.COLLECTION_SINGLE_OBJECT + id,
+            params: params,
+            method: 'GET'
+        };
+
+        return $http(request)
             .then(successArtifact, failureArtifact);
 
 
@@ -82,6 +94,8 @@ angular.module('exhibition-services', [])
         {
             if(response.status == 200) //IF OK
             {
+                console.log("ARTIFACT");
+                console.log(response.data);
                 return response.data;
             }
         }
@@ -106,6 +120,7 @@ angular.module('exhibition-services', [])
     {
         return museumObjects.activeObject;
     };
+
 
 
     return {

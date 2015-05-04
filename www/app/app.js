@@ -70,6 +70,13 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
         });
 
+        $rootScope.$on('http:serverUnavailable', function(){
+
+            $ionicPopup.alert({
+                title: $rootScope.navigationTitles.app.serverDownMaintenanceLabel
+            });
+        });
+
         $rootScope.$on('http:timeout', function()
         {
             var alertPopup = $ionicPopup.alert({
@@ -120,6 +127,9 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
             var uuid = $cordovaDevice.getUUID();
             console.log(uuid);
+
+
+
 
             //console.log(isIOS);
             //console.log(android);

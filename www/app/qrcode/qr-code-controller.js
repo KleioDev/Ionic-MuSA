@@ -3,7 +3,7 @@
 angular.module('qr-code-controllers', [])
 
     /* QrCode View Controller */
-    .controller('QRCodeViewCtrl', function($scope,$state,$window, Facebook, MuseumObjects, MatchHunt, $location, $ionicPopup, AppNavigationTitles)
+    .controller('QRCodeViewCtrl', function($scope,$state,$window, Facebook, $cordovaDevice, MuseumObjects, MatchHunt, $location, $ionicPopup, AppNavigationTitles)
     {
         /* Match hunt isn't available for everyone */
         $scope.matchHuntAvailable = false;
@@ -65,6 +65,8 @@ angular.module('qr-code-controllers', [])
         {
             var scanner = cordova.require("cordova/plugin/BarcodeScanner");
 
+            console.log("Scanner");
+            console.log(scanner);
             scanner.scan( function (scan) {
                 console.log(scan);
 
@@ -75,7 +77,16 @@ angular.module('qr-code-controllers', [])
 
                     /* Load Object */
 
-                    MuseumObjects.getById(qrCodeText)
+                    var deviceUUID = $cordovaDevice.getUUID();
+                    console.log(deviceUUID);
+
+                    var params = {
+                        scan: true,
+                        phone: deviceUUID
+
+                    };
+
+                    MuseumObjects.getById(qrCodeText, params)
                         .then(function(object)
                         {
                             MuseumObjects.setActiveObject(object);
@@ -99,6 +110,12 @@ angular.module('qr-code-controllers', [])
                 }
 
             }, function (error) {
+
+                $ionicPopup.alert({
+                    title: $scope.navigationTitles.scanner.cameraFailureLabel
+                });
+
+                console.log(error);
 
             } );
 
@@ -168,7 +185,6 @@ angular.module('qr-code-controllers', [])
                                             var userID = authUser.userId;
 
                                             console.log("Getting UserID");
-                                            var userID = Facebook.getUserID();
                                             console.log(userID);
 
                                             console.log("Retrieving Authorization");
@@ -286,6 +302,10 @@ angular.module('qr-code-controllers', [])
 
             }, function (error) {
                 console.log("Scanning failed: ", error);
+                $ionicPopup.alert({
+                    title: $scope.navigationTitles.scanner.cameraFailureLabel
+                });
+
             } );
         };
 
@@ -301,27 +321,38 @@ angular.module('qr-code-controllers', [])
                     if(user.connected)
                     {
 
-                        console.log("Getting UserID");
-                        var userID = Facebook.getUserID();
-                        console.log(userID);
+                        Facebook.generateToken(user)
+                            .then(function (authUser) {
 
-                        console.log("Retrieving Authorization");
-                        var authToken = Facebook.getAPIToken();
+                                var authToken = authUser.token;
+                                var userID = authUser.userId;
 
-                        //$window.localStorage.setItem('userID', user.userID);
-                        MatchHunt.generateGame( authToken)
-                            .then(function(matchHunt)
-                            {
-                                $scope.matchHunt = matchHunt;
+                                console.log("Getting UserID");
+                                console.log(userID);
 
-                            },
+                                console.log("Retrieving Authorization");
+                                console.log(authToken);
+                                console.log("Getting UserID");
+                                var userID = Facebook.getUserID();
+                                console.log(userID);
 
-                            function(err)
-                            {
-                                console.log("MATCH HUNT ERR");
-                                console.log(err);
-                            }
-                        );
+                                console.log("Retrieving Authorization");
+                                var authToken = Facebook.getAPIToken();
+
+                                //$window.localStorage.setItem('userID', user.userID);
+                                MatchHunt.generateGame(authToken)
+                                    .then(function (matchHunt) {
+                                        $scope.matchHunt = matchHunt;
+
+                                    },
+
+                                    function (err) {
+                                        console.log("MATCH HUNT ERR");
+                                        console.log(err);
+
+                                    }
+                                );
+                            });
                     }
                     else{
 

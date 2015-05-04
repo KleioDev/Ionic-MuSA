@@ -11,10 +11,10 @@
             <ion-list class="list">
 
                 <!--| filter:searchTerm-->
-                <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" ng-click="preLoadExhibition(exhibition.id)">
-                    <img ng-src="{{exhibition.img_href}}"/>
+                <ion-item class="item  item-icon-right" ng-repeat="exhibition in exhibitions" type="item-text-wrap" ng-click="preLoadExhibition(exhibition.id)">
+                    <!--<img ng-src="{{exhibition.img_href}}"/>-->
                     <h2>{{exhibition.title}}</h2>
-                    <p>{{exhibition.museumObjects.length}}</p>
+                    <p>{{exhibition.description}}</p>
                     <i class="icon ion-ios-arrow-right"></i>
 
                 </ion-item>

@@ -3,13 +3,13 @@
 
     <div ng-if="news.currentNews.length > 0">
     <div class="item item-divider  " ng-style="{'font-size': app.fontSize};">
-        {{navigationTitles.museumnews.recentNewsLabel}}
+        {{navigationTitles.museum.news.recentNewsLabel}}
     </div>
 
     <div class="list"  >
 
-        <a  class="item item-thumbnail-left  item-icon-right " ng-repeat="_news in news.currentNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
-            <img ng-src="{{_news.image}}">
+        <a  class="item item-icon-right " ng-repeat="_news in news.currentNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
+            <!--<img ng-src="{{_news.image}}">-->
             <h2 ng-style="{'font-size': app.fontSize};" class=" ">{{_news.title}}</h2>
             <p ng-style="{'font-size': app.fontSize};" class=" ">{{_news.author}}</p>
             <p ng-style="{'font-size': app.fontSize};" class=" ">{{_news.datetime.format('lll')}}</p>
@@ -27,8 +27,8 @@
     <div class="list">
 
 
-    <a  class="item item-thumbnail-left  item-icon-right " ng-style="{'font-size': app.fontSize};" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
-        <img ng-src="{{_news.image}}">
+    <a  class="item  item-icon-right " ng-style="{'font-size': app.fontSize};" ng-repeat="_news in news.pastWeekNews" type="item-text-wrap" ng-click="openNewsArticle(_news.id)">
+        <!--<img ng-src="{{_news.image}}">-->
         <h2 ng-style="{'font-size': app.fontSize};" class=" ">{{_news.title}}</h2>
         <p ng-style="{'font-size': app.fontSize};" class=" ">{{_news.author}}</p>
         <p ng-style="{'font-size': app.fontSize};" class=" ">{{_news.datetime.format('lll')}}</p>

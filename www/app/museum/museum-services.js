@@ -97,6 +97,9 @@ angular.module('museum-services', [])
         };
 
 
+
+
+
         return {
 
             getGeneralMuseumInfo: getGeneralMuseumInfo,
