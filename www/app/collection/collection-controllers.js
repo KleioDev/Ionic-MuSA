@@ -143,6 +143,7 @@ angular.module('collection-controllers', [])
     /* Single Object View Controller */
     .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook, UserPreferences, $ionicTabsDelegate)
     {
+        console.log("Object View Controller");
         /* Maintains the stack of modals */
         var modals = [];
 
@@ -171,6 +172,9 @@ angular.module('collection-controllers', [])
 
             });
         };
+
+        console.log("Object View Controller");
+
 
         /* Close the modal */
         $scope.closeModal = function() {
@@ -458,7 +462,27 @@ angular.module('collection-controllers', [])
                 Exhibitions.setActiveExhibition(exhibition);
                 $state.go('tab.collection-exhibition-view');
             });
-        }
+        };
+
+        $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+
+            console.log("State changed: ", toState);
+            console.log("State changed from : ", fromState);
+
+
+            if(fromState.name == 'tab.collection-exhibition-view')
+            {
+                console.log("Museum Object updated");
+                $scope.museumObjects = MuseumObjects.getActiveObject();
+            }
+
+
+
+
+        });
+
+
+
 
     })
 
@@ -674,7 +698,7 @@ angular.module('collection-controllers', [])
 
     })
 
-    .controller('ExhibitionViewCtrl', function($scope, $state, $ionicTabsDelegate, AppNavigationTitles, Exhibitions, MuseumObjects)
+    .controller('ExhibitionViewCtrl', function($scope, $state, $ionicTabsDelegate, AppNavigationTitles, Exhibitions, $rootScope, MuseumObjects)
     {
 
         /* Get exhibition stuff */
@@ -696,12 +720,14 @@ angular.module('collection-controllers', [])
                 {
 
                     if(artifact) {
+
                         var index = $ionicTabsDelegate.selectedIndex();
                         MuseumObjects.setActiveObject(artifact);
 
+
                         /* Called from collectoin tab */
                         if (index == 1) {
-                            $state.go('tab.collection-single-object');
+                            $state.go('tab.collection-single-object', {reload: true});
 
                         }
                         /* Caled from map tab */

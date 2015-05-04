@@ -32,7 +32,7 @@
 
             <!--| filter:searchTerm-->
             <ion-item class="item item-thumbnail-left item-icon-right" ng-repeat="object in exhibition.Artifacts " type="item-text-wrap" ng-click="loadObject(object.id)">
-                <img src="{{object.image}}"/>
+                <img ng-src="{{object.image}}"/>
                 <h2>{{object.title}}</h2>
                 <p>{{object.author}}</p>
                 <i class="icon ion-ios-arrow-right"></i>

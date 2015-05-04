@@ -9,7 +9,7 @@ angular.module('exhibition-services', [])
  * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
  *  @requires Routes, $q, $http
  *
- */.factory('MuseumObjects', function($q, Routes, $http)
+ */.factory('MuseumObjects', function($q, Routes, $http, $rootScope)
 {
 
     var museumObjects = {};
@@ -113,6 +113,7 @@ angular.module('exhibition-services', [])
 
     var setActiveObject = function(object)
     {
+        $rootScope.$broadcast('view:update');
         museumObjects.activeObject = object;
     };
 
@@ -293,7 +294,10 @@ angular.module('exhibition-services', [])
             for(var i = 0; i < beacons.length; i++)
             {
                 _params["beacon"+(i+1)] = beacons[i];
+
             }
+            console.log("Find BY Beacons: ");
+            console.log(_params);
 
             return $http.get(Routes.COLLECTION_NEAR_ME,
                 {params: _params}).then(beaconSuccess, beaconFailure);

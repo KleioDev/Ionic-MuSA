@@ -25,7 +25,6 @@
                 <div class="padding" style="text-align:center">
 
                     <h2>{{navigationTitles.app.welcomeTutorialLabel}}</h2>
-                    <br>
 
 
                 </div>
@@ -48,9 +47,8 @@
 
                 <!--</ion-list>-->
 
-                <div class="item item-divider">
-                    {{navigationTitles.app.receiveNotificationsQuestionLabel}}
-                </div>
+                <br>
+                    <p class="text-wrap padding">{{navigationTitles.app.receiveNotificationsQuestionLabel}}</p>
 
                 <ion-radio name="notifications" ng-model="notifications.radio" ng-value=true>{{navigationTitles.app.yesLabel}}</ion-radio>
                 <ion-radio name="notifications" ng-model="notifications.radio" ng-value=false>{{navigationTitles.app.noLabel}}</ion-radio>

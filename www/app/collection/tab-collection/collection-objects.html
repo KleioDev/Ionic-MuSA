@@ -15,7 +15,7 @@
 
         <!--| filter:searchTerm-->
         <ion-item ng-click="loadObject(object.id)" class="item item-thumbnail-left item-icon-right" ng-repeat="object in museumObjects " type="item-text-wrap">
-            <img ng-src="{{object.image}}"/>
+            <img ng-src="{{object.image}}" err-src="img/logo.png"/>
             <h2>{{object.title}}</h2>
             <p ng-style="{'font-size': app.fontSize};">{{object.Artist.name}}</p>
             <i class="icon ion-ios-arrow-right"></i>

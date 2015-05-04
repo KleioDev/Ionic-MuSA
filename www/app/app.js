@@ -126,8 +126,6 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $rootScope.platform.isIOS = isIOS;
             $rootScope.platform.isAndroid = android;
 
-            var uuid = $cordovaDevice.getUUID();
-            console.log(uuid);
 
 
 
@@ -152,13 +150,15 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
 
 
-            Notifications.setup();
-
 
             if(ionic.Platform.isAndroid() || ionic.Platform.isIOS())
             {
                 console.log("Setting up Notifications");
-                //Notifications.setup();
+                var uuid = $cordovaDevice.getUUID();
+                Notifications.setup();
+
+                console.log(uuid);
+
             }
 
             /* Ask user for the language */
@@ -168,8 +168,6 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     .config(function($stateProvider, $urlRouterProvider,$logProvider,$httpProvider) {
 
-        console.log(appID);
-        //$cordovaFacebookProvider.setAppID(appID, version);
 
         $stateProvider
 
@@ -239,6 +237,8 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             /* Single Object View */
             .state('tab.collection-single-object',{
                 url: '/collection/objects/:objectId',
+                cache: false,
+
                 views:
                 {
                     'tab-collection':{
