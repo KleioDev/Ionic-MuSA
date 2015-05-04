@@ -1,0 +1,67 @@
+<ion-view>
+
+        <ion-content>
+
+
+
+
+
+    <script id="language-modal.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar class="bar-positive">
+
+                <h1 class="title">Introduction</h1>
+
+
+                <button class="button button-clear" ng-click="continue()">
+                    {{navigationTitles.app.saveLabel}}
+                </button>
+            </ion-header-bar>
+
+
+            <ion-content>
+
+
+                <div class="padding" style="text-align:center">
+
+                    <h2>{{navigationTitles.app.welcomeTutorialLabel}}</h2>
+                    <br>
+
+
+                </div>
+                <p class="padding"> {{navigationTitles.app.tutorialIntroductionLabel}}</p>
+
+
+
+                <div class="item item-divider">
+{{navigationTitles.app.chooseLanguageOfPreference}}
+                </div>
+
+                <!--<ion-list>-->
+
+                    <ion-radio name="languages" ng-model="languagePreference.lang" ng-value="language.lang" ng-click="changeLanguage(language)" ng-repeat="language in navigationTitles.user.languagesAvailable">{{language.lang}} <p><span>{{language[preferences.language.english.toLowerCase()]}}</span></p></ion-radio>
+                    <!--<a class="item item-icon-right" ng-click="changeLanguage(language)" ng-repeat="language in navigationTitles.user.languagesAvailable">-->
+                        <!--<i ng-if="language.english == preferences.language.english"  ></i>-->
+                        <!--{{language.lang}}-->
+                        <!--<p>{{language[preferences.language.english.toLowerCase()]}}</p>-->
+                    <!--</a>-->
+
+                <!--</ion-list>-->
+
+                <div class="item item-divider">
+                    {{navigationTitles.app.receiveNotificationsQuestionLabel}}
+                </div>
+
+                <ion-radio name="notifications" ng-model="notifications.radio" ng-value=true>{{navigationTitles.app.yesLabel}}</ion-radio>
+                <ion-radio name="notifications" ng-model="notifications.radio" ng-value=false>{{navigationTitles.app.noLabel}}</ion-radio>
+
+
+
+
+
+            </ion-content>
+        </ion-modal-view>
+    </script>
+        </ion-content>
+
+</ion-view>
