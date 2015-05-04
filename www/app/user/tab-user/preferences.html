@@ -176,7 +176,7 @@
         </ion-modal-view>
     </script>
 
-    <script id="text-view.html" type="text/ng-template">
+    <script id="user-text-view.html" type="text/ng-template">
 
     <ion-modal-view>
 
@@ -188,7 +188,7 @@
 
 
         <ion-content>
-            <div class="padding" ng-bind-html="text.content"></div>
+            <div class="padding" ng-style="{'font-size': app.fontSize};" ng-bind-html="text.content"></div>
 
         </ion-content>
     </ion-modal-view>

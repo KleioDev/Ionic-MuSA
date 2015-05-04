@@ -68,9 +68,11 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo()
             .then(function(response)
             {
-                $scope.text.title = $scope.navigationTitles.user.aboutLabel;
-                $scope.text.content = response.about;
-                $scope.openModal('text-view.html');
+                if(response) {
+                    $scope.text.title = $scope.navigationTitles.user.aboutLabel;
+                    $scope.text.content = response.about;
+                    $scope.openModal('user-text-view.html');
+                }
 
             });
         //$scope.text = UserPreferences.getAbout();
@@ -104,9 +106,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo()
             .then(function(response)
             {
-                $scope.text.title = $scope.navigationTitles.user.termsOfServiceLabel;
-                $scope.text.content = response.terms;
-                $scope.openModal('text-view.html');
+
+                console.log(response);
+                if(response) {
+                    $scope.text.title = $scope.navigationTitles.user.termsOfServiceLabel;
+                    $scope.text.content = response.terms;
+                    $scope.openModal('user-text-view.html');
+                }
 
             });
         //$scope.text = UserPreferences.getTerms();
@@ -419,6 +425,16 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         console.log("Generating Token");
         console.log(response);
 
+        var defer = $q.defer();
+
+        if(user.isAuthAvailable())
+        {
+
+            defer.resolve(user.getUserAuth());
+            return defer.promise;
+        }
+        else {
+
 
             console.log("Token Post Data: ");
             var postData =
@@ -441,7 +457,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             console.log(userRequest);
 
             return $http(userRequest).then(storeToken, failureAccess);
-
+        }
 
 
 
@@ -457,7 +473,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 $window.localStorage.setItem('userIDAPI', response.data.userId);
 
                 /* Make an API Call to Facebook */
-                return response;
+                return response.data;
 
             }
             return null;
@@ -478,8 +494,10 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             $cordovaFacebook.logout()
                 .then(function(response) {
 
-                    var user = {loginStatus: false};
-                    return user;
+                    user.clearUser();
+                    var _user = {loginStatus: false};
+
+                    return _user;
                 }, function (error) {
                     // error
                 });
@@ -643,6 +661,14 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     };
 
+    user.clearUser = function()
+    {
+        $window.localStorage.removeItem('userAuthenticationToken');
+        $window.localStorage.removeItem('userIDAPI');
+
+    };
+
+
 
     user.isTokenAvailable = function()
     {
@@ -658,6 +684,30 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         }
     };
 
+    user.isAuthAvailable = function()
+    {
+
+        return user.isTokenAvailable() && user.userIDAvailable();
+
+    };
+
+
+    user.userIDAvailable = function()
+    {
+        var userID = user.getUserID();
+
+
+        if(userID)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     user.getAPIToken = function()
     {
         var APIToken = $window.localStorage.getItem('userAuthenticationToken');
@@ -669,6 +719,18 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         return $window.localStorage.getItem('userIDAPI');
     };
+
+
+    user.getUserAuth = function()
+    {
+        var userAuth = {
+
+            token : user.getAPIToken(),
+            userId: user.getUserID()
+        };
+
+        return userAuth;
+    }
 
     return user;
 

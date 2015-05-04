@@ -23,29 +23,32 @@ angular.module('qr-code-controllers', [])
                     if(user.connected)
                     {
 
-                        console.log("Getting UserID");
-                        var userID = Facebook.getUserID();
-                        console.log(userID);
+                        //console.log("Getting UserID");
+                        //var userID = Facebook.getUserID();
+                        //console.log(userID);
+                        //
+                        //console.log("Retrieving Authorization");
+                        //var authToken = Facebook.getAPIToken();
+                        Facebook.generateToken(user)
+                            .then(function(authUser) {
 
-                        console.log("Retrieving Authorization");
-                        var authToken = Facebook.getAPIToken();
+                                var authToken = authUser.token;
 
-                        //$window.localStorage.setItem('userID', user.userID);
-                        MatchHunt.generateGame(authToken)
-                            .then(function(response)
-                            {
-                                //console.log("Generated the Game");
-                                console.log(response);
-                                //if(response)
-                                    $state.go('tab.tab-match-hunt');
-                            },
+                                //$window.localStorage.setItem('userID', user.userID);
+                                MatchHunt.generateGame(authToken)
+                                    .then(function (response) {
+                                        //console.log("Generated the Game");
+                                        console.log(response);
+                                        //if(response)
+                                        $state.go('tab.tab-match-hunt');
+                                    },
 
-                            function(err)
-                            {
-                                console.log("MATCH HUNT ERR");
-                                console.log(err);
-                            }
-                        );
+                                    function (err) {
+                                        console.log("MATCH HUNT ERR");
+                                        console.log(err);
+                                    }
+                                );
+                            });
                     }
                     else{
 
@@ -132,6 +135,11 @@ angular.module('qr-code-controllers', [])
             /* Open Bar Code Scanner */
             var scanner = cordova.require("cordova/plugin/BarcodeScanner");
 
+
+
+
+
+
             scanner.scan( function (scan) {
 
                 console.log(scan);
@@ -151,11 +159,23 @@ angular.module('qr-code-controllers', [])
                                     console.log(userID);
 
                                     console.log("Retrieving Authorization");
-                                    var authToken = Facebook.getAPIToken();
+                                    //var authToken = Facebook.getAPIToken();
 
+                                    Facebook.generateToken(user)
+                                        .then(function (authUser) {
+
+                                    var authToken = authUser.token;
+                                            var userID = authUser.userId;
+
+                                            console.log("Getting UserID");
+                                            var userID = Facebook.getUserID();
+                                            console.log(userID);
+
+                                            console.log("Retrieving Authorization");
+                                            console.log(authToken);
 
                                     //TODO: IF we use some parsing or not
-                                    MatchHunt.guess( authToken,userID,  scan.text)
+                                    MatchHunt.guess(authToken, userID, scan.text)
                                         .then(function (game) {
 
                                             var status = game.status;
@@ -237,7 +257,11 @@ angular.module('qr-code-controllers', [])
                                             }
 
 
-                                        }, function(err){console.log(err);});
+                                        }, function (err) {
+                                            console.log(err);
+                                        });
+
+                                });
                                 }
 
 
@@ -387,6 +411,7 @@ angular.module('qr-code-controllers', [])
                         console.log(_matchHunt);
                         MatchHunt.setId(_matchHunt.id);
                         MatchHunt.activeGame = _matchHunt;
+                        MatchHunt.activeGame.pointsValue -= _matchHunt.attempts * 5;
 
                         MatchHunt.generateRandomDisplacements(_matchHunt)
                             .then(
@@ -533,7 +558,7 @@ angular.module('qr-code-controllers', [])
                         console.log("Game Status");
                         console.log(response.data);
 
-                        MatchHunt.activeGame.pointsValue = 15 - (gameStatus.attempts * 5);
+                        MatchHunt.activeGame.attempts = gameStatus.attempts;
 
                         /* User has won */
                         if(gameStatus.correct)
@@ -545,12 +570,16 @@ angular.module('qr-code-controllers', [])
 
                         else if(!gameStatus.correct && gameStatus.attempts == 3)
                         {
+                            MatchHunt.activeGame.pointsValue = 15 - (gameStatus.attempts * 5);
+
                             console.log("Game Lost");
                             MatchHunt.reset();
                             gameStatus.status = "lost";
                         }
 
                         else{
+                            MatchHunt.activeGame.pointsValue = 15 - (gameStatus.attempts * 5);
+
                             console.log("Incorrect Guess!");
                             gameStatus.status = "incorrect";
                         }

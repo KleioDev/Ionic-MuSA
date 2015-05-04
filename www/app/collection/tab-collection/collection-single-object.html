@@ -129,8 +129,8 @@
                     <a class="item item-icon-left item-icon-right" href="#">
                         <i class="icon ion-document-text"></i>
                         {{museumObject.Texts[0].title}}
-                        <p ng-if="museumObject.Texts[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
-                        <p ng-if="museumObject.Texts[0].lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][museumObject.Texts[0].lang]}})</p>
+                        <p ng-if="museumObject.Texts[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()]['eng']}})</p>
+                        <p ng-if="museumObject.Texts[0].lang">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()][museumObject.Texts[0].lang]}})</p>
                         <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -171,8 +171,8 @@
                         <i class="icon ion-headphone"></i>
                         {{museumObject.Audibles[0].title}}
                         <!--<div ng-repeat="language in navigationTitles.user.languages">-->
-                        <p ng-if="museumObject.Audibles[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
-                        <p ng-if="museumObject.Audibles[0].lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][museumObject.Audibles[0].lang]}})</p>
+                        <p ng-if="museumObject.Audibles[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()]['eng']}})</p>
+                        <p ng-if="museumObject.Audibles[0].lang">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()][museumObject.Audibles[0].lang]}})</p>
                          <!--</div>-->
                         <!--<p ng-if="museumObject.Audibles[0].lang == 'english'">({{navigationTitles.user.languages[preferences.language.english.toLowerCase()]}})-->
                         <!--</p>-->
@@ -213,8 +213,8 @@
                         <i class="icon ion-social-youtube"></i>
                        {{museumObject.Videos[0].title}}
 
-                        <p ng-if="museumObject.Videos[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
-                        <p ng-if="museumObject.Videos[0].lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][museumObject.Videos[0].lang]}})</p>
+                        <p ng-if="museumObject.Videos[0].lang == null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()]['eng']}})</p>
+                        <p ng-if="museumObject.Videos[0].lang">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()][museumObject.Videos[0].lang]}})</p>
                     <i class="icon ion-ios-arrow-right"></i>
 
                     </a>
@@ -336,8 +336,8 @@
                     <ion-list class="transparent">
                         <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-click="displayArchive(archive.id)" ng-repeat="archive in museumObject.Texts" type="item-text-wrap">
                             {{archive.title}}
-                            <p ng-if="archive.lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
-                            <p ng-if="archive.lang != null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][archive.lang.toLowerCase()]}})</p>
+                            <p ng-if="archive.lang == null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()]['eng']}})</p>
+                            <p ng-if="archive.lang != null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()][archive.lang.toLowerCase()]}})</p>
                             <!--<p ng-if="archive.lang != null">({{navigationTitles.getLanguageSubtitle(preferences.language.lang.toLowerCase(),}})</p>-->
 
 
@@ -372,8 +372,8 @@
                         <ion-item class="item item-icon-right padding" ng-click="playVideo(video.id)" ng-repeat="video in museumObject.Videos" type="item-text-wrap" ng-click="doSomething()">
                             {{video.title}}
 
-                            <p ng-if="video.lang == null">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()]['eng']}})</p>
-                            <p ng-if="video.lang">({{navigationTitles.user.languageOptions[preferences.language.lang.toLowerCase()][video.lang]}})</p>
+                            <p ng-if="video.lang == null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()]['eng']}})</p>
+                            <p ng-if="video.lang != null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()][video.lang.toLowerCase()]}})</p>
 
                             <i class="icon ion-ios-arrow-right"></i>
                         </ion-item>
@@ -403,8 +403,8 @@
                         <ion-item class="item item-icon-right padding" ng-style="{'font-size': app.fontSize};" ng-repeat="audio in museumObject.Audibles" type="item-text-wrap" ng-click="playAudio(audio.id)">
                             {{audio.title}}
 
-                            <p ng-if="audio.lang == null">({{preferences.language['eng']}})</p>
-                            <p ng-if="audio.lang">({{preferences.language[audio.lang.toLowerCase()]}})</p>
+                            <p ng-if="audio.lang == null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()]['eng']}})</p>
+                            <p ng-if="audio.lang != null">({{navigationTitles.user.languageOptions[preferences.language.english.toLowerCase()][audio.lang.toLowerCase()]}})</p>
 
                             <i class="icon ion-ios-arrow-right"></i>
                         </ion-item>
