@@ -6,29 +6,29 @@ navigation history that also transitions its views in and out.
 <ion-tabs class="tabs-icon-top tabs-positive">
 
   <!-- Museum Tab -->
-  <ion-tab title="Museum" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/tab/tab-museum/museum-segmented-control">
+  <ion-tab title="{{navigationTitles.app.tabBar.museumTab}}" icon-off="ion-ios-home-outline" icon-on="ion-ios-home" href="#/tab/tab-museum/museum-segmented-control">
     <ion-nav-view name="tab-museum"></ion-nav-view>
   </ion-tab>
 
   <!-- Collection Tab -->
-  <ion-tab title="Collection" icon-off="ion-ios-list-outline" icon-on="ion-ios-list" href="#/tab/tab-collection/collection">
+  <ion-tab title="{{navigationTitles.app.tabBar.collectionTab}}" icon-off="ion-ios-list-outline" icon-on="ion-ios-list" href="#/tab/tab-collection/collection">
     <ion-nav-view name="tab-collection"></ion-nav-view>
   </ion-tab>
 
   <!-- QR Code Tab -->
-  <ion-tab title="Scan" icon-off="ion-ios-camera-outline" icon-on="ion-ios-camera" href="#/tab/tab-qrcode/qr-code-scanner">
+  <ion-tab title="{{navigationTitles.app.tabBar.scanTab}}" icon-off="ion-ios-camera-outline" icon-on="ion-ios-camera" href="#/tab/tab-qrcode/qr-code-scanner">
     <ion-nav-view name="tab-qrcode"></ion-nav-view>
   </ion-tab>
 
     <!-- Map  Tab -->
-    <ion-tab title="Map" icon-off="ion-social-buffer-outline" icon-on="ion-social-buffer" href="#/tab/tab-map/maps">
+    <ion-tab title="{{navigationTitles.app.tabBar.mapTab}}" icon-off="ion-social-buffer-outline" icon-on="ion-social-buffer" href="#/tab/tab-map/maps">
         <ion-nav-view name="tab-maps"></ion-nav-view>
     </ion-tab>
 
 
 
     <!-- User Tab -->
-    <ion-tab title="User" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/tab-user/preferences">
+    <ion-tab title="{{navigationTitles.app.tabBar.userTab}}" icon-off="ion-ios-person-outline" icon-on="ion-ios-person" href="#/tab/tab-user/preferences">
         <ion-nav-view name="tab-user"></ion-nav-view>
     </ion-tab>
 

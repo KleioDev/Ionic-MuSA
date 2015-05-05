@@ -57,7 +57,6 @@ angular.module('tutorial', [])
             UserPreferences.setLanguage(language);
             //$scope.navigationTitles = AppNavigationTitles.get();
 
-            $window.localStorage.setItem('MuSAFirstTimeOpen', true);
 
 
 
@@ -70,6 +69,8 @@ angular.module('tutorial', [])
             $scope.modal.hide();
             console.log("Notifications Option:");
             console.log($scope.notifications);
+
+            $window.localStorage.setItem('MuSAFirstTimeOpen', true);
 
             if($scope.notifications.radio)
             {

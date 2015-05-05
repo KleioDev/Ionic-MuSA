@@ -18,7 +18,11 @@
 <br>
         <br>
 
-        <div id="entry-map" style="width: 1200px; height: 580px" class="">
+        <div id="entry-map" ng-show="segcontrol.state == 'entry'" style="width: 1200px; height: 580px" class="">
+            <!-- Raphaël JS Map Here -->
+        </div>
+
+        <div id="basement-map" ng-show="segcontrol.state == 'basement'" style="width: 1200px; height: 580px" class="">
             <!-- Raphaël JS Map Here -->
         </div>
 
@@ -40,7 +44,16 @@
 
         <!--<img class="modal-img map" ng-src="img/map/entry_level.png"/>-->
 
-    <!--</ion-scroll>-->
+        <script id="popover.html" type="text/ng-template">
+            <ion-popover-view class="padding" style="background-image: none; width: 75%; height: 10%">
+
+                <ion-content class="padding" style="text-align: center; background-image: none">
+                   <p>{{popoverMessage}}</p>
+                </ion-content>
+            </ion-popover-view>
+        </script>
+
+        <!--</ion-scroll>-->
     </ion-content>
 </ion-view>
 

@@ -594,20 +594,16 @@ angular.module('collection-controllers', [])
 
         });
 
-        /* Preferences updated */
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
+
 
         /* try and load exhibitions on the first try */
         $scope.loadExhibitions();
 
     })
 
-    .controller('ExhibitionsListCtrl', function($scope, $state, Exhibitions, AppNavigationTitles)
+    .controller('ExhibitionsListCtrl', function($scope, $state, Exhibitions)
     {
-        /* Navigation Labels */
-        $scope.navigationTitles = AppNavigationTitles.get();
+
 
         /* Page Number to 0 */
         $scope.pageNumber = 0;
@@ -698,19 +694,12 @@ angular.module('collection-controllers', [])
 
     })
 
-    .controller('ExhibitionViewCtrl', function($scope, $state, $ionicTabsDelegate, AppNavigationTitles, Exhibitions, $rootScope, MuseumObjects)
+    .controller('ExhibitionViewCtrl', function($scope, $state, $ionicTabsDelegate, Exhibitions, $rootScope, MuseumObjects)
     {
 
         /* Get exhibition stuff */
 
         $scope.exhibition = Exhibitions.getActiveExhibition();
-
-        /* Set titles */
-        $scope.navigationTitles = AppNavigationTitles.get();
-
-        $scope.$on('preferences:updated', function(event, data){
-            $scope.navigationTitles = AppNavigationTitles.get();
-        });
 
         /* Load Object */
         $scope.loadObject = function(id)

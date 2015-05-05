@@ -102,10 +102,6 @@ angular.module('exhibition-services', [])
 
         function failureArtifact(response)
         {
-            if(response.status == 404)
-            {
-                return $.reject('Artifact could not be received');
-            }
             return null;
         }
     };

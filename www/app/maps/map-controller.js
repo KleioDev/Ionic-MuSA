@@ -1,7 +1,7 @@
 angular.module('map-controllers', [])
 
 /* Map View Controller */
-.controller('MapViewCtrl', function($scope, $rootScope,Map,$state, $ionicTabsDelegate,$ionicScrollDelegate,$ionicPopup, Rooms, $ionicModal, Exhibitions, SegmentedControl, iBeacons)
+.controller('MapViewCtrl', function($scope, $timeout,$rootScope,Map,$state, $ionicPopover, $ionicTabsDelegate,$ionicScrollDelegate,$ionicPopup, Rooms, $ionicModal, Exhibitions, SegmentedControl, iBeacons)
 {
     $scope.modal = null;
 
@@ -24,9 +24,143 @@ angular.module('map-controllers', [])
     $scope.changeState = function(state)
     {
         $scope.segcontrol.set(state);
+
+        $scope.generateMap();
         $ionicScrollDelegate.scrollTop();
 
     };
+
+    $scope.rooms = [];
+
+    $scope.generateMap = function()
+    {
+        if($scope.segcontrol.state == 'entry'){
+           var components =  Map.generateEntryLevel();
+
+            var icons = components.icons;
+
+            var roomTaps = components.rooms;
+            console.log(roomTaps);
+
+            for(var i =0 ; i < roomTaps.length; i++)
+            {
+                roomTaps[i].tap.id = roomTaps[i].id;
+
+                roomTaps[i].tap.click(function(e){
+
+                    this.node.style.opacity = 0.5;
+                    var tap = this;
+
+                    $timeout(function(){
+
+                        console.log(tap.id);
+                        $scope.loadRoom(tap.id);
+                        tap.node.style.opacity = 1.0;
+
+                    },1000)
+
+                });
+            }
+
+            /* Tap Stairs */
+            var stairsIcon = icons.stairs;
+            stairsIcon.click(function(e){
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.stairsLabel;
+                $scope.openPopover(e);
+            });
+
+            /* Tap Entrance */
+            var entranceIcon = icons.entrance;
+            entranceIcon.click(function(e){
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.entranceLabel;
+                $scope.openPopover(e);
+            });
+
+            /* Tap Entrance */
+            var elevatorIcon = icons.elevator;
+            elevatorIcon.click(function(e){
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.elevatorLabel;
+                $scope.openPopover(e);
+            })
+
+
+
+
+        }
+        else if($scope.segcontrol.state == 'basement')
+        {
+            var components = Map.generateBasementLevel();
+
+            /* Room Tap */
+
+            var room = components.room;
+
+            var tap = room.tap;
+            tap.click(function (e) {
+
+                var tap = this;
+                this.node.style.opacity = 0.5;
+                //var id= this.data('roomNumber');
+                $timeout(function()
+                {
+                    tap.node.style.opacity = 1.0;
+
+                    $scope.loadRoom(15);
+                }, 1000);
+
+            });
+
+
+
+
+            var icons = components.icons;
+
+            var womanIcon = icons.woman;
+            womanIcon.click(function (e) {
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.womansBathroomLabel;
+                $scope.openPopover(e);
+
+            });
+
+
+            var manIcon = icons.man;
+            manIcon.click(function(e){
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.mensBathroomLabel;
+                $scope.openPopover(e);
+
+            });
+
+            var elevatorIcon = icons.elevator;
+            elevatorIcon.click(function(e){
+
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.elevatorLabel;
+                $scope.openPopover(e);
+
+
+            });
+
+            var exitIcon = icons.exit;
+            exitIcon.click(function(e){
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.exitLabel;
+                $scope.openPopover(e);
+            });
+
+            var stairsIcon = icons.stairs;
+            stairsIcon.click(function(e){
+                $scope.popoverMessage = $scope.navigationTitles.map.icons.stairsLabel;
+                $scope.openPopover(e);
+            })
+
+        }
+    };
+
+    $ionicPopover.fromTemplateUrl('popover.html',{
+        scope: $scope
+    }).then(function(popover)
+    {
+        $scope.popover = popover;
+    });
+
 
 
     /* Load rooms */
@@ -41,7 +175,7 @@ angular.module('map-controllers', [])
             console.log(err)
         });
 
-    }
+    };
     /* When beacons change state load up an active room */
     $scope.$on('beacons:stateChange', function()
     {
@@ -99,10 +233,30 @@ angular.module('map-controllers', [])
             console.log(err);
         }
     };
+    $scope.openPopover = function($event) {
+        $scope.popover.show($event);
+    };
+    $scope.closePopover = function() {
+        $scope.popoverMessage = "";
+        $scope.popover.hide();
+    };
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.popover.remove();
+    });
+    // Execute action on hide popover
+    $scope.$on('popover.hidden', function() {
+        // Execute action
+    });
+    // Execute action on remove popover
+    $scope.$on('popover.removed', function() {
+        // Execute action
+    });
 
 
     $scope.loadRooms();
-    Map.generateEntryLevel($scope.loadRoom);
+    $scope.generateMap();
+    //Map.generateEntryLevel($scope.loadRoom);
 
 
 })

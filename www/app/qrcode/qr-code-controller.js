@@ -3,13 +3,12 @@
 angular.module('qr-code-controllers', [])
 
     /* QrCode View Controller */
-    .controller('QRCodeViewCtrl', function($scope,$state,$window, Facebook, $cordovaDevice, MuseumObjects, MatchHunt, $location, $ionicPopup, AppNavigationTitles)
+    .controller('QRCodeViewCtrl', function($scope,$state,$window, Facebook, $cordovaDevice, MuseumObjects, MatchHunt, $location, $ionicPopup)
     {
         /* Match hunt isn't available for everyone */
         $scope.matchHuntAvailable = false;
 
         /* Get the labels */
-        $scope.navigationTitles = AppNavigationTitles.get();
 
         /* Play match hunt button */
         $scope.playMatchHunt = function()
@@ -36,11 +35,18 @@ angular.module('qr-code-controllers', [])
 
                                 //$window.localStorage.setItem('userID', user.userID);
                                 MatchHunt.generateGame(authToken)
-                                    .then(function (response) {
+                                    .then(function (game) {
                                         //console.log("Generated the Game");
-                                        console.log(response);
                                         //if(response)
-                                        $state.go('tab.tab-match-hunt');
+                                        console.log("Generated Game: " );
+                                        console.log(game);
+                                        if(game)
+                                            $state.go('tab.tab-match-hunt');
+                                        else{
+                                           $ionicPopup.alert({
+                                               title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
+                                           });
+                                        }
                                     },
 
                                     function (err) {
@@ -80,18 +86,32 @@ angular.module('qr-code-controllers', [])
                     var deviceUUID = $cordovaDevice.getUUID();
                     console.log(deviceUUID);
 
-                    var params = {
-                        scan: true,
-                        phone: deviceUUID
+                    //var params = {
+                    //    scan: true,
+                    //    phone: deviceUUID
+                    //
+                    //};
 
-                    };
+                    //TODO: Remove once Analytics is Done
+                    var params = {};
 
                     MuseumObjects.getById(qrCodeText, params)
                         .then(function(object)
                         {
-                            MuseumObjects.setActiveObject(object);
-                            //Change state
-                            $state.go('tab.scanner-object');
+                            console.log(object);
+                            if(object) {
+                                MuseumObjects.setActiveObject(object);
+                                //Change state
+
+                                $state.go('tab.scanner-object');
+                            }
+                            else
+                            {
+                                $ionicPopup.alert({
+                                    title: $scope.navigationTitles.scanner.objectNotAvailableLabel
+                                })
+
+                            }
 
                         },
                         function(response)
@@ -194,6 +214,10 @@ angular.module('qr-code-controllers', [])
                                     MatchHunt.guess(authToken, userID, scan.text)
                                         .then(function (game) {
 
+                                            console.log("GUESS STATUS");
+                                            console.log(game);
+
+                                            if(game){
                                             var status = game.status;
                                             console.log("PARSING GAME");
                                             console.log(game);
@@ -270,7 +294,7 @@ angular.module('qr-code-controllers', [])
                                                 alertFail.then(function (res) {
                                                     console.log("Guess Fail Alert Acknowledged");
                                                 });
-                                            }
+                                            }}
 
 
                                         }, function (err) {
@@ -342,7 +366,20 @@ angular.module('qr-code-controllers', [])
                                 //$window.localStorage.setItem('userID', user.userID);
                                 MatchHunt.generateGame(authToken)
                                     .then(function (matchHunt) {
-                                        $scope.matchHunt = matchHunt;
+
+                                        if(matchHunt) {
+
+                                            $scope.matchHunt = matchHunt;
+                                        }
+                                        else{
+
+                                                $ionicPopup.alert({
+                                                    title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
+                                                });
+
+                                            $state.go('tab.tab-qrcode-scanner');
+
+                                        }
 
                                     },
 
@@ -444,10 +481,12 @@ angular.module('qr-code-controllers', [])
                         MatchHunt.activeGame = _matchHunt;
                         MatchHunt.activeGame.pointsValue -= _matchHunt.attempts * 5;
 
-                        MatchHunt.generateRandomDisplacements(_matchHunt)
+                        return MatchHunt.generateRandomDisplacements(_matchHunt)
                             .then(
                             function(displacements)
                             {
+                                console.log("GENERATED DISPLACEMENTS: " );
+                                console.log(displacements);
                                 if(displacements)
                                 {
                                     console.log("Valid game");
@@ -460,7 +499,7 @@ angular.module('qr-code-controllers', [])
                             },
                             function(err)
                             {
-                                console.log("Couldn't calcualte the displacements");
+                                console.log("Couldn't calculate the displacements");
                             }
                         )
                     }
@@ -472,7 +511,7 @@ angular.module('qr-code-controllers', [])
                     console.log("Failed to get Match Hunt Game");
                     console.log("Response Status: " + response.status);
                     console.log("Data: " + response.data);
-                    $q.reject(null)
+                    return null;
                 }
 
 
@@ -491,8 +530,9 @@ angular.module('qr-code-controllers', [])
             {
                 var _displacements = $window.localStorage.getItem('matchHuntDisplacements');
 
+                console.log(_displacements);
                 var displacements = null;
-                if(!_displacements) {
+                if(_displacements == null) {
 
                     console.log("Creating new displacements");
 
@@ -520,14 +560,15 @@ angular.module('qr-code-controllers', [])
                     console.log(X);
                     console.log(Y);
 
-
-                    /* Store displacements */
-                    $window.localStorage.setItem('matchHuntDisplacements', JSON.stringify(displacements));
-
                     displacements = {
                         x: X,
                         y: Y
                     };
+                    console.log(displacements);
+                    /* Store displacements */
+                    $window.localStorage.setItem('matchHuntDisplacements', JSON.stringify(displacements));
+
+
                 }
 
                 else {
@@ -542,6 +583,7 @@ angular.module('qr-code-controllers', [])
 
 
                 }
+
 
                 console.log(displacements);
                 defer.resolve(displacements);

@@ -176,19 +176,23 @@ angular.module('museum-services', [])
                     for (var i = 0; i < data.events.length; i++)
                     {
                         //console.log(events[i].datetime.diff(currentDate));
-                        if (data.events[i].datetime.diff(currentDate,'days') == 0)
+                        if (data.events[i].datetime.isSame(currentDate, 'day'))
                         {
                             events.eventsToday.push(data.events[i]);
                         }
                     }
 
+
+
                     /* Store the upcoming events */
                     events.upcomingEvents = [];
                     for (var i = 0; i < data.events.length; i++) {
-                        if (currentDate.diff(data.events[i].datetime, 'days') < 0){// && currentDate.diff(data.events[i].datetime, 'months') == 0){
+                        if (!data.events[i].datetime.isSame(currentDate, 'day') && currentDate.diff(data.events[i].datetime, 'hours') < 0){// && currentDate.diff(data.events[i].datetime, 'months') == 0){
                             events.upcomingEvents.push(data.events[i]);
                         }
                     }
+
+
 
                     // console.log(events);
                     return events;
