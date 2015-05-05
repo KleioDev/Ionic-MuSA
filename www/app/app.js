@@ -105,7 +105,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
                 var request = {
 
                     'method': 'POST',
-                    'url': '/user/active/' + userID
+                    'url': Routes.MONTHLY_ACTIVE_USER + userID
 
                 };
 
