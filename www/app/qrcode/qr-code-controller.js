@@ -86,14 +86,14 @@ angular.module('qr-code-controllers', [])
                     var deviceUUID = $cordovaDevice.getUUID();
                     console.log(deviceUUID);
 
-                    //var params = {
-                    //    scan: true,
-                    //    phone: deviceUUID
-                    //
-                    //};
+                    var params = {
+                        scan: true,
+                        phone: deviceUUID
+
+                    };
 
                     //TODO: Remove once Analytics is Done
-                    var params = {};
+                    //var params = {};
 
                     MuseumObjects.getById(qrCodeText, params)
                         .then(function(object)

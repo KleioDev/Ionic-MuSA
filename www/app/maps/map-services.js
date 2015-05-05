@@ -663,13 +663,22 @@ angular.module('map-services', [])
                 {
                     if(response.status == 200) {
                         if (response.data) {
-                            return response.data.beacons;
+
+                            var beacons = response.data.beacons;
+
+                            var roomIDs = [];
+
+                            for(var i = 0; i < beacons.length; i++)
+                            {
+                                roomIDs.push(beacons[i].Room.id);
+                            }
+                            return roomIDs;
                         }
                     }
 
                     return null;
 
-                }, function(err)
+                }, function(response)
                 {
                     console.log("ROOM SERVICE - {retrieveRoomByiBeacon()} Failed!");
                     console.log("Response: " + response);

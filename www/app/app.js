@@ -8,7 +8,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$state, $window,Notifications,$ionicHistory,  $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$state, Facebook,$http,  $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         var DEBUG = 1;
 
@@ -20,6 +20,8 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         $rootScope.app = {};
         $rootScope.app.fontSize = UserPreferences.getFontSize();
         $rootScope.navigationTitles = AppNavigationTitles.get();
+
+
 
         $rootScope.goBack = function()
         {
@@ -94,6 +96,24 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $rootScope.app.fontSize = UserPreferences.getFontSize();
         });
 
+        $rootScope.$on('$stateChangeSuccess' , function(event, toState, toParams, fromState, fromParams){
+
+            var userID = Facebook.getUserID();
+            if(userID) {
+
+
+                var request = {
+
+                    'method': 'POST',
+                    'url': '/user/active/' + userID
+
+                };
+
+                $http(request);
+            }
+
+        });
+
 
         $rootScope.$on('$stateChangeStart',   function(event, toState, toParams, fromState, fromParams){
 
@@ -115,8 +135,6 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         ionPlatform.ready.then(function(device) {
 
             var deviceInformation = ionic.Platform.device();
-
-
 
             console.log(deviceInformation);
             var isIOS = ionic.Platform.isIOS();

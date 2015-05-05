@@ -7,28 +7,74 @@ angular.module('map-controllers', [])
 
     $scope.$on('ibeacon:nearestBeaconChanged', function()
     {
-
+        console.log("Retriving Room By iBeacon");
+        $scope.retrieveRoomByiBeacon();
     });
+
+
+
 
     $scope.retrieveRoomByiBeacon = function()
     {
         var beaconID = iBeacons.getNearestBeaconID();
 
-        var highlightColor = "#2ecc71";
-        Rooms.retrieveRoomByiBeacon(beaconID)
-            .then(function(id)
-            {
-                if(id) {
-                    if (!isNaN(id)) {
+        var rooms = $scope.mapRooms;
+        console.log(rooms);
+
+            for (var i = 0; i < rooms.length; i++) {
+                    rooms[i].area.attr({'fill': '#FFFFFF'});
+            }
+
+
+        console.log("Retrieving Room By iBeacon");
+
+        if(beaconID) {
+            var highlightColor = "#2ecc71";
+            Rooms.retrieveRoomByiBeacon(beaconID)
+                .then(function (ids) {
+                    console.log("IDS");
+                    console.log(ids);
+                    if (ids) {
+
+
+                            var rooms = $scope.mapRooms;
+                            console.log(rooms);
+
+                            for (var j = 0; j < ids.length; j++) {
+
+                                for (var i = 0; i < rooms.length; i++) {
+                                    if (rooms[i].id == parseInt(ids[j]))
+                                        rooms[i].area.attr({'fill': highlightColor});
+                                }
+                            }
+
+
 
                     }
-                }
-            });
+                });
+        }
 
     };
 
+
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+
+        if(toState.name == 'tab.tab-maps')
+        {
+            iBeacons.scanForNearestBeacon();
+            $scope.retrieveRoomByiBeacon();
+        }
+
+        if(fromState.name == 'tab.tab-maps')
+        {
+            iBeacons.stopRanging();
+
+        }
+
+    });
+
     $scope.segcontrol = SegmentedControl.create('map', ['entry', 'basement'], 'entry');
-    $scope.rooms = [];
+    $scope.mapRooms = [];
 
     $scope.$on('Rooms:NotFound', function()
     {
@@ -88,6 +134,8 @@ angular.module('map-controllers', [])
                 });
             }
 
+            $scope.mapRooms = components.rooms;
+
             /* Tap Stairs */
             var stairsIcon = icons.stairs;
             stairsIcon.click(function(e){
@@ -120,6 +168,8 @@ angular.module('map-controllers', [])
             /* Room Tap */
 
             var room = components.room;
+            $scope.mapRooms = components.rooms;
+
 
             var tap = room.tap;
             tap.click(function (e) {
@@ -282,6 +332,7 @@ angular.module('map-controllers', [])
 
     $scope.loadRooms();
     $scope.generateMap();
+    $scope.retrieveRoomByiBeacon();
     //Map.generateEntryLevel($scope.loadRoom);
 
 

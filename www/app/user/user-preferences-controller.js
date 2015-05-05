@@ -730,7 +730,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         };
 
         return userAuth;
-    }
+    };
 
     return user;
 
