@@ -5,6 +5,27 @@ angular.module('map-controllers', [])
 {
     $scope.modal = null;
 
+    $scope.$on('ibeacon:nearestBeaconChanged', function()
+    {
+
+    });
+
+    $scope.retrieveRoomByiBeacon = function()
+    {
+        var beaconID = iBeacons.getNearestBeaconID();
+
+        var highlightColor = "#2ecc71";
+        Rooms.retrieveRoomByiBeacon(beaconID)
+            .then(function(id)
+            {
+                if(id) {
+                    if (!isNaN(id)) {
+
+                    }
+                }
+            });
+
+    };
 
     $scope.segcontrol = SegmentedControl.create('map', ['entry', 'basement'], 'entry');
     $scope.rooms = [];
@@ -25,6 +46,7 @@ angular.module('map-controllers', [])
     {
         $scope.segcontrol.set(state);
 
+        Map.clearMap();
         $scope.generateMap();
         $ionicScrollDelegate.scrollTop();
 
@@ -34,12 +56,16 @@ angular.module('map-controllers', [])
 
     $scope.generateMap = function()
     {
+
+        /* Generate Entry Level */
         if($scope.segcontrol.state == 'entry'){
-           var components =  Map.generateEntryLevel();
+            var components =  Map.generateEntryLevel();
 
             var icons = components.icons;
 
+
             var roomTaps = components.rooms;
+            //$scope.rooms.concat
             console.log(roomTaps);
 
             for(var i =0 ; i < roomTaps.length; i++)
