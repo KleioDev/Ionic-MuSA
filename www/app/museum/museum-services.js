@@ -157,18 +157,20 @@ angular.module('museum-services', [])
 
                     //console.log(data);
 
-                    data.events.sort(compareMilli);
 
-                    function compareMilli(a,b) {
-                        if(a.milli < b.milli) return -1;
-                        if(a.milli > b.milli) return 1;
-                        return 0;
-                    }
 
 
                     for(var i = 0; i < data.events.length ; i++)
                     {
                         data.events[i].datetime = moment(new Date(data.events[i].eventDate));
+                    }
+
+                    data.events.sort(compareMilli);
+
+                    function compareMilli(a,b) {
+                        if(a.datetime.milli < b.datetime.milli) return -1;
+                        if(a.datetime.milli > b.datetime.milli) return 1;
+                        return 0;
                     }
 
 
