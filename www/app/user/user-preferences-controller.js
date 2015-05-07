@@ -4,7 +4,7 @@
 
 angular.module('user-preferences-controllers', ['ngCordova'])
 
-.controller('UserPreferencesCtrl', function($scope, Notifications, Facebook, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
+.controller('UserPreferencesCtrl', function($scope, Notifications, FacebookUser, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
 {
     $scope.preferences = UserPreferences.get();
 
@@ -427,7 +427,37 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             });
     };
 
-    var retrieveInfo = function()
+
+    var retrieveUser = function(authPackage)
+    {
+
+        return retrieveFacebookInfo.then(
+            function(user)
+            {
+                if(user && authPackage)
+                {
+                    return retrievePoints(authPackage)
+                        .then(function(points)
+                        {
+                            if(points)
+                            {
+                                user.points = points;
+                                return user;
+                            }
+                        })
+                }
+                else
+                {
+                    console.log("AuthPackage Not Defined?");
+                    console.log(authPackage);
+
+                    console.log("User is not defined");
+                    console.log(user);
+                }
+            })
+    };
+
+    var retrieveFacebookInfo = function()
     {
         return $cordovaFacebook.api("me", ["public_profile"])
             .then(function(success) {
@@ -440,6 +470,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
                 console.log("FacebookUser :- $cordovaFacebook.api (User Generated)");
                 console.log(user);
+
+                /* Retrieve Points */
 
 
                 // success
@@ -464,13 +496,13 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 {
                     //Need to generate a token from our MuSA API
                     return generateToken(success.authResponse.accessToken, success.authResponse.userID)
-                        .then(function(tokenGenerationSuccess)
+                        .then(function(authPackage)
                         {
 
-                            if(tokenGenerationSuccess)
+                            if(authPackage)
                             {
                                 /* User is connected, go get the user info */
-                                return retrieveInfo();
+                                return retrieveUser(authPackage);
                             }
                             else
                             {
@@ -583,289 +615,43 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     };
 
 
-
-
-    return {
-
-        refreshUser: refreshUser,
-        login: login,
-        logout: logout,
-        retrieveInfo: retrieveInfo,
-        loadLeaderboard: loadLeaderboard
-    }
-
-
-})
-
-
-
-/* Service handles Facebook calls */
-.factory('Facebook', function($cordovaFacebook, $timeout, $q, AppNavigationTitles, $window, Routes, $http, $ionicPopup, $rootScope)
-{
-
-    /* User info */
-    var user = {};
-
-    user.loginStatus = false;
-    user.userInfo = {};
-
-
-    user.login = function() {
-
-        /* If login was successful get the token from our server */
-        return $cordovaFacebook.login(["public_profile", "email"]).then(successLogin, failureLogin);
-
-        function successLogin(response)
-        {
-            console.log(response);
-            return response;
-        };
-
-        /* Fails to Login */
-        function failureLogin(error) {
-           // console.log("FACEBOOK ERR:");
-            //console.log(error);
-            /* DOn't proceed with the login, show an error message */
-            $rootScope.$broadcast('http:error', {});
-            $q.reject('Failed to get login');
-        };
-    };
-
-    user.generateToken = function(response)
+    /* Always call method after checking login Status */
+    var retrievePoints = function(authPackage)
     {
-        /* User Response */
-
-        console.log("Generating Token");
-        console.log(response);
-
-        var defer = $q.defer();
-
-        if(user.isAuthAvailable())
-        {
-
-            defer.resolve(user.getUserAuth());
-            return defer.promise;
-        }
-        else {
-
-
-            console.log("Token Post Data: ");
-            var postData =
-            {
-                accessToken: response.authResponse.accessToken,
-                userID: response.authResponse.userID,
-                type: 'user'
-            };
-            console.log(postData);
-
-
-            console.log("Token Post Request: ");
-            var userRequest = {
-
-                url: Routes.USER_AUTHENTICATION,
-                method: 'POST',
-                data: postData
-            };
-
-            console.log(userRequest);
-
-            return $http(userRequest).then(storeToken, failureAccess);
-        }
-
-
-
-        function storeToken(response)
-        {
-            if (response.status == 200)
-            {
-                console.log("Storing Token=");
-                console.log(response);
-
-                $window.localStorage.setItem('userAuthenticationToken', response.data.token);
-
-                $window.localStorage.setItem('userIDAPI', response.data.userId);
-
-                /* Make an API Call to Facebook */
-                return response.data;
-
-            }
-            return null;
-        }
-
-        function failureAccess(response)
-        {
-            $q.reject('Failed to Get/Store Token');
-        }
-
-
-
-    };
-
-    user.logout = function()
-    {
-
-            $cordovaFacebook.logout()
-                .then(function(response) {
-
-                    user.clearUser();
-                    var _user = {loginStatus: false};
-
-                    return _user;
-                }, function (error) {
-                    // error
-                });
-    };
-
-    user.isLoggedIn = function()
-    {
-       return $cordovaFacebook.getLoginStatus().then(successLoginStatus, failureLoginStatus);
-
-
-        function successLoginStatus(response)
-        {
-
-            if(response.status == 'connected')
-            {
-                return true;
-            }
-
-            /* Let them know he's not logged in */
-            else{
-                return false;;
-            }
-
-        };
-
-        function failureLoginStatus(error)
-        {
-            console.log("FAILED TO GET LOGIN STATUS - $cordovaFacebook (Facebook Service)");
-            console.log(error);
-            return false;
-        };
-
-
-    };
-
-    user.getUserInfo = function()
-    {
-
-        return $cordovaFacebook.api("me", ["public_profile", "email"])
-            .then(function(success) {
-
-                var user = {};
-
-
-                /* Parse out the correct Info */
-                user.name = success.name;
-                user.email = success.email;
-                user.userID = success.id;
-                user.loginStatus = success.verified;
-
-
-                return user;
-
-
-            }, function (error) {
-
-
-            });
-
-    };
-
-
-
-
-    user.showLoginPopup = function()
-    {
-
-        var labels = AppNavigationTitles.get();
-        var loginButton = {
-            text: labels.app.facebookLoginLabel,
-            type: 'button-royal',
-            onTap: function()
-            {
-                user.login()
-                    .then(function(response)
-                    {
-                        console.log(response);
-                        if(response)
-                        {
-                            console.log(response);
-                            /* Now we should generate the token Info */
-                            user.generateToken(response)
-                                .then(function(valid) {
-
-                                    if (valid) {
-                                    }
-                                })}});
-            }
-
-        };
-
-        var cancelButton = {
-            text: labels.app.cancelFacebookLoginPopup,
-            type: 'button-light'
-        };
-
-        var loginPopup = $ionicPopup.show(
-        {
-            title: labels.app.facebookRequiredLabel,
-            subTitle: labels.app.playMatchHuntFacebookAccountRequiredLabel,
-            buttons:[
-
-                cancelButton,
-                loginButton
-            ]
-        });
-
-        loginPopup.then(function(res){
-
-            console.log(res);
-        });
-
-        $timeout(function()
-        {
-            loginPopup.close();
-        }, 10000)
-
-    };
-
-
-    user.getPoints = function()
-    {
-
-
-        var authToken = $window.localStorage.getItem('userAuthenticationToken');
-        var _userID = $window.localStorage.getItem('userIDAPI');
 
         var request = {
-            url: Routes.USER + _userID,
+            url: Routes.USER + authPackage.userID,
             method: 'GET',
             headers:
             {
-                'Authorization': 'Bearer ' + authToken
+                'Authorization': 'Bearer ' + authPackage.authToken
             }
         };
 
         //console.log(request);
 
         return $http(request)
-            .then(function(response)
-            {
-                if(response.status == 200)
-                {
-                    console.log("Got the points");
-                    console.log(response.data.points);
-                    return response.data.points;
-                }
-            }, function(err){
 
-                $q.reject('failed to get the points');
+            .success(function(response)
+            {
+                console.log("Retrieved Points");
+                console.log(response);
+                if(response)
+                    return response.data.points;
+
             })
+            .error(function(err)
+            {
+                console.log("Error retrieving points");
+                console.log(err);
+                return null;
+            })
+
+
     };
 
 
-    user.postToFacebook = function(title, img,  description)
+    var postToFacebook = function(title, img,  description)
     {
 
         var options = {
@@ -877,87 +663,89 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             description: description
         };
 
-        $cordovaFacebook.showDialog(options)
+       return  $cordovaFacebook.showDialog(options)
             .then(function(success) {
-                // success
+                console.log("Managed to post to facebook!");
+                return success;
             }, function (error) {
-                // error
+                console.log("Poisting to Facebook failed");
+
+                return null;
             });
 
     };
 
-    user.clearUser = function()
-    {
-        $window.localStorage.removeItem('userAuthenticationToken');
-        $window.localStorage.removeItem('userIDAPI');
+    var popupDialog = function()
 
-    };
-
-
-
-    user.isTokenAvailable = function()
-    {
-        var authToken = $window.localStorage.getItem('userAuthenticationToken');
-
-        if(authToken)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    };
-
-    user.isAuthAvailable = function()
     {
 
-        return user.isTokenAvailable() && user.userIDAvailable();
+            var labels = AppNavigationTitles.get();
+            var loginButton = {
+                text: labels.app.facebookLoginLabel,
+                type: 'button-royal',
+                onTap: function()
+                {
+                    user.login()
+                        .then(function(response)
+                        {
+                            console.log(response);
+                            if(response)
+                            {
+                                console.log(response);
+                                /* Now we should generate the token Info */
+                                user.generateToken(response)
+                                    .then(function(valid) {
 
-    };
+                                        if (valid) {
+                                        }
+                                    })}});
+                }
 
+            };
 
-    user.userIDAvailable = function()
-    {
-        var userID = user.getUserID();
+            var cancelButton = {
+                text: labels.app.cancelFacebookLoginPopup,
+                type: 'button-light'
+            };
 
+            var loginPopup = $ionicPopup.show(
+                {
+                    title: labels.app.facebookRequiredLabel,
+                    subTitle: labels.app.playMatchHuntFacebookAccountRequiredLabel,
+                    buttons:[
 
-        if(userID)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+                        cancelButton,
+                        loginButton
+                    ]
+                });
+
+            loginPopup.then(function(res){
+
+                console.log(res);
+            });
+
+            $timeout(function()
+            {
+                loginPopup.close();
+            }, 10000)
+
+        };
+
+    return {
+
+        refreshUser: refreshUser,
+        login: login,
+        logout: logout,
+        retrieveInfo: retrieveFacebookInfo,
+        loadLeaderboard: loadLeaderboard,
+        postToFacebook: postToFacebook
 
     }
 
-    user.getAPIToken = function()
-    {
-        var APIToken = $window.localStorage.getItem('userAuthenticationToken');
-        return APIToken;
-    };
 
-    user.getUserID = function()
-    {
-
-        return $window.localStorage.getItem('userIDAPI');
-    };
+})
 
 
-    user.getUserAuth = function()
-    {
-        var userAuth = {
-
-            token : user.getAPIToken(),
-            userId: user.getUserID()
-        };
-
-        return userAuth;
-    };
-
-    return user;
 
 
-});
+
