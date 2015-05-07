@@ -103,7 +103,7 @@ angular.module('collection-controllers', [])
                     }
                     else
                     {
-                        $scope.noObjectFound();
+                       $scope.noObjectFound();
                     }
 
 
@@ -130,8 +130,13 @@ angular.module('collection-controllers', [])
         });
 
         $scope.noObjectFound = function() {
-            var alertPopup = $ionicPopup.alert({
+            var noObjectFoundPopup = $ionicPopup.alert({
                 title: $scope.navigationTitles.collection.noArtifactFoundLabel
+            });
+
+            noObjectFoundPopup.then(function()
+            {
+                console.log("User understood no artifact information is available");
             });
 
         };

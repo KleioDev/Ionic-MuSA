@@ -26,7 +26,6 @@ angular.module('museum-services', [])
 
         var days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
-
         /**
          * Returns a response from the API
          * @memberof Museum
@@ -34,16 +33,10 @@ angular.module('museum-services', [])
          */
         var getGeneralMuseumInfo = function()
         {
-            return $http.get(Routes.MUSEUM_GENERAL_ROUTE).then(museumInfoSuccess, museumInfoFailure);
+            return $http.get(Routes.MUSEUM_GENERAL_ROUTE)
+                .success(function(response)
+                {
 
-
-            function museumInfoSuccess(response)
-            {
-
-                    if(response.status == 200)
-                    {
-
-                        /* Parse out data */
 
                         var hoursOfOperation = response.data.hoursOfOperation;
 
@@ -71,18 +64,20 @@ angular.module('museum-services', [])
 
                         return response.data;
 
-                    }
 
-            }
 
-            function museumInfoFailure(response)
-            {
-                /* A mistake happened */
-                console.log("Museum Info Could Not Be Retrieved: ");
-                console.log("Status: " + response.status);
-                console.log("Data: " + response.data);
-                return null
-            }
+
+                })
+                .error(function(response)
+
+                {
+                    /* A mistake happened */
+                    console.log("Museum Info Could Not Be Retrieved: ");
+                    console.log("Status: " + response.status);
+                    console.log("Data: " + response.data);
+                    return null;
+                });
+
         };
 
 
@@ -124,17 +119,17 @@ angular.module('museum-services', [])
  * Requires Routes and {@link https://docs.angularjs.org/api/ng/service/$http | $http} services
  *
  */
-.factory('Events', function(Routes,$http, $q)
-{
-    var events = {};
+    .factory('Events', function(Routes,$http, $q)
+    {
+        var events = {};
 
-    /**
-     * Returns an object containing the events happening on the current day as well as the events that are happening in the past weeks.
-     *
-     * @memberof Events
-     * @example
-     * //AngularJS Controller, inject the Events service
-     * .controller('ExampleController', function(Events){
+        /**
+         * Returns an object containing the events happening on the current day as well as the events that are happening in the past weeks.
+         *
+         * @memberof Events
+         * @example
+         * //AngularJS Controller, inject the Events service
+         * .controller('ExampleController', function(Events){
      *      Events.getNews().then(function(response){
      *
      *              //Get the events from the response body
@@ -146,14 +141,14 @@ angular.module('museum-services', [])
      *
      *      }, function(err){ console.log("ERR Happened")});
      * });
-     * @returns {Promise} Events object containing the upcoming events and events today
-     */
-    var getEvents = function(){
-        return  $http.get(Routes.MUSEUM_EVENTS_ROUTE)
-            .then(handleEventsSuccess, handleEventsFailure);
+         * @returns {Promise} Events object containing the upcoming events and events today
+         */
+        var getEvents = function(){
+            return  $http.get(Routes.MUSEUM_EVENTS_ROUTE)
+                .then(handleEventsSuccess, handleEventsFailure);
 
-        function handleEventsSuccess(response)
-        {
+            function handleEventsSuccess(response)
+            {
 
 
                 if(response.status == 200){
@@ -161,6 +156,15 @@ angular.module('museum-services', [])
                     var data = response.data;
 
                     //console.log(data);
+
+                    data.events.sort(compareMilli);
+
+                    function compareMilli(a,b) {
+                        if(a.milli < b.milli) return -1;
+                        if(a.milli > b.milli) return 1;
+                        return 0;
+                    }
+
 
                     for(var i = 0; i < data.events.length ; i++)
                     {
@@ -198,26 +202,29 @@ angular.module('museum-services', [])
                     return events;
 
                 }
+                else{
+                    return null;
+                }
 
 
 
-        }
+            }
 
-        function handleEventsFailure(response)
-        {
-            events.eventsToday = [];
-            events.upcomingEvents = [];
-            return events;
-        }
+            function handleEventsFailure(response)
+            {
+                events.eventsToday = [];
+                events.upcomingEvents = [];
+                return null;
+            }
 
-    };
+        };
 
-    /**
-     * Returns a response containing a single event from the API
-     * @memberof Events
-     * @example
-     * //AngularJS Controller, inject the Events service
-     * .controller('ExampleController', function(Events){
+        /**
+         * Returns a response containing a single event from the API
+         * @memberof Events
+         * @example
+         * //AngularJS Controller, inject the Events service
+         * .controller('ExampleController', function(Events){
      *      var id = 2;
      *      Events.getSingleEvent(id).then(function(response){
      *
@@ -229,52 +236,60 @@ angular.module('museum-services', [])
      *
      *      }, function(err){ console.log("ERR Happened")});
      * });
-     * @param {string} id of the event trying to request from the API
-     * @returns {Promise} Promise containing the response from the server
-     */
-    var getSingleEvent = function(id)
-    {
-       return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id)
-           .then(success, failure);
-
-        function success(response)
+         * @param {string} id of the event trying to request from the API
+         * @returns {Promise} Promise containing the response from the server
+         */
+        var getSingleEvent = function(id)
         {
-            if(response.status == 200)
+            return  $http.get(Routes.MUSEUM_SINGLE_EVENT_ROUTE + id)
+                .then(success, failure);
+
+            function success(response)
             {
-                return response.data;
+                if(response.status == 200)
+                {
+                    return response.data;
+                }
+                else
+                {
+                    return null;
+                }
             }
-        }
-        function failure(response)
+            function failure(response)
+            {
+                console.log("EventServices - Retrieving a Single Event");
+                console.log("Failed to get Event:");
+                console.log("Response Status: " + response.status);
+                console.log(response);
+                return null;
+            }
+
+        };
+
+        /* Event */
+        var setEvent = function(event)
         {
-            return $q.reject('Event Failure');
+            events.event = event;
+        };
+
+
+        /* Get Event */
+        var getEvent = function()
+        {
+            return events.event;
+        };
+
+        return {
+
+            getEvents: getEvents,
+            getSingleEvent: getSingleEvent,
+            setEvent: setEvent,
+            eventsToday: events.eventsToday,
+            upcomingEvents : events.upcomingEvents,
+            getEvent: getEvent
         }
 
-    };
-
-    /* Event */
-    var setEvent = function(event)
-    {
-        events.event = event;
-    };
-
-
-    /* Get Event */
-    var getEvent = function()
-    {
-        return events.event;
-    };
-
-    return {
-
-        getEvents: getEvents,
-        getSingleEvent: getSingleEvent,
-        setEvent: setEvent,
-        eventsToday: events.eventsToday,
-        upcomingEvents : events.upcomingEvents,
-        getEvent: getEvent
-    }
-
-})
+    })
 
 
 /**
@@ -321,13 +336,13 @@ angular.module('museum-services', [])
 
 
 
-                function newsSuccess(response)
-                {
+            function newsSuccess(response)
+            {
 
+                if(response.status == 200) {
                     var _news = response.data.news;
 
-                    for(var j = 0; j < _news.length; j++)
-                    {
+                    for (var j = 0; j < _news.length; j++) {
                         _news[j].datetime = moment(new Date(_news[j].createdAt));
                     }
 
@@ -339,8 +354,7 @@ angular.module('museum-services', [])
                     for (var i = 0; i < _news.length; i++) {
 
                         //console.log(_news[i]);
-                        if (currentDate.diff(_news[i].datetime, 'days') <= 7)
-                        {
+                        if (currentDate.diff(_news[i].datetime, 'days') <= 7) {
                             news.currentNews.push(_news[i]);
                         }
                     }
@@ -350,24 +364,24 @@ angular.module('museum-services', [])
                     news.pastWeekNews = [];
                     for (var i = 0; i < _news.length; i++) {
 
-                        if (currentDate.diff(_news[i].datetime, 'days') > 7 && currentDate.diff(_news[i].datetime, 'years') == 0)
-                        {
+                        if (currentDate.diff(_news[i].datetime, 'days') > 7 && currentDate.diff(_news[i].datetime, 'years') == 0) {
                             news.pastWeekNews.push(_news[i]);
                         }
                     }
                     //console.log(news);
                     return news;
+                }
+                else
+                    return null;
 
-                };
+            };
 
-                function newsFailure()
-                {
-                    console.log("FAILED TO GET THE NEWS");
+            function newsFailure()
+            {
+                console.log("FAILED TO GET THE NEWS");
 
-                    news.currentNews = [];
-                    news.pastWeekNews = [];
-                    return news;
-                };
+                return null;
+            };
         };
 
         /**
@@ -401,11 +415,14 @@ angular.module('museum-services', [])
                 {
                     return response.data;
                 }
+                else
+                    return null;
             }
 
             function failure(err)
             {
                 console.log('Load Single Event Failure');
+                return null;
 
             }
 
