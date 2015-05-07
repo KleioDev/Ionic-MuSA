@@ -2,7 +2,7 @@
 
     <ion-content>
 <br>
-            <div ng-if="user.loginStatus" class="list" >
+            <div ng-if="loggedIn" class="list" >
                 <ion-item class="item-icon-left " ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-ios-person"></i>
                     {{user.name}}
@@ -47,7 +47,7 @@
 
             </div>
 
-            <div ng-if="!user.loginStatus">
+            <div ng-if="!loggedIn">
                 <a class="item item-icon-left" ng-click="login()" ng-style="{'font-size': app.fontSize};">
                     <i class="icon ion-social-facebook"  style="color:#3b5998;"></i>
                     {{navigationTitles.user.linkFacebookAccountLabel}}

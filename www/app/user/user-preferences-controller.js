@@ -4,14 +4,12 @@
 
 angular.module('user-preferences-controllers', ['ngCordova'])
 
-.controller('UserPreferencesCtrl', function($scope, AppNavigationTitles, Notifications, Facebook, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
+.controller('UserPreferencesCtrl', function($scope, Notifications, Facebook, Museum, UserPreferences,$window, $ionicModal, $http, Routes)
 {
-    $scope.navigationTitles = AppNavigationTitles.get();
     $scope.preferences = UserPreferences.get();
 
-
-    //$scope.user = Facebook.isLoggedIn();
     $scope.user = {};
+    $scope.loggedIn = false;
 
     $scope.points = 0;
     $scope.text = {};
@@ -22,15 +20,11 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         points: false
     };
 
-
-
-    //$scope.notifications = UserPreferences.getNotificationStatus();
-
     $scope.notifications  = {
 
         checked: UserPreferences.getNotificationStatus()
-
     };
+
     $scope.openModal = function(template) {
 
         $ionicModal.fromTemplateUrl(template, {
@@ -51,9 +45,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     };
 
 
-    $scope.$on('preferences:updated', function(event, data){
-        $scope.navigationTitles = AppNavigationTitles.get();
-    });
 
     $scope.changeLanguage = function(language)
     {
@@ -75,9 +66,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 }
 
             });
-        //$scope.text = UserPreferences.getAbout();
-        //console.log($scope.text);
-        //$scope.openModal('text-view.html');
     };
 
     $scope.$watch('font.size', function()
@@ -108,7 +96,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         Museum.getGeneralMuseumInfo()
             .then(function(response)
             {
-
                 console.log(response);
                 if(response) {
                     $scope.text.title = $scope.navigationTitles.user.termsOfServiceLabel;
@@ -117,58 +104,30 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 }
 
             });
-        //$scope.text = UserPreferences.getTerms();
-        //$scope.openModal('text-view.html');
+
     };
 
 
     $scope.loadLeaderboard = function()
     {
-        //console.log("GETTING LEADERBOARD");
-        Facebook.isLoggedIn()
-            .then(function(user)
+
+        FacebookUser.loadLeaderboard()
+            .then(function(leaderboard)
             {
-                //console.log(user);
-                if(user.connected)
+                if(leaderboard)
                 {
-                    $scope.user.loginStatus = user.connected;
+                    /* Set leaderboard */
+                    $scope.leaderboard = response.data.leaderboard;
 
-
-                    var authToken = $window.localStorage.getItem('userAuthenticationToken');
-
-                    //console.log("SENDING REQ");
-
-                    var request = {
-                        url: Routes.LEADERBOARD,
-                        method: 'GET',
-                        headers:
-                        {
-                            'Authorization': 'Bearer ' + authToken
-                        },
-                        data: {
-                            userID:  $window.localStorage.getItem('userIDAPI')
-
+                    /* Open the list */
+                    $scope.openModal('leaderboard-view.html');
                 }
-                    };
-
-
-                    return $http(request).then(function(response)
-                    {
-                        if(response.status == 200)
-                        {
-                            /* Set leaderboard */
-                            $scope.leaderboard = response.data.leaderboard;
-
-                            /* Open the list */
-                            $scope.openModal('leaderboard-view.html');
-
-
-                        }
-                    })
+                else
+                {
+                    //TODO: Display error
+                    /* Display error message */
                 }
-
             });
-        //$http.then('')
     };
 
     $scope.closePage = function()
@@ -178,125 +137,63 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.login = function()
     {
-        //console.log("LOGIN");
-        Facebook.login()
-            .then(function(response)
+        FacebookUser.login()
+            .then(function(user)
             {
-                console.log(response);
-                if(response)
-                {
-                    console.log(response);
-                    /* Now we should generate the token Info */
-                    Facebook.generateToken(response)
-                        .then(function(valid)
-                        {
-
-                            if(valid)
-                            {
-                                console.log(valid);
-                                Facebook.getUserInfo()
-                                    .then(function(user)
-                                    {
-                                        console.log(user);
-                                        $scope.user = user;
-                                    });
-
-                                Facebook.getPoints()
-                                    .then(function (points) {
-                                        console.log(points);
-
-                                        $scope.points = points;
-
-
-                                        $scope.loading.points = true;
-
-                                    }, function (err) {
-                                    })
-                            }
-                            else
-                            {
-                                $scope.user.loginStatus = false;
-                                Facebook.logout();
-                            }
-
-
-                        });
-
+                if(user) {
+                    $scope.user = user;
+                    $scope.loggedIn = true;
                 }
-            });
+                else
+                {
+                    $scope.loggedIn = false;
+                }
 
-        //$scope.user = Facebook.getUser();
+            })
+
     };
 
     $scope.logout = function()
     {
-        //console.log('log out');
-       $scope.user =  Facebook.logout();
+       FacebookUser.logout()
+           .then(function(loggedOut){
+
+               if(loggedOut)
+               {
+                    $scope.loggedIn = false;
+                    //Logged out, empty user
+                   $scope.user = {};
+               }
+
+               else{
+
+                   console.log("Could Not Logou successfull!");
+               }
+
+           });
     };
 
 
 
     $scope.onLoad = function()
     {
-        /* Check if Logged in */
+        /* Call the service */
 
-
-            //TODO: Check if the state is changed to User */
-
-            Facebook.isLoggedIn()
-                .then(function(user)
+        FacebookUser.refreshUser()
+            .then(function(user)
+            {
+                if(user)
                 {
-                    //User is logged in
-                    if(user.connected)
-                    {
-                        $scope.user.loginStatus = user.connected;
+                    $scope.user = user;
+                    $scope.loggedIn = true;
+                }
+                else
+                {
+                    $scope.loggedIn = false;
+                    /* User is not available */
+                }
 
-                        /* Now we should generate the token Info */
-                        Facebook.generateToken(user)
-                            .then(function(valid)
-                            {
-
-                                if(valid)
-                                {
-                                    Facebook.getUserInfo()
-                                        .then(function(user)
-                                        {
-                                            $scope.user = user;
-
-
-                                            Facebook.getPoints()
-                                                .then(function (points) {
-                                                    console.log(points);
-
-                                                    $scope.points = points;
-                                                    $scope.loading.points = true;
-
-
-
-                                                }, function (err) {
-                                                })
-                                        });
-                                }
-                                else
-                                {
-                                    $scope.user.loginStatus = false;
-                                    Facebook.logout();
-                                }
-
-
-                            });
-                    }
-                    //User is not connected
-                    else
-                    {
-
-                        $scope.user.loginStatus = user.connected;
-
-                    }
-                }, console.log)
-
-
-
+            });
     };
 
     $scope.onLoad();
@@ -386,6 +283,320 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
     })
+
+    .factory('FacebookUser', function($cordovaFacebook,localStorageService, $window, Routes, $http)
+{
+    var authStorageKey = 'MUSA-AUTH-TOKEN';
+
+    var apiUserIDKey = 'MUSA-USER-ID';
+
+    var timeOfStorage = 'MUSA-API-TIMEOUT'; //TODO: Ask César about Token Timeout (Probably not expired)
+
+    var generateToken = function(accessToken, facebookUserID)
+    {
+        /* Check if token is stored */
+
+        if(!accessToken)
+        { console.log("Access Token Is Not Defined!"); console.log(accessToken);}
+
+        if(!facebookUserID)
+        { console.log("FacebookUserID Is Not Defined!"); console.log(facebookUserID);}
+
+        var defer = $q.defer();
+
+        var apiAuthToken = localStorageService.get(authStorageKey);
+
+        var apiUserID = localStorageService.get(apiUserIDKey);
+
+        /* If Both are them are defined  then no need to retrieve from server */
+        if(apiAuthToken && apiUserID)
+        {
+            var authPackage = {
+                authToken: apiAuthToken,
+                userID: apiUserID
+            };
+            defer.resolve(authPackage);
+            //Return the promise
+            return defer.promise;
+        }
+
+        //Need to retrieve the token from the server via HTTP Request
+        else
+        {
+            //Setup request
+            console.log("Declaring Token Generation Request: ");
+            var request = {
+                method: 'POST',
+                url: Routes.USER_AUTHENTICATION,
+                data: {
+
+                    accessToken: accessToken,
+                    userID: facebookUserID,
+                    type: 'user'
+                }
+            };
+            console.log(request);
+
+            return $http(request)
+                .success(function(response)
+                {
+                    console.log("Generation Token HTTP Success");
+                    console.log(response);
+
+                    if(!localStorageService.set(authStorageKey, response.data.token))
+                        console.log("Failed to store authtoken - local Storage");
+
+                    localStorageService.set(apiUserID, response.data.userId);
+
+                    var authPackage = {
+                        authToken: response.data.token,
+                        userID: response.data.userId
+                    };
+
+                    return authPackage;
+
+                })
+                .error(function(error)
+                {
+                    console.log("Error generating Token");
+                    console.log(error);
+                    return null;
+
+                });
+
+        }
+
+
+    };
+
+    var login = function()
+    {
+        return $cordovaFacebook.login(["public_profile"])
+            .then(
+            function(response)
+            {
+                console.log("FacebookUser - Success Login");
+                console.log(response);
+
+                if(response)
+                {
+                    console.log("Verifying Token Authorization from MuSA API");
+
+                    //Need to generate a token from our MuSA API
+                    return generateToken(success.authResponse.accessToken, success.authResponse.userID)
+                        .then(function(tokenGenerationSuccess)
+                        {
+
+                            if(tokenGenerationSuccess)
+                            {
+                                /* User is connected, go get the user info */
+                                return retrieveInfo();
+                            }
+                            else
+                            {
+                                console.log("tokenGeneration Failure");
+                                return null;
+                            }
+                        }
+
+                    );
+                }
+
+            },
+
+            function(error)
+            {
+                console.log("FacebookUser - Failed to Login");
+                console.log(error);
+                return null;
+            }
+        )
+
+    };
+
+    var logout = function()
+    {
+
+        return  $cordovaFacebook.logout()
+            .then(function(success) {
+                console.log("FacebookUser - Logout Successful");
+                console.log(success);
+                return success;
+            }, function (error) {
+                return null;
+            });
+    };
+
+    var retrieveInfo = function()
+    {
+        return $cordovaFacebook.api("me", ["public_profile"])
+            .then(function(success) {
+
+                var user = {};
+                user.name = success.name;
+                user.email = success.email;
+                user.id = success.id;
+                user.verified = success.verified;
+
+                console.log("FacebookUser :- $cordovaFacebook.api (User Generated)");
+                console.log(user);
+
+
+                // success
+
+                return user;
+            }, function (error) {
+                // error
+                return null;
+            });
+    };
+
+    var refreshUser = function()
+    {
+
+        getLoginStatus()
+            .then(function(success)
+            {
+                console.log("refresh user: - ");
+                console.log(success);
+
+                if(success)
+                {
+                    //Need to generate a token from our MuSA API
+                    return generateToken(success.authResponse.accessToken, success.authResponse.userID)
+                        .then(function(tokenGenerationSuccess)
+                        {
+
+                            if(tokenGenerationSuccess)
+                            {
+                                /* User is connected, go get the user info */
+                                return retrieveInfo();
+                            }
+                            else
+                            {
+                                console.log("tokenGeneration Failure");
+                            }
+                        }
+
+                    );
+                }
+                else
+                {
+                    return null;
+                }
+            });
+
+    };
+
+    var getLoginStatus = function()
+    {
+        return $cordovaFacebook.getLoginStatus()
+            .then(
+
+            function(success)
+            {
+                console.log("Service - FacebookUser: $cordovaFacebook.getLoginStatus");
+                console.log(success);
+                if(success.status == 'connected')
+                {
+                    return success;
+                }
+                else
+                {
+                    return null;
+                }
+
+            },
+            function(err)
+            {
+                console.log("FAILED:- Service - FacebookUser: $cordovaFacebook.getLoginStatus");
+                console.log(err);
+                return null;
+            }
+        )
+
+    };
+
+    var loadLeaderboard = function()
+    {
+
+        return getLoginStatus()
+            .then(function(success)
+            {
+                if(success)
+                {
+                    return generateToken(success.authResponse.authToken, success.authResponse.userID)
+                        .then(function(authPackage)
+                        {
+                            console.log("Load Leaderboard Auth Package");
+                            console.log(authPackage);
+
+                            if(authPackage)
+                            {
+
+                                console.log("OPENING AUTH PACKAGE ~ Leaderboard");
+                                var authToken = authPackage.authToken;
+                                var userID = authPackage.userID;
+                                var request = {
+                                    url: Routes.LEADERBOARD,
+                                    method: 'GET',
+                                    headers:
+                                    {
+                                        'Authorization': 'Bearer ' + authToken
+                                    },
+                                    data: {
+                                        userID: userID
+
+                                    }
+                                };
+
+
+                                return $http(request)
+                                    .success(function(response)
+                                    {
+                                        console.log("LEADERBOARD REQUEST DATA RESPONSE SUCCESS:");
+                                        console.log(response);
+                                        return response.data.leaderboard;
+                                    })
+                                    .error(function(err)
+                                    {
+                                        console.log("ERR GETTING LEADERBOARDS");
+                                        console.log(err);
+                                        return null;
+                                    });
+
+
+                            }
+                            else
+                                return null;
+                        })
+                }
+                else
+                {
+                    return null;
+                }
+
+            });
+
+
+
+    };
+
+
+
+
+    return {
+
+        refreshUser: refreshUser,
+        login: login,
+        logout: logout,
+        retrieveInfo: retrieveInfo,
+        loadLeaderboard: loadLeaderboard
+    }
+
+
+})
+
 
 
 /* Service handles Facebook calls */
@@ -515,26 +726,25 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
             if(response.status == 'connected')
             {
-                response.connected = true;
+                return true;
             }
 
             /* Let them know he's not logged in */
             else{
-                response.connected = false;
+                return false;;
             }
-
-            return response;
 
         };
 
         function failureLoginStatus(error)
         {
-            $q.reject('Facebook/Login Status Could not Be Reached');
+            console.log("FAILED TO GET LOGIN STATUS - $cordovaFacebook (Facebook Service)");
+            console.log(error);
+            return false;
         };
 
 
     };
-
 
     user.getUserInfo = function()
     {

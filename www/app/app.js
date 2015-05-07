@@ -6,7 +6,8 @@
 angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-controllers', 'museum-services', 'app-services',
 
 
-    'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives', 'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial'])//,'ngMockE2E'])
+    'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives',
+    'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial', 'LocalStorageModule'])//,'ngMockE2E'])
 
     .run(function(ionPlatform, AppNavigationTitles,$state, Facebook,$http,  $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
@@ -184,7 +185,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         });
     })
 
-    .config(function($stateProvider, $urlRouterProvider,$logProvider,$httpProvider) {
+    .config(function($stateProvider, $urlRouterProvider,$logProvider,localStorageServiceProvider,$httpProvider) {
 
 
         $stateProvider
@@ -460,6 +461,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
         $logProvider.debugEnabled(false);
 
+        localStorageServiceProvider.setPrefix('MuSA-Storage');
 
 
     });
