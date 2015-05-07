@@ -10,7 +10,7 @@
 
     <ion-content>
         <div class="padding">
-            <h2 class="object-title">{{museumObject.title}}</h2>
+            <h2 class="object-title">{{museumObject.title.capitalize()}}</h2>
             <h3>{{museumObject.Artist.name}}</h3>
             <p>{{museumObject.dated}}</p>
 
@@ -56,10 +56,10 @@
                {{museumObject.medium}}    </span>
         </ion-item>
 
-        <ion-item ng-if="museumObject.type" ng-style="{'font-size': app.fontSize};">
-            {{navigationTitles.collection.singleObject.typeLabel}}
-            <span class="item-note">{{museumObject.type}}    </span>
-        </ion-item>
+        <!--<ion-item ng-if="museumObject.type" ng-style="{'font-size': app.fontSize};">-->
+            <!--{{navigationTitles.collection.singleObject.typeLabel}}-->
+            <!--<span class="item-note">{{museumObject.type}}    </span>-->
+        <!--</ion-item>-->
 
         <ion-item ng-if="museumObject.culture" ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.cultureLabel}}
@@ -67,7 +67,7 @@
         </ion-item>
         <ion-item ng-if="museumObject.dimensions" ng-style="{'font-size': app.fontSize};">
             {{navigationTitles.collection.singleObject.dimensionsLabel}}
-            <span class="item-note">{{museumObject.dimensions}}  </span>
+            <span class="item-note text-wrap">{{museumObject.dimensions}}  </span>
         </ion-item>
         </ion-list>
 

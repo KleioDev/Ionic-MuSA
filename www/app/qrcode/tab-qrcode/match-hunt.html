@@ -1,7 +1,13 @@
 <ion-view title="{{navigationTitles.scanner.matchHuntLabel}}">
 
 
+    <ion-nav-buttons side="right">
 
+        <button class="button button-clear" ng-click="skip()">
+            {{navigationTitles.scanner.skipLabel}}
+        </button>
+
+    </ion-nav-buttons>
 
     <ion-header-bar class="bar-subheader"  ng-class="platform.isAndroid == true ? 'android' : ''">
 
@@ -69,13 +75,14 @@
 
 
                     <br><br>
-                    <button  style="width: 100%; color: white;" class="button icon-left ion-qr-scanner padding" ng-click="takeAGuess()">{{navigationTitles.scanner.takeAGuessLabel}}</button>
+                    <button  style="width: 100%; color: white;" class="button button-positive icon-left ion-qr-scanner padding" ng-click="takeAGuess()">{{navigationTitles.scanner.takeAGuessLabel}}</button>
                 </div>
             <div class="col"></div>
             </div>
 
 
 
+                <facebook-popup dialog="dialog"></facebook-popup>
 
     </ion-content>
 </ion-view>

@@ -50,6 +50,7 @@ angular.module('museum-controllers', ['ngCordova'])
 
             if(museumGeneralInfo) {
 
+                console.log(museumGeneralInfo);
                 $scope.museum = museumGeneralInfo;
             }
             else

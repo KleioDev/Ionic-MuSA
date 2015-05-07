@@ -8,7 +8,6 @@ angular.module('qr-code-controllers', [])
         /* Match hunt isn't available for everyone */
         $scope.matchHuntAvailable = false;
 
-        FacebookUser.logout();
 
         /* Get the labels */
         $scope.dialog = {
@@ -61,6 +60,7 @@ angular.module('qr-code-controllers', [])
 
 
         };
+
 
         /* Open the scanner when the user wants to scan a qr code */
         $scope.openScanner = function()
@@ -150,15 +150,50 @@ angular.module('qr-code-controllers', [])
 
         console.log($scope.matchHunt);
 
+
         $scope.skip = function()
         {
-            /* Get a new match hunt */
-            MatchHunt.skip().then(function(res){
+            FacebookUser.getAPIStatus()
+                .then(function(authPackage)
+                {
+                    console.log("Auth Package - Match Hunt");
+                    console.log(authPackage);
 
-                if(res)
-                    $scope.loadNewMatchHuntGame();
+                    MatchHunt.skip(authPackage.authToken)
+                        .then(function(skipped)
+                        {
 
-            }, function(err){console.log(err)})
+                            if(skipped) {
+                                MatchHunt.generateGame(authPackage.authToken)
+                                    .then(function (game) {
+
+                                        if (game) {
+                                            $scope.matchHunt = MatchHunt.activeGame;
+
+                                            //$state.go('tab.tab-match-hunt');
+                                        }
+                                        else {
+                                            $ionicPopup.alert({
+                                                title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
+                                            });
+                                            $state.go('tab.tab-qrcode-scanner');
+
+                                        }
+                                    },
+
+                                    function (err) {
+                                        console.log("MATCH HUNT ERR");
+                                        console.log(err);
+                                    }
+                                );
+                            }
+                            else
+                            {
+                                console.log("Showing Popup");
+                                $scope.showPopup();
+                            }
+                        })
+                });
 
         };
 
@@ -189,7 +224,7 @@ angular.module('qr-code-controllers', [])
                                     var userID = authPackage.userID;
                                     var authToken = authPackage.authToken;
 
-                                    MatchHunt.guess(authToken, userID, scan.text)
+                                    MatchHunt.guess(authToken, userID, parseInt(scan.text))
                                         .then(function(game){
 
                                             if(game)
@@ -307,7 +342,7 @@ angular.module('qr-code-controllers', [])
                                 console.log("Generated Game: ");
                                 console.log(game);
                                 if (game) {
-                                    $scope.matchHunt = game;
+                                    $scope.matchHunt = MatchHunt.activeGame;
 
                                     //$state.go('tab.tab-match-hunt');
                                 }
@@ -516,7 +551,7 @@ angular.module('qr-code-controllers', [])
 
                     console.log("using previous displacements");
 
-                    var _parseDisplacements = JSON.parse(_displacements);
+                    var _parseDisplacements = _displacements;
 
                     console.log(_parseDisplacements);
 
@@ -636,7 +671,7 @@ angular.module('qr-code-controllers', [])
                         function(response)
                         {
 
-                            if(response.status)
+                            if(response.status == 200)
                             {
                                 if(response.data)
                                 {
@@ -644,11 +679,15 @@ angular.module('qr-code-controllers', [])
                                     return response;
                                 }
                             }
+                            else{
+                                return null;
+                            }
                         },
 
                         function(response)
                         {
-                            return $q.reject('Failed to SKIP game due to status: ' + response.status + '\nError: ' + response.data);
+                            return null;
+                           // return $q.reject('Failed to SKIP game due to status: ' + response.status + '\nError: ' + response.data);
                         }
                     )
 

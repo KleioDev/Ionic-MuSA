@@ -34,11 +34,12 @@ angular.module('museum-services', [])
         var getGeneralMuseumInfo = function()
         {
             return $http.get(Routes.MUSEUM_GENERAL_ROUTE)
-                .success(function(response)
+                .then(function(success)
                 {
-
-
-                        var hoursOfOperation = response.data.hoursOfOperation;
+                        var response = success.data;
+                        console.log("SUCCESS GOT RESPONSE :- ");
+                        console.log(response);
+                        var hoursOfOperation = response.hoursOfOperation;
 
                         for(var dayName in hoursOfOperation)
                         {
@@ -47,13 +48,12 @@ angular.module('museum-services', [])
                                 hoursOfOperation[dayName].open = moment(day.open, 'h:mm A').format('h:mm A');
                                 hoursOfOperation[dayName].close = moment(day.close, 'h:mm A').format('h:mm A');
                             }
-
                         }
 
-                        response.data.hoursOfOperation = hoursOfOperation;
-                        response.data.days = days;
+                        response.hoursOfOperation = hoursOfOperation;
+                        response.days = days;
 
-                        response.data.phone = phoneFormat(response.data.phone);
+                        response.phone = phoneFormat(response.phone);
 
 
                         function phoneFormat(phone) {
@@ -62,13 +62,13 @@ angular.module('museum-services', [])
                             return phone;
                         }
 
-                        return response.data;
+                        return response;
 
 
 
 
                 })
-                .error(function(response)
+                .catch(function(response)
 
                 {
                     /* A mistake happened */
@@ -167,9 +167,10 @@ angular.module('museum-services', [])
 
                     data.events.sort(compareMilli);
 
+                    console.log(data.events);
                     function compareMilli(a,b) {
-                        if(a.datetime.milli < b.datetime.milli) return -1;
-                        if(a.datetime.milli > b.datetime.milli) return 1;
+                        if(a.datetime.valueOf() < b.datetime.valueOf()) return -1;
+                        if(a.datetime.valueOf() > b.datetime.valueOf()) return 1;
                         return 0;
                     }
 

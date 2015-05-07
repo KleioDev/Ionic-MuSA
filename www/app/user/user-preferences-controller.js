@@ -20,6 +20,17 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         points: false
     };
 
+    $scope.$on('$stateChangeSuccess' , function(event, toState, toParams, fromState, fromParams){
+
+        if(toState.name == 'tab.tab-user')
+        {
+            $scope.onLoad();
+        }
+
+
+    });
+
+
     $scope.notifications  = {
 
         checked: UserPreferences.getNotificationStatus()
@@ -117,7 +128,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                 if(leaderboard)
                 {
                     /* Set leaderboard */
-                    $scope.leaderboard = response.data.leaderboard;
+                    $scope.leaderboard = leaderboard;
 
                     /* Open the list */
                     $scope.openModal('leaderboard-view.html');
@@ -158,17 +169,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
        FacebookUser.logout()
            .then(function(loggedOut){
 
-               if(loggedOut)
-               {
-                    $scope.loggedIn = false;
-                    //Logged out, empty user
-                   $scope.user = {};
-               }
-
-               else{
-
-                   console.log("Could Not Logou successfull!");
-               }
 
            });
     };
@@ -345,25 +345,28 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             console.log(request);
 
             return $http(request)
-                .success(function(response)
+                .then(function(response)
                 {
-                    console.log("Generation Token HTTP Success");
-                    console.log(response);
 
-                    if(!localStorageService.set(authStorageKey, response.data.token))
-                        console.log("Failed to store authtoken - local Storage");
+                    if(response.data) {
+                        console.log("Generation Token HTTP Success");
+                        console.log(response);
 
-                    localStorageService.set(apiUserID, response.data.userId);
+                        if (!localStorageService.set(authStorageKey, response.data.token))
+                            console.log("Failed to store authtoken - local Storage");
 
-                    var authPackage = {
-                        authToken: response.data.token,
-                        userID: response.data.userId
-                    };
+                        localStorageService.set(apiUserID, response.data.userId);
 
-                    return authPackage;
+                        var authPackage = {
+                            authToken: response.data.token,
+                            userID: response.data.userId
+                        };
+
+                        return authPackage;
+                    }
 
                 })
-                .error(function(error)
+                .catch(function(error)
                 {
                     console.log("Error generating Token");
                     console.log(error);
@@ -442,7 +445,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     var retrieveUser = function(authPackage)
     {
 
-        return retrieveFacebookInfo.then(
+        return retrieveFacebookInfo().then(
             function(user)
             {
                 if(user && authPackage)
@@ -497,7 +500,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     var refreshUser = function()
     {
 
-        getLoginStatus()
+        return getLoginStatus()
             .then(function(success)
             {
                 console.log("refresh user: - ");
@@ -509,7 +512,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                     return generateToken(success.authResponse.accessToken, success.authResponse.userID)
                         .then(function(authPackage)
                         {
-
                             if(authPackage)
                             {
                                 /* User is connected, go get the user info */
@@ -520,7 +522,6 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                                 console.log("tokenGeneration Failure");
                             }
                         }
-
                     );
                 }
                 else
@@ -595,13 +596,15 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
                                 return $http(request)
-                                    .success(function(response)
+                                    .then(function(response)
                                     {
-                                        console.log("LEADERBOARD REQUEST DATA RESPONSE SUCCESS:");
-                                        console.log(response);
-                                        return response.data.leaderboard;
+                                        if(response.status == 200) {
+                                            console.log("LEADERBOARD REQUEST DATA RESPONSE SUCCESS:");
+                                            console.log(response);
+                                            return response.data.leaderboard;
+                                        }
                                     })
-                                    .error(function(err)
+                                    .catch(function(err)
                                     {
                                         console.log("ERR GETTING LEADERBOARDS");
                                         console.log(err);
@@ -643,15 +646,15 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         return $http(request)
 
-            .success(function(response)
+            .then(function(response)
             {
                 console.log("Retrieved Points");
                 console.log(response);
-                if(response)
+                if(response.status == 200 || response.status == 201)
                     return response.data.points;
 
             })
-            .error(function(err)
+            .catch(function(err)
             {
                 console.log("Error retrieving points");
                 console.log(err);
