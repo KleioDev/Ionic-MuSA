@@ -158,7 +158,7 @@ angular.module('museum-controllers', ['ngCordova'])
             /* Show Confirm  popup to add the calendar */
             var confirmPopup = $ionicPopup.confirm({
 
-                title: $scope.navigationTitles.dialogCalendar.addToCalendarQuestion,
+                title: $scope.navigationTitles.museum.eventsSingle.dialogCalendar.addToCalendarQuestion,
                 template: '<strong>'+$scope.event.title+'</strong>'
                 + '<p>'+$scope.event.datetime.format('lll')+'</p>'
 

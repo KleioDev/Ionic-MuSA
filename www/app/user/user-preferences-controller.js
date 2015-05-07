@@ -269,6 +269,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                                                     console.log(points);
 
                                                     $scope.points = points;
+                                                    $scope.loading.points = true;
+
 
 
                                                 }, function (err) {
@@ -572,7 +574,20 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             type: 'button-royal',
             onTap: function()
             {
-                user.login();
+                user.login()
+                    .then(function(response)
+                    {
+                        console.log(response);
+                        if(response)
+                        {
+                            console.log(response);
+                            /* Now we should generate the token Info */
+                            user.generateToken(response)
+                                .then(function(valid) {
+
+                                    if (valid) {
+                                    }
+                                })}});
             }
 
         };
@@ -595,7 +610,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         loginPopup.then(function(res){
 
-            //console.log(res);
+            console.log(res);
         });
 
         $timeout(function()
