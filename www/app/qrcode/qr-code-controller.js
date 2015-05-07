@@ -3,66 +3,62 @@
 angular.module('qr-code-controllers', [])
 
     /* QrCode View Controller */
-    .controller('QRCodeViewCtrl', function($scope,$state,$window, Facebook, $cordovaDevice, MuseumObjects, MatchHunt, $location, $ionicPopup)
+    .controller('QRCodeViewCtrl', function($scope,$state, FacebookUser, $cordovaDevice, MuseumObjects, MatchHunt, $location, $ionicPopup)
     {
         /* Match hunt isn't available for everyone */
         $scope.matchHuntAvailable = false;
 
+        FacebookUser.logout();
+
         /* Get the labels */
+        $scope.dialog = {
+            navigationTitles  : $scope.navigationTitles
+        };
+
+
+        $scope.setShowPopup = function(popupOpen)
+        {
+            $scope.showPopup = popupOpen;
+        };
 
         /* Play match hunt button */
         $scope.playMatchHunt = function()
         {
-            /* If is logged in Open Match Hunt */
-            Facebook.isLoggedIn()
-                .then(function(user)
+
+            FacebookUser.getAPIStatus()
+                .then(function(authPackage)
                 {
+                    console.log("Auth Package - Match Hunt");
+                    console.log(authPackage);
+                    if(authPackage) {
+                        MatchHunt.generateGame(authPackage.authToken)
+                            .then(function (game) {
+                                //console.log("Generated the Game");
+                                //if(response)
+                                console.log("Generated Game: ");
+                                console.log(game);
+                                if (game)
+                                    $state.go('tab.tab-match-hunt');
+                                else {
+                                    $ionicPopup.alert({
+                                        title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
+                                    });
+                                }
+                            },
 
-
-                    if(user.connected)
-                    {
-
-                        //console.log("Getting UserID");
-                        //var userID = Facebook.getUserID();
-                        //console.log(userID);
-                        //
-                        //console.log("Retrieving Authorization");
-                        //var authToken = Facebook.getAPIToken();
-                        Facebook.generateToken(user)
-                            .then(function(authUser) {
-
-                                var authToken = authUser.token;
-
-                                //$window.localStorage.setItem('userID', user.userID);
-                                MatchHunt.generateGame(authToken)
-                                    .then(function (game) {
-                                        //console.log("Generated the Game");
-                                        //if(response)
-                                        console.log("Generated Game: " );
-                                        console.log(game);
-                                        if(game)
-                                            $state.go('tab.tab-match-hunt');
-                                        else{
-                                           $ionicPopup.alert({
-                                               title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
-                                           });
-                                        }
-                                    },
-
-                                    function (err) {
-                                        console.log("MATCH HUNT ERR");
-                                        console.log(err);
-                                    }
-                                );
-                            });
+                            function (err) {
+                                console.log("MATCH HUNT ERR");
+                                console.log(err);
+                            }
+                        );
                     }
-                    else{
-
-                        //TODO: Show a popup asking the user to login
-
-                        Facebook.showLoginPopup();
+                    else
+                    {
+                        console.log("Showing Popup");
+                        $scope.showPopup();
                     }
                 });
+
 
         };
 
@@ -145,7 +141,7 @@ angular.module('qr-code-controllers', [])
     })
 
     /* Open the math hunt game */
-    .controller('MatchHuntCtrl', function($scope,$state, Facebook,$ionicPopup, MatchHunt)
+    .controller('MatchHuntCtrl', function($scope,$state, FacebookUser,$ionicPopup, MatchHunt)
     {
 
 
@@ -166,16 +162,16 @@ angular.module('qr-code-controllers', [])
 
         };
 
+        $scope.setShowPopup = function(popupOpen)
+        {
+            $scope.showPopup = popupOpen;
+        };
+
         /* Open qr code scanner */
         $scope.takeAGuess = function()
         {
             /* Open Bar Code Scanner */
             var scanner = cordova.require("cordova/plugin/BarcodeScanner");
-
-
-
-
-
 
             scanner.scan( function (scan) {
 
@@ -185,48 +181,30 @@ angular.module('qr-code-controllers', [])
 
                     if(!scan.cancelled) {
 
-                        Facebook.isLoggedIn()
-                            .then(function (user) {
+                        FacebookUser.getAPIStatus()
+                            .then(function(authPackage){
 
+                                if(authPackage)
+                                {
+                                    var userID = authPackage.userID;
+                                    var authToken = authPackage.authToken;
 
-                                if (user.connected) {
-
-                                    console.log("Getting UserID");
-                                    var userID = Facebook.getUserID();
-                                    console.log(userID);
-
-                                    console.log("Retrieving Authorization");
-                                    //var authToken = Facebook.getAPIToken();
-
-                                    Facebook.generateToken(user)
-                                        .then(function (authUser) {
-
-                                    var authToken = authUser.token;
-                                            var userID = authUser.userId;
-
-                                            console.log("Getting UserID");
-                                            console.log(userID);
-
-                                            console.log("Retrieving Authorization");
-                                            console.log(authToken);
-
-                                    //TODO: IF we use some parsing or not
                                     MatchHunt.guess(authToken, userID, scan.text)
-                                        .then(function (game) {
+                                        .then(function(game){
 
-                                            console.log("GUESS STATUS");
-                                            console.log(game);
+                                            if(game)
+                                            {
+                                                var status = game.status;
+                                                console.log("PARSING GAME");
+                                                console.log(game);
 
-                                            if(game){
-                                            var status = game.status;
-                                            console.log("PARSING GAME");
-                                            console.log(game);
-                                            if (status == 'won') {
+                                                var popUpTitle = "";
+                                                var popUpsubTitle = "";
+
                                                 var okButton = {
                                                     text: $scope.navigationTitles.scanner.playAgainLabel,
                                                     type: 'button-positive',
                                                     onTap: $scope.loadNewMatchHuntGame
-
                                                 };
 
                                                 var cancelButton = {
@@ -236,191 +214,154 @@ angular.module('qr-code-controllers', [])
                                                     }
                                                 };
 
-                                                var wonPopup = $ionicPopup.show(
-                                                    {
-                                                        title: $scope.navigationTitles.scanner.youWonLabel,
-                                                        subTitle: $scope.navigationTitles.scanner.pointsReceivedLabel + $scope.matchHunt.pointsValue,
-                                                        buttons: [
-                                                            cancelButton, okButton
-                                                        ]
-                                                    }
-                                                );
+                                                if(status == 'won')
+                                                {
+                                                    popUpTitle = $scope.navigationTitles.scanner.youWonLabel,
+                                                    popUpsubTitle = $scope.navigationTitles.scanner.pointsReceivedLabel + $scope.matchHunt.pointsValue
 
-                                                wonPopup.then(function (res) {
-                                                    console.log("Doing something");
-                                                });
+                                                }
+                                                else if(status == 'lost')
+                                                {
+                                                    popUpTitle = $scope.navigationTitles.scanner.youLoseLabel;
+                                                    popUpsubTitle =  $scope.navigationTitles.scanner.youLoseBodyLabel;
+                                                }
+                                                else if(status == 'incorrect')
+                                                {
+                                                    var alertFail = $ionicPopup.alert(
+                                                        {
+                                                            title: $scope.navigationTitles.scanner.failGuessLabel,
+                                                            template: $scope.navigationTitles.scanner.livesLeftLabel + (3 - game.attempts) + "<br>"
+
+                                                        }
+                                                    );
+
+                                                    alertFail.then(function (res) {
+                                                        console.log("Guess Fail Alert Acknowledged");
+                                                    });
+
+                                                }
+
+                                                if(status == 'lost' || status == 'won')
+                                                {
+                                                    var updatePopup = $ionicPopup.show(
+                                                        {
+                                                            title: popUpTitle,
+                                                            subTitle: popUpsubTitle,
+                                                            buttons: [
+                                                                cancelButton, okButton
+                                                            ]
+                                                        }
+                                                    );
+
+                                                    updatePopup.then(function (res) {
+                                                        console.log("Doing something");
+                                                    });
+                                                }
+
+
+                                            }
+                                            else
+                                            {
+
                                             }
 
-                                            else if (status == 'lost') {
-                                                var okButton = {
-                                                    text: $scope.navigationTitles.scanner.playAgainLabel,
-                                                    type: 'button-positive',
-                                                    onTap: $scope.loadNewMatchHuntGame
-
-                                                };
-
-                                                var cancelButton = {
-                                                    text: $scope.navigationTitles.scanner.quitLabel,
-                                                    onTap: function () {
-                                                        $state.go('tab.tab-qrcode-scanner');
-                                                    }
-                                                };
-
-                                                var losePopup = $ionicPopup.show(
-                                                    {
-                                                        title: $scope.navigationTitles.scanner.youLoseLabel,
-                                                        subTitle: $scope.navigationTitles.scanner.youLoseBodyLabel,
-                                                        buttons: [
-                                                            cancelButton, okButton
-                                                        ]
-                                                    }
-                                                );
-
-                                                losePopup.then(function (res) {
-                                                    console.log("Doing something");
-                                                });
-                                            }
-
-                                            else if (status == 'incorrect') {
-                                                //TODO: Show a popup dialog saying you failed
-                                                var alertFail = $ionicPopup.alert(
-                                                    {
-                                                        title: $scope.navigationTitles.scanner.failGuessLabel,
-                                                        template: $scope.navigationTitles.scanner.livesLeftLabel + (3 - game.attempts) + "<br>"
-
-                                                    }
-                                                );
-
-                                                alertFail.then(function (res) {
-                                                    console.log("Guess Fail Alert Acknowledged");
-                                                });
-                                            }}
-
-
-                                        }, function (err) {
-                                            console.log(err);
                                         });
 
-                                });
                                 }
-
-
-                                else {
-
-                                    //TODO: Show a popup asking the user to login
-
-                                    Facebook.showLoginPopup();
+                                else
+                                {
+                                    console.log("Showing Popup");
+                                    $scope.showPopup();
                                 }
                             });
-
-
                     }
-                }
                 else if(!(scan.cancelled)) {
 
                     $ionicPopup.alert({
                         title: $scope.navigationTitles.scanner.invalidQRCodeLabel
                     });
 
-                }
+                }}
 
             }, function (error) {
                 console.log("Scanning failed: ", error);
                 $ionicPopup.alert({
                     title: $scope.navigationTitles.scanner.cameraFailureLabel
-                });
+                })});
 
-            } );
+
         };
 
 
         $scope.loadNewMatchHuntGame = function()
         {
 
-            Facebook.isLoggedIn()
-                .then(function(user)
+            FacebookUser.getAPIStatus()
+                .then(function(authPackage)
                 {
+                    if(authPackage) {
+                        MatchHunt.generateGame(authPackage.authToken)
+                            .then(function (game) {
+                                //console.log("Generated the Game");
+                                //if(response)
+                                console.log("Generated Game: ");
+                                console.log(game);
+                                if (game) {
+                                    $scope.matchHunt = game;
 
+                                    //$state.go('tab.tab-match-hunt');
+                                }
+                                else {
+                                    $ionicPopup.alert({
+                                        title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
+                                    });
+                                    $state.go('tab.tab-qrcode-scanner');
 
-                    if(user.connected)
-                    {
+                                }
+                            },
 
-                        Facebook.generateToken(user)
-                            .then(function (authUser) {
-
-                                var authToken = authUser.token;
-                                var userID = authUser.userId;
-
-                                console.log("Getting UserID");
-                                console.log(userID);
-
-                                console.log("Retrieving Authorization");
-                                console.log(authToken);
-                                console.log("Getting UserID");
-                                var userID = Facebook.getUserID();
-                                console.log(userID);
-
-                                console.log("Retrieving Authorization");
-                                var authToken = Facebook.getAPIToken();
-
-                                //$window.localStorage.setItem('userID', user.userID);
-                                MatchHunt.generateGame(authToken)
-                                    .then(function (matchHunt) {
-
-                                        if(matchHunt) {
-
-                                            $scope.matchHunt = matchHunt;
-                                        }
-                                        else{
-
-                                                $ionicPopup.alert({
-                                                    title: $scope.navigationTitles.app.matchHuntNoMoreCluesLabel
-                                                });
-
-                                            $state.go('tab.tab-qrcode-scanner');
-
-                                        }
-
-                                    },
-
-                                    function (err) {
-                                        console.log("MATCH HUNT ERR");
-                                        console.log(err);
-
-                                    }
-                                );
-                            });
+                            function (err) {
+                                console.log("MATCH HUNT ERR");
+                                console.log(err);
+                            }
+                        );
                     }
-                    else{
+                    else
+                    {
+                        /* Show a login popup */
+                        console.log("Showing Popup");
+                        $scope.showPopup();
 
-                        //TODO: Show a popup asking the user to login
-
-                        Facebook.showLoginPopup();
                     }
                 });
+
         }
 
     })
 
     ///* Match Hunt game */
-    .factory('MatchHunt',function(Routes, $http, $q, $window){
+    .factory('MatchHunt',function(Routes, $http, $q, localStorageService){
 
+
+        var matchHuntIdKey = 'MUSA-MATCH-HUNT';
+        var matchHuntDisplacementsKey = 'MATCH-HUNT-DISPLACEMENTS';
 
         var MatchHunt = {};
 
         MatchHunt.activeGame = {};
 
         MatchHunt.getId = function(){
-            return $window.localStorage.getItem('MusAMatchHuntId');
+            return localStorageService.get(matchHuntIdKey);
         };
+
         MatchHunt.setId = function(id){
-            $window.localStorage.setItem('MusAMatchHuntId', id);
+            localStorageService.set(matchHuntIdKey, id);
         };
 
         MatchHunt.reset = function(){
             MatchHunt.activeGame = {};
-            $window.localStorage.removeItem('MusAMatchHuntId');
-            $window.localStorage.removeItem('matchHuntDisplacements');
+           localStorageService.remove(matchHuntIdKey);
+            localStorageService.remove(matchHuntDisplacementsKey);
         };
 
 
@@ -528,7 +469,7 @@ angular.module('qr-code-controllers', [])
             img.src = matchHunt.image;
             img.onload = function()
             {
-                var _displacements = $window.localStorage.getItem('matchHuntDisplacements');
+                var _displacements = localStorageService.get(matchHuntDisplacementsKey);
 
                 console.log(_displacements);
                 var displacements = null;
@@ -566,7 +507,7 @@ angular.module('qr-code-controllers', [])
                     };
                     console.log(displacements);
                     /* Store displacements */
-                    $window.localStorage.setItem('matchHuntDisplacements', JSON.stringify(displacements));
+                    localStorageService.set(matchHuntDisplacementsKey, JSON.stringify(displacements));
 
 
                 }

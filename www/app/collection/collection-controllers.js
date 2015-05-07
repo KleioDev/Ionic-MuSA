@@ -146,7 +146,7 @@ angular.module('collection-controllers', [])
     })
 
     /* Single Object View Controller */
-    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, Facebook, UserPreferences, $ionicTabsDelegate)
+    .controller('ObjectViewCtrl', function($scope, $state, MuseumObjects, $ionicBackdrop, $stateParams, $interval, $ionicLoading, $ionicModal,Exhibitions, Audio, Video, Archive, Gallery, FacebookUser , UserPreferences, $ionicTabsDelegate)
     {
         console.log("Object View Controller");
         /* Maintains the stack of modals */
@@ -454,7 +454,7 @@ angular.module('collection-controllers', [])
             var desc = $scope.museumObject.description;
             var title = $scope.museumObject.title;
 
-            Facebook.postToFacebook(title, img_source, desc);
+            FacebookUser.postToFacebook(title, img_source, desc);
         };
 
         /* Preload exhibition */

@@ -210,6 +210,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         $scope.feedback.type = 'general';
         $scope.feedback.message = '';
 
+
+
         $scope.sendFeedback = function()
         {
             //console.log($scope.feedback.messageTitle);
@@ -284,14 +286,17 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     })
 
-    .factory('FacebookUser', function($cordovaFacebook,localStorageService, $window, Routes, $http)
+    .factory('FacebookUser', function($cordovaFacebook,localStorageService, $window, $q,Routes, $http)
 {
+    /* Storage Key for the Auth Token */
     var authStorageKey = 'MUSA-AUTH-TOKEN';
 
+    /* Storage Key for the User ID */
     var apiUserIDKey = 'MUSA-USER-ID';
 
     var timeOfStorage = 'MUSA-API-TIMEOUT'; //TODO: Ask César about Token Timeout (Probably not expired)
 
+    /* Generate the app authPackage which contains the authToken and api user id */
     var generateToken = function(accessToken, facebookUserID)
     {
         /* Check if token is stored */
@@ -302,8 +307,10 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         if(!facebookUserID)
         { console.log("FacebookUserID Is Not Defined!"); console.log(facebookUserID);}
 
+
         var defer = $q.defer();
 
+        //Get the values to test if they exist
         var apiAuthToken = localStorageService.get(authStorageKey);
 
         var apiUserID = localStorageService.get(apiUserIDKey);
@@ -368,29 +375,32 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
 
     };
-
+    /**
+     * Login to Facebook using $cordovaFacebook, if it is successful it will generate tokens used for the API and then retrieve the user info
+     * @returns {*}
+     */
     var login = function()
     {
         return $cordovaFacebook.login(["public_profile"])
             .then(
-            function(response)
+            function(success)
             {
                 console.log("FacebookUser - Success Login");
-                console.log(response);
+                console.log(success);
 
-                if(response)
+                if(success)
                 {
                     console.log("Verifying Token Authorization from MuSA API");
 
                     //Need to generate a token from our MuSA API
                     return generateToken(success.authResponse.accessToken, success.authResponse.userID)
-                        .then(function(tokenGenerationSuccess)
+                        .then(function(authPackage)
                         {
 
-                            if(tokenGenerationSuccess)
+                            if(authPackage)
                             {
                                 /* User is connected, go get the user info */
-                                return retrieveInfo();
+                                return retrieveUser(authPackage);
                             }
                             else
                             {
@@ -421,6 +431,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
             .then(function(success) {
                 console.log("FacebookUser - Logout Successful");
                 console.log(success);
+                resetUserStorage();//Reset the user auth package
                 return success;
             }, function (error) {
                 return null;
@@ -650,6 +661,37 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     };
 
+    var getAPIStatus = function() {
+        console.log("Verifying User is Logged In To Facebook and the MuSA API");
+
+        return getLoginStatus().then(
+            function (user) {
+                if (user) {
+
+
+                    return generateToken(user.authResponse.accessToken, user.authResponse.userID)
+                        .then(function(authPackage){
+
+                            if(authPackage)
+                            {
+                                return authPackage;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+
+                        })
+                }
+                else
+                {
+                    console.log("USER NOT LOGGED IN - Veryfing API Status");
+                    return null;
+                }
+            }
+        )
+    };
+
 
     var postToFacebook = function(title, img,  description)
     {
@@ -675,61 +717,18 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     };
 
-    var popupDialog = function()
 
+
+    var resetUserStorage = function()
     {
+        localStorageService.remove(apiUserIDKey);
+        localStorageService.remove(authStorageKey);
+    };
 
-            var labels = AppNavigationTitles.get();
-            var loginButton = {
-                text: labels.app.facebookLoginLabel,
-                type: 'button-royal',
-                onTap: function()
-                {
-                    user.login()
-                        .then(function(response)
-                        {
-                            console.log(response);
-                            if(response)
-                            {
-                                console.log(response);
-                                /* Now we should generate the token Info */
-                                user.generateToken(response)
-                                    .then(function(valid) {
-
-                                        if (valid) {
-                                        }
-                                    })}});
-                }
-
-            };
-
-            var cancelButton = {
-                text: labels.app.cancelFacebookLoginPopup,
-                type: 'button-light'
-            };
-
-            var loginPopup = $ionicPopup.show(
-                {
-                    title: labels.app.facebookRequiredLabel,
-                    subTitle: labels.app.playMatchHuntFacebookAccountRequiredLabel,
-                    buttons:[
-
-                        cancelButton,
-                        loginButton
-                    ]
-                });
-
-            loginPopup.then(function(res){
-
-                console.log(res);
-            });
-
-            $timeout(function()
-            {
-                loginPopup.close();
-            }, 10000)
-
-        };
+    var getUserID = function()
+    {
+        return localStorageService.get(apiUserIDKey);
+    };
 
     return {
 
@@ -738,12 +737,14 @@ angular.module('user-preferences-controllers', ['ngCordova'])
         logout: logout,
         retrieveInfo: retrieveFacebookInfo,
         loadLeaderboard: loadLeaderboard,
-        postToFacebook: postToFacebook
+        postToFacebook: postToFacebook,
+        getAPIStatus: getAPIStatus,
+        getUserID: getUserID
 
     }
 
 
-})
+});
 
 
 

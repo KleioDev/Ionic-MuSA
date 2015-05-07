@@ -58,4 +58,76 @@ angular.module('starter.directives', [])
                 }
             });
         }
-    }});
+    }})
+
+.directive('facebookPopup', function(FacebookUser, $ionicPopup)
+    {
+        return {
+            restrict: 'EA',
+
+
+            replace: true,
+            template: '<div></div>',
+            //templateUrl: '',
+            link: function($scope)
+            {
+                console.log("SCOPE");
+                console.log($scope);
+                var loginButton = {
+                    text: $scope.navigationTitles.app.facebookLoginLabel,
+                    type: 'button-royal',
+                    onTap: function()
+                    {
+                        FacebookUser.login()
+                            .then(function(user)
+                            {
+                                if(user)
+                                {
+                                    $scope.load();
+                                }
+                                else
+                                {
+                                    console.log("Directive Facebook Popup FAield to Login");
+                                    console.log(user);
+                                }
+                            });
+
+                    }
+
+                };
+
+                var cancelButton = {
+                    text: $scope.navigationTitles.app.cancelFacebookLoginPopup,
+                    type: 'button-light'
+                };
+
+
+
+                var showPopup = function() {
+                    console.log("Showing Popup");
+                    var loginPopup = $ionicPopup.show(
+                        {
+                            title: $scope.navigationTitles.app.facebookRequiredLabel,
+                            subTitle: $scope.navigationTitles.app.playMatchHuntFacebookAccountRequiredLabel,
+                            buttons:[
+                                cancelButton,
+                                loginButton
+                            ]
+                        });
+
+                    loginPopup.then(function(res){
+
+                        console.log(res);
+                    });
+                };
+
+                $scope.setShowPopup(showPopup);
+
+
+
+
+
+            }
+        }
+
+    });

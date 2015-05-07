@@ -9,13 +9,16 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives',
     'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial', 'LocalStorageModule'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$state, Facebook,$http,  $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$state,$http,FacebookUser,  $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         var DEBUG = 1;
 
+
         /* Set the user global variables */
-        if(!DEBUG)
-            console.log = function() {};
+        if(!DEBUG) {
+            console.log = function () {
+            };
+        }
 
         //$window.localStorage.clear();
         $rootScope.app = {};
@@ -99,7 +102,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
         $rootScope.$on('$stateChangeSuccess' , function(event, toState, toParams, fromState, fromParams){
 
-            var userID = Facebook.getUserID();
+            var userID = FacebookUser.getUserID();
             if(userID) {
 
 
