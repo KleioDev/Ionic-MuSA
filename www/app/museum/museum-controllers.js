@@ -95,7 +95,6 @@ angular.module('museum-controllers', ['ngCordova'])
                 .then(function(event){
 
                     if(event){
-                        event.datetime = moment(new Date(event.eventDate));
                         Events.setEvent(event);
                         $state.go('tab.museum-events-single');
                     }

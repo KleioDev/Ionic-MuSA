@@ -301,6 +301,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
     {
         /* Check if token is stored */
 
+        console.log("Generating Access Token from MuSA API - FacebookUser.generateToken()");
         if(!accessToken)
         { console.log("Access Token Is Not Defined!"); console.log(accessToken);}
 
@@ -315,9 +316,12 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
         var apiUserID = localStorageService.get(apiUserIDKey);
 
+        console.log(apiAuthToken);
+        console.log(apiUserID);
         /* If Both are them are defined  then no need to retrieve from server */
         if(apiAuthToken && apiUserID)
         {
+            console.log("Tokens are defined");
             var authPackage = {
                 authToken: apiAuthToken,
                 userID: apiUserID
@@ -355,7 +359,7 @@ angular.module('user-preferences-controllers', ['ngCordova'])
                         if (!localStorageService.set(authStorageKey, response.data.token))
                             console.log("Failed to store authtoken - local Storage");
 
-                        localStorageService.set(apiUserID, response.data.userId);
+                        localStorageService.set(apiUserIDKey, response.data.userId);
 
                         var authPackage = {
                             authToken: response.data.token,

@@ -251,7 +251,10 @@ angular.module('museum-services', [])
             {
                 if(response.status == 200)
                 {
-                    return response.data;
+                    var event = response.data;
+                    event.datetime = moment(new Date(event.eventDate));
+
+                    return event;
                 }
                 else
                 {

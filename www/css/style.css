@@ -18,8 +18,8 @@ ion-scroll[direction=y] {
     /*background-position: -400px -400px;*/
 
     border: 1px solid black;
-    filter: blur(7px);
-    -webkit-filter: blur(7px);
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
 
 }
 .crop img {
