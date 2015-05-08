@@ -12,7 +12,10 @@
         <div class="padding">
             <h2 class="object-title">{{museumObject.title.capitalize()}}</h2>
             <h3>{{museumObject.Artist.name}}</h3>
-            <p>{{museumObject.dated}}</p>
+
+
+            <p ng-if="!(museumObject.date == 'Not dated')">{{museumObject.dated}}</p>
+            <p ng-if="museumObject.date == 'Not dated'">{{navigationTitles.collection.singleObject.notDatedLabel}}</p>
 
 
 
@@ -51,9 +54,9 @@
         <ion-list>
 
         <ion-item ng-if="museumObject.medium" ng-style="{'font-size': app.fontSize};">
-            {{navigationTitles.collection.singleObject.mediumLabel}}
-        <span class="item-note">
-               {{museumObject.medium}}    </span>
+           <h2>{{navigationTitles.collection.singleObject.mediumLabel}}</h2>
+        <p class="item-note item-text-wrap">
+               {{museumObject.medium}}    </p>
         </ion-item>
 
         <!--<ion-item ng-if="museumObject.type" ng-style="{'font-size': app.fontSize};">-->
@@ -62,12 +65,12 @@
         <!--</ion-item>-->
 
         <ion-item ng-if="museumObject.culture" ng-style="{'font-size': app.fontSize};">
-            {{navigationTitles.collection.singleObject.cultureLabel}}
-            <span class="item-note">{{museumObject.culture}}  </span>
+           <h2> {{navigationTitles.collection.singleObject.cultureLabel}}</h2>
+            <p class="item-note item-text-wrap">{{museumObject.culture}}  </p>
         </ion-item>
         <ion-item ng-if="museumObject.dimensions" ng-style="{'font-size': app.fontSize};">
-            {{navigationTitles.collection.singleObject.dimensionsLabel}}
-            <span class="item-note text-wrap">{{museumObject.dimensions}}  </span>
+            <h2>{{navigationTitles.collection.singleObject.dimensionsLabel}}</h2>
+            <p class="item-note item-text-wrap">{{museumObject.dimensions}}  </p>
         </ion-item>
         </ion-list>
 

@@ -13,7 +13,9 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     $scope.points = 0;
     $scope.text = {};
-    $scope.font = {size: 0};
+
+    var size = ($scope.preferences.fontSize - $scope.preferences.baseFont)/($scope.preferences.fontMultiplier);
+    $scope.font = {size: size};
     $scope.loadingUser = false;
     $scope.loading = {
         user : false,
@@ -30,10 +32,11 @@ angular.module('user-preferences-controllers', ['ngCordova'])
 
     });
 
-
+    console.log("Notifications");
+    console.log($scope.preferences);
     $scope.notifications  = {
 
-        checked: UserPreferences.getNotificationStatus()
+        checked: ($scope.preferences.notifications  == "true")
     };
 
     $scope.openModal = function(template) {

@@ -9,9 +9,14 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives',
     'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial', 'LocalStorageModule'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$state,$http,FacebookUser,  $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$state,$http,FacebookUser, UserPreferences, $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
         var DEBUG = 1;
+
+
+        moment.locale(["en","es"]);
+        console.log("DEBUGGING");
+
 
         $rootScope.notificationModal = {
 
@@ -154,6 +159,16 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $rootScope.platform.isIOS = isIOS;
             $rootScope.platform.isAndroid = android;
 
+            UserPreferences.setup();
+            var language = UserPreferences.getLanguage();
+
+            if(language.english.toLowerCase() == "spanish")
+                moment.locale('es'); // 'en'
+
+            if(language.english.toLowerCase() == "english")
+                moment.locale('en'); // 'en'
+
+            $rootScope.$broadcast('preferences:updated', {});
 
 
 
