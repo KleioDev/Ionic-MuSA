@@ -13,6 +13,12 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
         var DEBUG = 1;
 
+        $rootScope.notificationModal = {
+
+
+        }
+
+        $rootScope.notificationModal.openModal = function(){}
 
         /* Set the user global variables */
         if(!DEBUG) {
