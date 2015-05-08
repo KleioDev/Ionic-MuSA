@@ -348,8 +348,21 @@ angular.module('museum-services', [])
                 if(response.status == 200) {
                     var _news = response.data.news;
 
+
+
+
+
+
                     for (var j = 0; j < _news.length; j++) {
                         _news[j].datetime = moment(new Date(_news[j].createdAt));
+                    }
+
+                    _news.sort(compareMilli);
+
+                    function compareMilli(a,b) {
+                        if(a.datetime.valueOf() < b.datetime.valueOf()) return 1;
+                        if(a.datetime.valueOf() > b.datetime.valueOf()) return -1;
+                        return 0;
                     }
 
                     /* Current Date */
