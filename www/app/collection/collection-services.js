@@ -28,13 +28,16 @@ angular.module('exhibition-services', [])
 
      var getPage = function(pageNumber,searchTerm, limit)
     {
-        return $http.get(Routes.COLLECTION_OBJECTS, {
-            params: {
-                page: pageNumber,
-                title: searchTerm,
-                per_page: PER_PAGE
+        var params = {
+            page: pageNumber,
+            title: searchTerm,
+            per_page: PER_PAGE
 
-            }})
+        };
+        console.log(params);
+
+        return $http.get(Routes.COLLECTION_OBJECTS, {
+            params: params})
             .then(pageRetrievalSuccess, pageRetrievalFailure);
 
 
@@ -42,6 +45,8 @@ angular.module('exhibition-services', [])
             {
                 if(response.status == 200)
                 {
+                    console.log("PAGE");
+                    console.log(response.data);
                     return response.data.artifacts;
                 }
                 return [];

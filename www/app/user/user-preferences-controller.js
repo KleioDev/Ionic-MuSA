@@ -172,7 +172,8 @@ angular.module('user-preferences-controllers', ['ngCordova'])
        FacebookUser.logout()
            .then(function(loggedOut){
 
-
+               $scope.loggedIn = false;
+               $scope.user = {};
            });
     };
 

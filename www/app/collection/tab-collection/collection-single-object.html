@@ -96,10 +96,11 @@
 
 
         <!-- Description -->
-        <div class="padding text-wrapping">
+        <div class="padding text-wrapping" ng-if="museumObject.description">
             <h4>{{navigationTitles.collection.singleObject.descriptionLabel}}</h4>
 
-            <p ng-style="{'font-size': app.fontSize};">{{museumObject.description | limitTo:200}} ...</p>
+            <p ng-style="{'font-size': app.fontSize};">{{museumObject.description | limitTo:200}}</p>
+            <p ng-if="(museumObject.description.length > 200)">...</p>
 
 
             <div class="row">
@@ -120,7 +121,7 @@
 
 
 
-
+<br>
         <!-- Extra content -->
         <div class="list ">
 
@@ -491,10 +492,11 @@
                     <h1 class="title">{{text.title}}</h1>
                 </ion-header-bar>
 
-                <h2 class="padding">{{text.title}}</h2>
 
-                <br>
                 <ion-content>
+                    <h2 class="padding">{{text.title}}</h2>
+
+                    <br>
                     <div class="padding" ng-style="{'font-size': app.fontSize};" ng-bind-html="text.description"></div>
 
                 </ion-content>

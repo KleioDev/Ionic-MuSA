@@ -2,13 +2,16 @@
 angular.module('tutorial', [])
 
 
-.controller('TutorialCtrl', function($scope,$ionicModal, $timeout,Notifications, $state,$window, UserPreferences) {
+.controller('TutorialCtrl', function($scope,$ionicModal, $timeout,Notifications, AppNavigationTitles,$state,$window, UserPreferences) {
 
         var flag = $window.localStorage.getItem('MuSAFirstTimeOpen');
 
         console.log("Tutorial has not been opened");
 
+        UserPreferences.setup();
+
         $scope.preferences = UserPreferences.get();
+
         $scope.checkTutorial = function()
         {
 
@@ -39,7 +42,8 @@ angular.module('tutorial', [])
         };
 
 
-        $scope.languagePreference = $scope.preferences.language;
+        $scope.languagePreference = UserPreferences.get().language.lang;
+        console.log($scope.navigationTitles.user.languagesAvailable);
 
         $scope.openModal = function(template) {
 
@@ -54,11 +58,10 @@ angular.module('tutorial', [])
         };
 
         $scope.changeLanguage = function (language) {
+
+            console.log($scope.navigationTitles.user.languagesAvailable);
             UserPreferences.setLanguage(language);
             //$scope.navigationTitles = AppNavigationTitles.get();
-
-
-
 
         };
 
@@ -74,18 +77,11 @@ angular.module('tutorial', [])
 
             if($scope.notifications.radio)
             {
-                Notifications.subscribe()
-                    .then(function(response)
-                    {
+               UserPreferences.setNotificationStatus(true);
+                $state.go('tab.museum-segmented-control');
 
-                        if(response)
-                        {
-                            console.log("Subscribed successfully");
-                            $state.go('tab.museum-segmented-control');
-
-                        }
-                    })
             }
+
             else
             {
                 $state.go('tab.museum-segmented-control');

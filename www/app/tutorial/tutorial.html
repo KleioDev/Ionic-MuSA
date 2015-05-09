@@ -38,7 +38,7 @@
 
                 <!--<ion-list>-->
 
-                    <ion-radio name="languages" ng-model="languagePreference.lang" ng-value="language.lang" ng-click="changeLanguage(language)" ng-repeat="language in navigationTitles.user.languagesAvailable">{{language.lang}} <p><span>{{language[preferences.language.english.toLowerCase()]}}</span></p></ion-radio>
+                    <ion-radio name="languages" ng-model="languagePreference" ng-repeat="languageItem in navigationTitles.user.languagesAvailable" ng-value="languageItem.lang" ng-click="changeLanguage(languageItem)" >{{languageItem.lang}} <p><span>{{languageItem[preferences.language.english.toLowerCase()]}}</span></p></ion-radio>
                     <!--<a class="item item-icon-right" ng-click="changeLanguage(language)" ng-repeat="language in navigationTitles.user.languagesAvailable">-->
                         <!--<i ng-if="language.english == preferences.language.english"  ></i>-->
                         <!--{{language.lang}}-->
@@ -47,7 +47,6 @@
 
                 <!--</ion-list>-->
 
-                <br>
                     <p class="text-wrap padding">{{navigationTitles.app.receiveNotificationsQuestionLabel}}</p>
 
                 <ion-radio name="notifications" ng-model="notifications.radio" ng-value=true>{{navigationTitles.app.yesLabel}}</ion-radio>

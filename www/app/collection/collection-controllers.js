@@ -28,6 +28,7 @@ angular.module('collection-controllers', [])
     });
 
 
+
 })
 
     /* Collection Object List Controller */
@@ -598,6 +599,9 @@ angular.module('collection-controllers', [])
             $scope.loadExhibitions();
 
         });
+
+
+
 
 
 

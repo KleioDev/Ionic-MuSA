@@ -9,9 +9,9 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
     'collection-controllers', 'map-controllers', 'qr-code-controllers','user-preferences-controllers','museum-services', 'exhibition-services', 'content-services','starter.directives',
     'ui.router', 'map-services','monospaced.elastic', 'notification-services', 'tutorial', 'LocalStorageModule'])//,'ngMockE2E'])
 
-    .run(function(ionPlatform, AppNavigationTitles,$state,$http,FacebookUser, UserPreferences, $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
+    .run(function(ionPlatform, AppNavigationTitles,$state,$http,FacebookUser , UserPreferences, $window,Notifications,$ionicHistory, $cordovaDevice, $ionicPopup, $state, $cordovaPush, $rootScope, UserPreferences, $ionicPopup, $ionicLoading, $timeout, $httpBackend,Routes, Connection) {
 
-        var DEBUG = 1;
+        var DEBUG = 0;
 
 
         moment.locale(["en","es"]);
@@ -21,7 +21,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         $rootScope.notificationModal = {
 
 
-        }
+        };
 
         $rootScope.notificationModal.openModal = function(){}
 
@@ -116,7 +116,6 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             var userID = FacebookUser.getUserID();
             if(userID) {
 
-
                 var request = {
 
                     'method': 'POST',
@@ -126,6 +125,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
                 $http(request);
             }
+
 
         });
 
@@ -144,6 +144,17 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
 
                 });
             }
+            var stateName = toState.name;
+            if(stateName == 'tab.collection' || stateName == 'tab.tab-maps' )
+            {
+                BluetoothService.isEnabled()
+                    .then(function(result){
+                        console.log(result);
+                        $rootScope.bluetoothEnabled =result;
+
+                    })
+            }
+
 
         });
 
@@ -159,7 +170,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
             $rootScope.platform.isIOS = isIOS;
             $rootScope.platform.isAndroid = android;
 
-            UserPreferences.setup();
+            //UserPreferences.setup();
             var language = UserPreferences.getLanguage();
 
             if(language.english.toLowerCase() == "spanish")
