@@ -44,7 +44,7 @@ angular.module('musa-app', ['ngCordova', 'ionic','ionic.contrib.frost', 'museum-
         };
 
         /* HTTP Defined Routes */
-
+        //Keeping the streak alive!
         $rootScope.$on('http:notFound', function(event, type)
         {
 
